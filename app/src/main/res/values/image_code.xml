@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="ic_close">&#xf00d;</string>
+    <string name="ic_edit">&#xf304;</string>
+    <string name="ic_truck">&#xf0d1;</string>
+    <string name="ic_maintanance">&#xf7d9;</string>
+    <string name="ic_user">&#xf007;</string>
+    <string name="ic_right_arrow">&#xf105;</string>
+    <string name="ic_up_arrow">&#xf106;</string>
+</resources>

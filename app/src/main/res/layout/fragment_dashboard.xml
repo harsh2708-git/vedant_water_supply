@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/srlDashboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/nsView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:overScrollMode="never">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context=".ui.dashboard.DashboardFragment">
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/start"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_begin="@dimen/_25sdp" />
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/end"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_end="@dimen/_25sdp" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cvUserDetail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/_23sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        app:cardCornerRadius="@dimen/_5sdp"
+                        app:cardElevation="@dimen/_5sdp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/color_0E5BA1"
+                            android:padding="@dimen/_20sdp">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/labelHello"
+                                style="@style/RobotoRegular16"
+                                android:layout_width="wrap_content"
+                                android:text="@string/hello"
+                                android:textColor="@color/color_FFFFFFD9"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tvUserName"
+                                style="@style/RobotoRegular16"
+                                android:layout_width="0dp"
+                                android:layout_marginStart="@dimen/_5sdp"
+                                android:layout_marginEnd="@dimen/_10sdp"
+                                android:maxLines="2"
+                                android:text="Harsh Prajapati"
+                                android:textColor="@color/white"
+                                app:layout_constraintEnd_toStartOf="@id/fabLogout"
+                                app:layout_constraintStart_toEndOf="@+id/labelHello"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/labelWelcome"
+                                style="@style/RobotoRegular16"
+                                android:layout_width="wrap_content"
+                                android:layout_marginTop="@dimen/_5sdp"
+                                android:text="@string/welcome"
+                                android:textColor="@color/white"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tvUserName" />
+
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/fabLogout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:backgroundTint="@color/color_dark"
+                                app:fabCustomSize="@dimen/_50sdp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/ic_log_out"
+                                app:tint="@color/white"
+                                tools:ignore="ContentDescription" />
+
+                            <View
+                                android:id="@+id/userDivider"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_1sdp"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:background="@color/color_E6E6E64D"
+                                app:layout_constraintTop_toBottomOf="@id/labelWelcome" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/labelTotalTrip"
+                                style="@style/RobotoRegular14"
+                                android:layout_width="wrap_content"
+                                android:layout_marginTop="@dimen/_20sdp"
+                                android:text="@string/total_trips"
+                                android:textColor="@color/color_FFFFFFD9"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/userDivider" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tvTotalTrip"
+                                style="@style/RobotoRegular16"
+                                android:layout_width="0dp"
+                                android:layout_marginStart="@dimen/_10sdp"
+                                android:gravity="end"
+                                android:text="10,000"
+                                android:textColor="@color/white"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/labelTotalTrip"
+                                app:layout_constraintTop_toTopOf="@+id/labelTotalTrip" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/labelTotalMaintanance"
+                                style="@style/RobotoRegular14"
+                                android:layout_width="wrap_content"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:text="@string/total_maintenance"
+                                android:textColor="@color/color_FFFFFFD9"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tvTotalTrip" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tvTotalMaintanance"
+                                style="@style/RobotoRegular16"
+                                android:layout_width="0dp"
+                                android:layout_marginStart="@dimen/_10sdp"
+                                android:gravity="end"
+                                android:text="10,000"
+                                android:textColor="@color/white"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/labelTotalMaintanance"
+                                app:layout_constraintTop_toTopOf="@+id/labelTotalMaintanance" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/labelTotalMaintananceAmount"
+                                style="@style/RobotoRegular14"
+                                android:layout_width="wrap_content"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:text="@string/total_maintenance_amount"
+                                android:textColor="@color/color_FFFFFFD9"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tvTotalMaintanance" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tvTotalMaintananceAmount"
+                                style="@style/RobotoRegular16"
+                                android:layout_width="0dp"
+                                android:layout_marginStart="@dimen/_10sdp"
+                                android:gravity="end"
+                                android:text="10,000"
+                                android:textColor="@color/white"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/labelTotalMaintananceAmount"
+                                app:layout_constraintTop_toTopOf="@+id/labelTotalMaintananceAmount" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/llOptions"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="@id/end"
+                        app:layout_constraintStart_toStartOf="@id/start"
+                        app:layout_constraintTop_toBottomOf="@id/cvUserDetail">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/ll1stOptions"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:id="@+id/llTrip"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:paddingVertical="@dimen/_20sdp">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    style="@style/IconFont"
+                                    android:layout_gravity="center"
+                                    android:text="@string/ic_truck"
+                                    android:textColor="@color/color_0E0D12" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    style="@style/RobotoRegular14"
+                                    android:layout_gravity="center"
+                                    android:text="@string/trips"
+                                    android:textColor="@color/color_0E0D12" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            <View
+                                android:layout_width="@dimen/_1sdp"
+                                android:layout_height="match_parent"
+                                android:background="@color/color_E6E6E64D" />
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:id="@+id/llDrivers"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:paddingVertical="@dimen/_20sdp">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    style="@style/IconFont"
+                                    android:layout_gravity="center"
+                                    android:text="@string/ic_user"
+                                    android:textColor="@color/color_0E0D12" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    style="@style/RobotoRegular14"
+                                    android:layout_gravity="center"
+                                    android:text="@string/drivers"
+                                    android:textColor="@color/color_0E0D12" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            <View
+                                android:layout_width="@dimen/_1sdp"
+                                android:layout_height="match_parent"
+                                android:background="@color/color_E6E6E64D" />
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:id="@+id/llMaintanance"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:paddingVertical="@dimen/_20sdp">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    style="@style/IconFont"
+                                    android:layout_gravity="center"
+                                    android:text="@string/ic_maintanance"
+                                    android:textColor="@color/color_0E0D12" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    style="@style/RobotoRegular14"
+                                    android:layout_gravity="center"
+                                    android:text="@string/maintenance"
+                                    android:textColor="@color/color_0E0D12" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_1sdp"
+                            android:background="@color/color_E6E6E64D" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/labelTrip"
+                        style="@style/RobotoMedium18"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:text="@string/trips"
+                        android:textColor="@color/color_0E0D12"
+                        app:layout_constraintStart_toStartOf="@id/start"
+                        app:layout_constraintTop_toBottomOf="@id/llOptions" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvViewAllTrips"
+                        style="@style/RobotoRegular16"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:text="@string/view_all"
+                        android:textColor="@color/color_0E5BA1"
+                        app:layout_constraintEnd_toStartOf="@+id/ivViewAllTrips"
+                        app:layout_constraintTop_toTopOf="@+id/labelTrip" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/ivViewAllTrips"
+                        style="@style/IconFont"
+                        android:text="@string/ic_right_arrow"
+                        android:textColor="@color/color_4A494D"
+                        android:textSize="@dimen/_18ssp"
+                        app:layout_constraintBottom_toBottomOf="@id/tvViewAllTrips"
+                        app:layout_constraintEnd_toEndOf="@id/end"
+                        app:layout_constraintTop_toTopOf="@+id/tvViewAllTrips" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvTrips"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="@id/end"
+                        app:layout_constraintStart_toStartOf="@id/start"
+                        app:layout_constraintTop_toBottomOf="@id/labelTrip" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/labelMaintanance"
+                        style="@style/RobotoMedium18"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:text="@string/maintenance"
+                        android:textColor="@color/color_0E0D12"
+                        app:layout_constraintStart_toStartOf="@id/start"
+                        app:layout_constraintTop_toBottomOf="@id/rvTrips" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvViewAllTripsMaintanance"
+                        style="@style/RobotoRegular16"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:text="@string/view_all"
+                        android:textColor="@color/color_0E5BA1"
+                        app:layout_constraintEnd_toStartOf="@+id/ivViewAllMaintanance"
+                        app:layout_constraintTop_toTopOf="@+id/labelMaintanance" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/ivViewAllMaintanance"
+                        style="@style/IconFont"
+                        android:text="@string/ic_right_arrow"
+                        android:textColor="@color/color_4A494D"
+                        android:textSize="@dimen/_18ssp"
+                        app:layout_constraintBottom_toBottomOf="@id/tvViewAllTripsMaintanance"
+                        app:layout_constraintEnd_toEndOf="@id/end"
+                        app:layout_constraintTop_toTopOf="@+id/tvViewAllTripsMaintanance" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvMaintanance"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="@id/end"
+                        app:layout_constraintStart_toStartOf="@id/start"
+                        app:layout_constraintTop_toBottomOf="@id/labelMaintanance" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/labelDrivers"
+                        style="@style/RobotoMedium18"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:text="@string/drivers"
+                        android:textColor="@color/color_0E0D12"
+                        app:layout_constraintStart_toStartOf="@id/start"
+                        app:layout_constraintTop_toBottomOf="@id/rvMaintanance" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvViewAllTripsDrivers"
+                        style="@style/RobotoRegular16"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:text="@string/view_all"
+                        android:textColor="@color/color_0E5BA1"
+                        app:layout_constraintEnd_toStartOf="@+id/ivViewAllDrivers"
+                        app:layout_constraintTop_toTopOf="@+id/labelDrivers" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/ivViewAllDrivers"
+                        style="@style/IconFont"
+                        android:text="@string/ic_right_arrow"
+                        android:textColor="@color/color_4A494D"
+                        android:textSize="@dimen/_18ssp"
+                        app:layout_constraintBottom_toBottomOf="@id/tvViewAllTripsDrivers"
+                        app:layout_constraintEnd_toEndOf="@id/end"
+                        app:layout_constraintTop_toTopOf="@+id/tvViewAllTripsDrivers" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvDrivers"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:orientation="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="@id/end"
+                        app:layout_constraintStart_toStartOf="@id/start"
+                        app:layout_constraintTop_toBottomOf="@id/labelDrivers" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/ivUp"
+            style="@style/IconFont"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/bg_round_blue"
+            android:gravity="center"
+            android:text="@string/ic_up_arrow"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

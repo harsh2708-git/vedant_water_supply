@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clRoot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.login.LoginActivity">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv"
+                    android:layout_width="@dimen/_200sdp"
+                    android:layout_height="@dimen/_200sdp"
+                    android:layout_marginTop="@dimen/_100sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/img_login" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelLetsSign"
+                    style="@style/MontserratMedium24"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:text="@string/let_s_sign_you_in"
+                    android:textColor="@color/color_0E0D12"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etEmail"
+                    style="@style/InputStyle"
+                    android:layout_marginStart="@dimen/_25sdp"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:layout_marginEnd="@dimen/_25sdp"
+                    android:hint="@string/enter_your_email"
+                    android:imeOptions="actionNext"
+                    android:inputType="textWebEmailAddress"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/labelLetsSign" />
+
+                <com.production.vedantwatersupply.custome.ShowHidePasswordEditText
+                    android:id="@+id/etPassword"
+                    style="@style/InputStyle"
+                    android:layout_marginHorizontal="@dimen/_25sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:hint="@string/password"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    app:drawable_hide="@drawable/img_showpassword"
+                    app:drawable_show="@drawable/img_hidepassword"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/etEmail"
+                    app:tint_color="@color/color_0E0D12" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/chkRememberMe"
+                    style="@style/CheckBoxStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:checked="true"
+                    android:minHeight="0dp"
+                    android:text="@string/remember_me"
+                    android:textColor="@color/color_4A494D"
+                    app:layout_constraintStart_toStartOf="@id/etPassword"
+                    app:layout_constraintTop_toBottomOf="@id/etPassword" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/btnLogin"
+            style="@style/BlueButton"
+            android:layout_marginEnd="@dimen/_25sdp"
+            android:layout_marginBottom="@dimen/_30sdp"
+            android:gravity="center"
+            android:paddingStart="@dimen/_40sdp"
+            android:paddingTop="@dimen/_13sdp"
+            android:paddingEnd="@dimen/_40sdp"
+            android:paddingBottom="@dimen/_15sdp"
+            android:text="@string/login"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

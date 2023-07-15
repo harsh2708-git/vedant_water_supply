@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Vedant Water Supply</string>
+
+    <string name="copyright_2023_vedant_water_supply_nall_rights_reserved">Copyright %s © Vedant Water Supply. \nAll Rights Reserved</string>
+    <string name="let_s_sign_you_in">Let\'s Sign You in</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="remember_me">Remember me</string>
+    <string name="please_enter_email_address">Please Enter Email Address</string>
+    <string name="please_enter_valid_email_address">Please Valid Enter Email Address</string>
+    <string name="please_enter_password">Please Enter Password</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dashboard_fragment">Dashboard Fragment</string>
+    <string name="hello">Hello,</string>
+    <string name="welcome">Welcome!</string>
+    <string name="total_trips">Total Trips</string>
+    <string name="total_maintenance">Total Maintenance</string>
+    <string name="total_maintenance_amount">Total Maintenance Amount</string>
+    <string name="trips">Trips</string>
+    <string name="maintenance">Maintenance</string>
+    <string name="drivers">Drivers</string>
+    <string name="view_all">View All</string>
 </resources>
