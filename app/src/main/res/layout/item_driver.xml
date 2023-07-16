@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        app:cardCornerRadius="@dimen/_5sdp"
+        app:cardElevation="@dimen/_5sdp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/_20sdp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvTripCode"
+                style="@style/RobotoMedium16"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="VWS/DRV/2023/07/0001"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/ivOptions"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/ivOptions" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/ivOptions"
+                style="@style/IconFont"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:background="@drawable/circle_f2f2f2"
+                android:gravity="center"
+                android:text="@string/ic_vertical_dot"
+                android:textColor="@color/color_4A494D"
+                android:textSize="@dimen/_24ssp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/brOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="ivOptions" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/color_DBDADB"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/brOptions" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/labelTanker"
+                style="@style/RobotoRegular12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:text="@string/tanker"
+                android:textColor="@color/color_868588"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvTruck"
+                style="@style/RobotoRegular14"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:gravity="end"
+                android:text="MH 01 PC 094567"
+                android:textColor="@color/color_4A494D"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/labelTanker"
+                app:layout_constraintTop_toTopOf="@id/labelTanker" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/labelDriver"
+                style="@style/RobotoRegular12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="@string/driver"
+                android:textColor="@color/color_868588"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTruck" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvDriver"
+                style="@style/RobotoRegular14"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:gravity="end"
+                android:text="Harsh Prajapati"
+                android:textColor="@color/color_4A494D"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/labelDriver"
+                app:layout_constraintTop_toTopOf="@id/labelDriver" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/labelAmount"
+                style="@style/RobotoRegular12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="@string/amount"
+                android:textColor="@color/color_868588"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDriver" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvAmount"
+                style="@style/RobotoRegular14"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:gravity="end"
+                android:text="5,000"
+                android:textColor="@color/color_4A494D"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/labelAmount"
+                app:layout_constraintTop_toTopOf="@id/labelAmount" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/labelPaymentDate"
+                style="@style/RobotoRegular12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="@string/payment_date"
+                android:textColor="@color/color_868588"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvAmount" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvScheduledDate"
+                style="@style/RobotoRegular14"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:gravity="end"
+                android:text="13/06/2023"
+                android:textColor="@color/color_4A494D"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/labelPaymentDate"
+                app:layout_constraintTop_toTopOf="@id/labelPaymentDate" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

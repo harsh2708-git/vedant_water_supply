@@ -22,8 +22,10 @@
                 android:overScrollMode="never">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clRoot"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:paddingBottom="@dimen/_50sdp"
                     tools:context=".ui.dashboard.DashboardFragment">
 
                     <androidx.constraintlayout.widget.Guideline
@@ -224,33 +226,6 @@
                                 android:background="@color/color_E6E6E64D" />
 
                             <androidx.appcompat.widget.LinearLayoutCompat
-                                android:id="@+id/llDrivers"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:paddingVertical="@dimen/_20sdp">
-
-                                <androidx.appcompat.widget.AppCompatTextView
-                                    style="@style/IconFont"
-                                    android:layout_gravity="center"
-                                    android:text="@string/ic_user"
-                                    android:textColor="@color/color_0E0D12" />
-
-                                <androidx.appcompat.widget.AppCompatTextView
-                                    style="@style/RobotoRegular14"
-                                    android:layout_gravity="center"
-                                    android:text="@string/drivers"
-                                    android:textColor="@color/color_0E0D12" />
-
-                            </androidx.appcompat.widget.LinearLayoutCompat>
-
-                            <View
-                                android:layout_width="@dimen/_1sdp"
-                                android:layout_height="match_parent"
-                                android:background="@color/color_E6E6E64D" />
-
-                            <androidx.appcompat.widget.LinearLayoutCompat
                                 android:id="@+id/llMaintanance"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -268,6 +243,33 @@
                                     style="@style/RobotoRegular14"
                                     android:layout_gravity="center"
                                     android:text="@string/maintenance"
+                                    android:textColor="@color/color_0E0D12" />
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            <View
+                                android:layout_width="@dimen/_1sdp"
+                                android:layout_height="match_parent"
+                                android:background="@color/color_E6E6E64D" />
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:id="@+id/llDrivers"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:paddingVertical="@dimen/_20sdp">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    style="@style/IconFont"
+                                    android:layout_gravity="center"
+                                    android:text="@string/ic_user"
+                                    android:textColor="@color/color_0E0D12" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    style="@style/RobotoRegular14"
+                                    android:layout_gravity="center"
+                                    android:text="@string/drivers"
                                     android:textColor="@color/color_0E0D12" />
 
                             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -292,7 +294,7 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvViewAllTrips"
-                        style="@style/RobotoRegular16"
+                        style="@style/RobotoRegular14"
                         android:layout_marginEnd="@dimen/_5sdp"
                         android:text="@string/view_all"
                         android:textColor="@color/color_0E5BA1"
@@ -318,6 +320,18 @@
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintEnd_toEndOf="@id/end"
                         app:layout_constraintStart_toStartOf="@id/start"
+                        app:layout_constraintTop_toBottomOf="@id/labelTrip"
+                        tools:itemCount="1"
+                        tools:listitem="@layout/item_trip" />
+
+                    <include
+                        android:id="@+id/tripNoData"
+                        layout="@layout/layout_no_data_found"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@id/end"
+                        app:layout_constraintStart_toStartOf="@id/start"
                         app:layout_constraintTop_toBottomOf="@id/labelTrip" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -331,7 +345,7 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvViewAllTripsMaintanance"
-                        style="@style/RobotoRegular16"
+                        style="@style/RobotoRegular14"
                         android:layout_marginEnd="@dimen/_5sdp"
                         android:text="@string/view_all"
                         android:textColor="@color/color_0E5BA1"
@@ -357,6 +371,18 @@
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintEnd_toEndOf="@id/end"
                         app:layout_constraintStart_toStartOf="@id/start"
+                        app:layout_constraintTop_toBottomOf="@id/labelMaintanance"
+                        tools:itemCount="1"
+                        tools:listitem="@layout/item_maintenance" />
+
+                    <include
+                        android:id="@+id/maintenanceNoData"
+                        layout="@layout/layout_no_data_found"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@id/end"
+                        app:layout_constraintStart_toStartOf="@id/start"
                         app:layout_constraintTop_toBottomOf="@id/labelMaintanance" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -370,7 +396,7 @@
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvViewAllTripsDrivers"
-                        style="@style/RobotoRegular16"
+                        style="@style/RobotoRegular14"
                         android:layout_marginEnd="@dimen/_5sdp"
                         android:text="@string/view_all"
                         android:textColor="@color/color_0E5BA1"
@@ -394,6 +420,18 @@
                         android:layout_marginTop="@dimen/_10sdp"
                         android:orientation="vertical"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="@id/end"
+                        app:layout_constraintStart_toStartOf="@id/start"
+                        app:layout_constraintTop_toBottomOf="@id/labelDrivers"
+                        tools:itemCount="1"
+                        tools:listitem="@layout/item_driver" />
+
+                    <include
+                        android:id="@+id/driverNoData"
+                        layout="@layout/layout_no_data_found"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@id/end"
                         app:layout_constraintStart_toStartOf="@id/start"
                         app:layout_constraintTop_toBottomOf="@id/labelDrivers" />

@@ -41,6 +41,10 @@
         <item name="android:textSize">@dimen/_16sdp</item>
     </style>
 
+    <style name="RobotoRegular18" parent="RobotoRegular">
+        <item name="android:textSize">@dimen/_18sdp</item>
+    </style>
+
     <style name="RobotoMedium">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -131,6 +135,16 @@
         <item name="android:textColor">@color/color_868588</item>
         <item name="android:textSize">@dimen/_24ssp</item>
         <item name="fontFamily">@font/la_solid</item>
+    </style>
+
+    <style name="MontserratSemiBold">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontFamily">@font/montserrat_semibold</item>
+    </style>
+
+    <style name="MontserratSemiBold9" parent="MontserratSemiBold">
+        <item name="android:textSize">@dimen/_9ssp</item>
     </style>
 
 </resources>
