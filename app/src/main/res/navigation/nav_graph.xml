@@ -28,4 +28,22 @@
         android:name="com.production.vedantwatersupply.ui.driver.DriverListingFragment"
         android:label="Driver Listing"
         tools:layout="@layout/fragment_driver_listing" />
+
+    <fragment
+        android:id="@+id/nav_add_trip"
+        android:name="com.production.vedantwatersupply.ui.trips.AddTripFragment"
+        android:label="@string/add_trip"
+        tools:layout="@layout/fragment_add_trip" />
+
+    <fragment
+        android:id="@+id/nav_add_maintenance"
+        android:name="com.production.vedantwatersupply.ui.maintenance.AddMaintenanceFragment"
+        android:label="@string/add_maintenance"
+        tools:layout="@layout/fragment_add_maintenance" />
+
+    <fragment
+        android:id="@+id/nav_add_driver"
+        android:name="com.production.vedantwatersupply.ui.driver.AddDriverExpenseFragment"
+        android:label="@string/add_driver_expense"
+        tools:layout="@layout/fragment_add_driver_expense" />
 </navigation>

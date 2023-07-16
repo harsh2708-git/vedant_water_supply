@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomEditText">
+        <attr name="customFont" />
+        <attr name="astrisk" />
+    </declare-styleable>
+
+    <declare-styleable name="CustomAutoCompleteTextView">
+        <attr name="customFont" />
+        <attr name="astrisk" />
+    </declare-styleable>
+    <declare-styleable name="CustomTextView">
+        <attr name="customFont" />
+        <attr name="astrisk" />
+    </declare-styleable>
+
+    <attr name="astrisk" format="boolean" />
+
+    <attr name="customFont" format="enum">
+        <enum name="light" value="1" />
+        <enum name="regular" value="2" />
+        <enum name="semibold" value="3" />
+        <enum name="bold" value="4" />
+    </attr>
+
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <!-- {@deprecated Use civ_circlebackground_color instead.} -->
+        <attr name="civ_fill_color" format="color" />
+        <attr name="civ_circle_background_color" format="color" />
+    </declare-styleable>
+
+
+    <!-- RecyclerView resources-->
+    <declare-styleable name="CustomRecyclerView">
+        <attr name="pagination" format="boolean" />
+        <attr name="loadmore_visibility" format="boolean" />
+        <attr name="gird_span" format="integer" />
+        <attr name="list_type" />
+        <attr name="list_orientation" />
+        <attr name="loadmore_type" />
+        <attr name="divider_line" format="boolean" />
+        <attr name="grid_view_spacing" format="integer" />
+        <attr name="divider_height" format="integer" />
+    </declare-styleable>
+    <attr name="loadmore_type">
+        <enum name="bottom" value="0" />
+        <enum name="top" value="1" />
+    </attr>
+
+    <attr name="list_type">
+        <enum name="list" value="0" />
+        <enum name="grid" value="1" />
+        <enum name="staggered" value="2" />
+    </attr>
+
+    <attr name="list_orientation">
+        <enum name="vertical" value="0" />
+        <enum name="horizontal" value="1" />
+    </attr>
+
+
+    <declare-styleable name="TextViewDrawableSize">
+        <attr name="compoundDrawableWidth" format="dimension" />
+        <attr name="compoundDrawableHeight" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="FieldSetView">
+        <attr name="fsv_borderColor" format="reference|color"/>
+        <attr name="fsv_borderWidth" format="dimension"/>
+        <attr name="fsv_borderRadius" format="dimension"/>
+        <attr name="fsv_borderAlpha" format="float"/>
+        <attr name="fsv_legend" format="string"/>
+        <attr name="fsv_legendIcon" format="reference"/>
+        <attr name="fsv_legendIconTint" format="reference|color"/>
+        <attr name="fsv_legendSize" format="dimension"/>
+        <attr name="fsv_legendColor" format="reference|color"/>
+        <attr name="fsv_legendFont" format="string"/>
+        <attr name="fsv_legendMarginLeft" format="dimension"/>
+        <attr name="fsv_legendMarginRight" format="dimension"/>
+        <attr name="fsv_legendPadding" format="dimension"/>
+        <attr name="fsv_legendPaddingLeft" format="dimension"/>
+        <attr name="fsv_legendPaddingRight" format="dimension"/>
+        <attr name="fsv_legendPosition" format="enum">
+            <enum name="left" value="1"/>
+            <enum name="right" value="2"/>
+            <enum name="center" value="3"/>
+        </attr>
+        <attr name="fsv_legendDirection" format="enum">
+            <enum name="ltr" value="1"/>
+            <enum name="rtl" value="2"/>
+        </attr>
+    </declare-styleable>
+
+<!--    <declare-styleable name="ShowHidePasswordEditText">-->
+<!--        <attr name="drawable_hide" format="integer" />-->
+<!--        <attr name="drawable_show" format="integer" />-->
+<!--        <attr name="tint_color" format="color" />-->
+<!--        <attr name="additionalTouchTargetSize" format="dimension" />-->
+<!--    </declare-styleable>-->
+
+    <attr name="CustomChipChoiceStyle" format="reference" />
+
+
+</resources>

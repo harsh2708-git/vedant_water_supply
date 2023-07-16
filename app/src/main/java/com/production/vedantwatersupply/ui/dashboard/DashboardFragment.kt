@@ -18,6 +18,8 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
     override fun getViewModel(): Class<DashboardViewModel> = DashboardViewModel::class.java
 
     override fun init() {
+
+        binding?.clHeader?.ivBack?.visibility = View.GONE
         setTripsAdapter()
         setMaintenanceAdpter()
         setDriverAdapter()

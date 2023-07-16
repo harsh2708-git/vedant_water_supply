@@ -61,5 +61,7 @@ dependencies {
 
     implementation 'com.airbnb.android:lottie:3.4.0'
     implementation 'androidx.multidex:multidex:2.0.1'
+    // For Numeric Edit Text
+    implementation 'org.apache.commons:commons-lang3:3.7'
 
 }

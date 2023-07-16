@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.transportermanger.util.filter.FilterItem" />
+    </data>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/txt_value"
+        style="@style/MontserratSemiBold9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_filter_bg"
+        android:gravity="center"
+        android:minWidth="@dimen/_70sdp"
+        android:minHeight="@dimen/_30sdp"
+        android:paddingStart="@dimen/_16sdp"
+        android:paddingEnd="@dimen/_16sdp"
+        android:text="@{item.displayValue}"
+        android:textColor="@drawable/selector_filter_text"
+        app:textAllCaps="true"
+        tools:text="All" />
+
+</layout>

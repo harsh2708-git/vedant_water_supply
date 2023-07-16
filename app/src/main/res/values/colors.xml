@@ -19,4 +19,9 @@
     <color name="color_E6E6E64D">#4DE6E6E6</color>
     <color name="color_dark">#0E0D12</color>
     <color name="color_D21629">#D21629</color>
+    <color name="transparent">#00000000</color>
+    <color name="body_text">#4A494D</color>
+    <color name="color_CECECF">#CECECF</color>
+    <color name="color_divider">#E8E8E8</color>
+
 </resources>

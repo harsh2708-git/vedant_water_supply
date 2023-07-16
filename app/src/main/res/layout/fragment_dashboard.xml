@@ -42,17 +42,20 @@
                         android:orientation="vertical"
                         app:layout_constraintGuide_end="@dimen/_25sdp" />
 
+                    <include
+                        android:id="@+id/clHeader"
+                        layout="@layout/layout_header" />
+
                     <androidx.cardview.widget.CardView
                         android:id="@+id/cvUserDetail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_23sdp"
-                        android:layout_marginTop="@dimen/_20sdp"
                         app:cardCornerRadius="@dimen/_5sdp"
                         app:cardElevation="@dimen/_5sdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toBottomOf="@+id/clHeader">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
@@ -188,6 +191,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_30sdp"
                         android:orientation="vertical"
+                        android:background="@color/color_F2F2F2"
                         app:layout_constraintEnd_toEndOf="@id/end"
                         app:layout_constraintStart_toStartOf="@id/start"
                         app:layout_constraintTop_toBottomOf="@id/cvUserDetail">
@@ -223,7 +227,7 @@
                             <View
                                 android:layout_width="@dimen/_1sdp"
                                 android:layout_height="match_parent"
-                                android:background="@color/color_E6E6E64D" />
+                                android:background="@color/color_FFFFFFD9" />
 
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:id="@+id/llMaintanance"
@@ -250,7 +254,7 @@
                             <View
                                 android:layout_width="@dimen/_1sdp"
                                 android:layout_height="match_parent"
-                                android:background="@color/color_E6E6E64D" />
+                                android:background="@color/color_FFFFFFD9" />
 
                             <androidx.appcompat.widget.LinearLayoutCompat
                                 android:id="@+id/llDrivers"
@@ -279,7 +283,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_1sdp"
-                            android:background="@color/color_E6E6E64D" />
+                            android:background="@color/color_FFFFFFD9" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -442,16 +446,8 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/ivUp"
-            style="@style/IconFont"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:background="@drawable/bg_round_blue"
+            style="@style/UpIconStyle"
             android:gravity="center"
-            android:text="@string/ic_up_arrow"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_14ssp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
