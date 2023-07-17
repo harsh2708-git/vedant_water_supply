@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentMaintenanceListingBinding
+import com.production.vedantwatersupply.ui.dialog.FilterDialogFragment
 import com.production.vedantwatersupply.ui.trips.TripsAdapter
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
@@ -87,7 +88,13 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         when (v?.id) {
             R.id.ivBack -> baseActivity?.onBackPressed()
             R.id.btnAdd -> navigateFragment(v, R.id.nav_add_maintenance)
-            R.id.btnFilter -> {}
+            R.id.btnFilter -> openFilterDialog()
         }
     }
+
+    private fun openFilterDialog() {
+        val filterDialog = FilterDialogFragment()
+        filterDialog.show(childFragmentManager, "Trip Filter Dialog")
+    }
+
 }

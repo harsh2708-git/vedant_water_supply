@@ -1,0 +1,13 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+
+        <layer-list>
+            <item android:drawable="@drawable/bg_textfield" />
+
+            <item android:right="@dimen/_14sdp">
+                <bitmap android:gravity="center_vertical|right" android:src="@drawable/arrow_down" android:tint="@color/color_4A494D" />
+            </item>
+        </layer-list>
+    </item>
+</selector>

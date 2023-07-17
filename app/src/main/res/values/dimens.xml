@@ -1,6 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--Login-->
+    <dimen name="login_img_lock_width">75dp</dimen>
+    <dimen name="login_img_lock_height">90dp</dimen>
+    <dimen name="login_padding_top">20dp</dimen>
+    <dimen name="login_margin_card">30dp</dimen>
+
+    <dimen name="login_margin_card_top">50dp</dimen>
+    <dimen name="login_margin_input">25dp</dimen>
+    <dimen name="login_margin_input_top">50dp</dimen>
+    <dimen name="login_margin_input_bottom">15dp</dimen>
+    <dimen name="login_btn_padding_vertical">5dp</dimen>
+    <dimen name="login_btn_padding_horizontal">20dp</dimen>
+    <dimen name="login_btn_margin">10dp</dimen>
+
+    <dimen name="signup_margin_card">20dp</dimen>
+
+    <!--Dashboard-->
+    <dimen name="dashboard_grid_margin_vertical">15dp</dimen>
+    <dimen name="dashboard_grid_padding_top">25dp</dimen>
+    <dimen name="dashboard_grid_spacing">10dp</dimen>
+    <dimen name="dashboard_item_padding">25dp</dimen>
+    <dimen name="dashboard_item_text_size">14sp</dimen>
+
+    <!--Security Gate-->
+    <dimen name="sec_gate_pin_margin">20dp</dimen>
+    <dimen name="sec_gate_card_margin">50dp</dimen>
+    <dimen name="sec_gate_card_padding_vertical">15dp</dimen>
+    <dimen name="sec_gate_card_padding_horizontal">10dp</dimen>
+    <dimen name="sec_gate_submit_padding_horizontal">30dp</dimen>
+    <dimen name="sec_gate_submit_margin_top">20dp</dimen>
+    <dimen name="sec_gate_card_in_padding">5dp</dimen>
+
+    <!--TSI Check-->
+    <dimen name="img_height">100dp</dimen>
+    <dimen name="tsi_check_imgtext_size">14sp</dimen>
+    <dimen name="tsi_check_img_padding_bottom">10dp</dimen>
+    <dimen name="tsi_check_img_padding_top">5dp</dimen>
+    <dimen name="tsi_check_img_text_margin_top">5dp</dimen>
+    <dimen name="tsi_check_button_padding">5dp</dimen>
+    <dimen name="tsi_truck_text_padding">5dp</dimen>
+    <dimen name="tsi_card_margin">10dp</dimen>
+    <dimen name="tsi_truck_detail_padding_horizontal">10dp</dimen>
+    <dimen name="tsi_truck_detail_padding_vertical">5dp</dimen>
+    <dimen name="tsi_check_textsize_question">14sp</dimen>
+    <dimen name="tsi_check_question_margin_vertical">10dp</dimen>
+    <dimen name="tsi_check_question_margin_left">-10dp</dimen>
+    <dimen name="tsi_check_arrow_margin">15dp</dimen>
+    <dimen name="tsi_check_remark_margin">4dp</dimen>
+    <dimen name="tsi_check_remark_margin_h">2dp</dimen>
+    <dimen name="tsi_check_question_no">12sp</dimen>
+    <dimen name="tsi_badge_size">40dp</dimen>
+    <dimen name="badge_maring_left">-2dp</dimen>
+
+    <!--Common-->
+    <dimen name="input_padding">5dp</dimen>
+    <dimen name="title_textsize">20sp</dimen>
+    <dimen name="button_padding_vertical">@dimen/space_15</dimen>
+    <dimen name="back_button_margin">15dp</dimen>
+    <dimen name="back_button_padding">10dp</dimen>
+    <dimen name="button_text_size">16sp</dimen>
+    <dimen name="common_text_size">18sp</dimen>
+    <dimen name="common_hint_size">14sp</dimen>
+    <dimen name="small_hint_size">12sp</dimen>
+    <dimen name="design_fab_image_size" tools:override="true">@dimen/_24sdp</dimen>
+
+    <dimen name="certificate_image_height">150dp</dimen>
+
+    <!--Setting-->
+    <dimen name="clear_data_textsize">18sp</dimen>
+
+    <dimen name="img_height_quality_certificate">250dp</dimen>
+    <dimen name="space_16">16dp</dimen>
+    <dimen name="space_60">60dp</dimen>
+    <dimen name="profile_image_size">100dp</dimen>
+    <dimen name="space_10">10dp</dimen>
+    <dimen name="space_2">2dp</dimen>
+    <dimen name="space_3">3dp</dimen>
+    <dimen name="space_4">4dp</dimen>
+    <dimen name="space_8">8dp</dimen>
+    <dimen name="space_5">5dp</dimen>
+    <dimen name="space_6">6dp</dimen>
+    <dimen name="space12">12dp</dimen>
+    <dimen name="text_14">14sp</dimen>
+    <dimen name="text_12">12sp</dimen>
+    <dimen name="space_12">12dp</dimen>
+    <dimen name="space_25">25dp</dimen>
+    <dimen name="space_24">24dp</dimen>
+    <dimen name="space_34">34dp</dimen>
+    <dimen name="signature_height">100dp</dimen>
+
+    <integer name="loading_frame_time">30</integer>
+    <dimen name="service_image_height">200dp</dimen>
+    <dimen name="lub_product_height">75dp</dimen>
+    <dimen name="oil_icon_width">30dp</dimen>
+    <dimen name="oil_icon_height">48dp</dimen>
+
+    <dimen name="product_oil_icon_width">56dp</dimen>
+    <dimen name="product_oil_icon_height">79dp</dimen>
+
+    <dimen name="program_oil_icon_width">25dp</dimen>
+    <dimen name="program_oil_icon_height">40dp</dimen>
+    <dimen name="dashboard_image_height">180dp</dimen>
+    <dimen name="dashboard_slider_height">150dp</dimen>
+    <dimen name="dashboard_slider_width">200dp</dimen>
+    <dimen name="attachment_size">@dimen/_60sdp</dimen>
+
     <bool name="is_tablet">false</bool>
+    <dimen name="margin_spinner">20dp</dimen>
+    <dimen name="quantity_item_width">80dp</dimen>
+    <dimen name="space_15">15dp</dimen>
+    <dimen name="space_20">20dp</dimen>
+
+    <!--    Print Cash sale receipt-->
+    <dimen name="title">15sp</dimen>
+    <dimen name="header">13sp</dimen>
+    <dimen name="regular">12sp</dimen>
+    <dimen name="print_width">240dp</dimen>
+    <dimen name="logo_size">95dp</dimen>
+
+    <dimen name="line">0.8dp</dimen>
+    <dimen name="tsi_truck_image_size">80dp</dimen>
+
+    <dimen name="checkout_summary_title">18sp</dimen>
+    <dimen name="checkout_summary_label">18sp</dimen>
+    <dimen name="checkout_summary_list_item">16sp</dimen>
+    <dimen name="space_72">72dp</dimen>
+    <dimen name="space_70">70dp</dimen>
+    <dimen name="space_30">30dp</dimen>
+    <dimen name="space_36">36dp</dimen>
+    <dimen name="home_menu_width">36dp</dimen>
+    <dimen name="home_menu_height">34dp</dimen>
+    <dimen name="home_screen_portal_strip_height">28dp</dimen>
+    <dimen name="buttons_space">1dp</dimen>
+<!--    ************************************************************************************************************************************* -->
     <dimen name="_0sdp">0.00dp</dimen>
     <dimen name="_0ssp">0.00sp</dimen>
     <dimen name="_100sdp">100.00dp</dimen>
@@ -680,5 +813,17 @@
     <dimen name="_99ssp">99.00sp</dimen>
     <dimen name="_9sdp">9.00dp</dimen>
     <dimen name="_9ssp">9.00sp</dimen>
+
+    <dimen name="vertical_margin">@dimen/_30sdp</dimen>
+    <dimen name="horizontal_margin">@dimen/_30sdp</dimen>
+    <dimen name="bottom_menu_icon_size">@dimen/_32sdp</dimen>
+    <integer name="bottom_menu_icon_viewport_size">32</integer>
+    <dimen name="floating_button_size">@dimen/_50sdp</dimen>
+    <dimen name="added_profile_image">@dimen/_40sdp</dimen>
+    <integer name="progress_bar_width">60</integer>
+    <integer name="progress_place_holder_width">60</integer>
+    <dimen name="progressbar_height">160.00dp</dimen>
+    <dimen name="progressbar_width">300.00dp</dimen>
+    <!--<dimen name="hi_chart_height">300.00dp</dimen>-->
 
 </resources>

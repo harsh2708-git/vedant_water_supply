@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/_35sdp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/_40sdp" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/clFilter"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_80sdp"
+            android:layout_marginBottom="@dimen/_90sdp"
+            app:cardCornerRadius="@dimen/_25sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/end"
+            app:layout_constraintStart_toStartOf="@id/start"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/_40sdp">
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toTopOf="@+id/llButtons"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/start1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_begin="@dimen/vertical_margin" />
+
+                        <androidx.constraintlayout.widget.Guideline
+                            android:id="@+id/end1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintGuide_end="@dimen/vertical_margin" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/labelDate"
+                            style="@style/RobotoRegular12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="@string/date"
+                            android:textColor="@color/color_dark"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <LinearLayout
+                            android:id="@+id/llDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_30sdp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:layout_marginEnd="@dimen/_30sdp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@+id/labelDate">
+
+                            <androidx.appcompat.widget.AppCompatEditText
+                                android:id="@+id/tvFromDate"
+                                style="@style/InputStyle"
+                                android:layout_width="0dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginTop="0dp"
+                                android:layout_marginEnd="@dimen/_5sdp"
+                                android:layout_weight="1"
+                                android:focusable="false"
+                                android:hint="@string/from_date" />
+
+                            <androidx.appcompat.widget.AppCompatEditText
+                                android:id="@+id/tvToDate"
+                                style="@style/InputStyle"
+                                android:layout_width="0dp"
+                                android:layout_marginStart="@dimen/_5sdp"
+                                android:layout_marginTop="0dp"
+                                android:layout_weight="1"
+                                android:focusable="false"
+                                android:hint="@string/to_date" />
+
+                        </LinearLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/clYear"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/llDate">
+
+                            <LinearLayout
+                                android:id="@+id/llYear"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/labelYear"
+                                    style="@style/RobotoRegular12"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:text="@string/year"
+                                    android:textColor="@color/color_dark"
+                                    app:layout_constraintStart_toStartOf="@id/start1"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/tvYear"
+                                    style="@style/StyleInputForTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_10sdp"
+                                    android:background="@drawable/bg_input_border"
+                                    android:drawableEnd="@drawable/spinner_background_only_dropdown_arrow"
+                                    android:paddingEnd="@dimen/_0ssp"
+                                    app:layout_constraintEnd_toEndOf="@id/end1"
+                                    app:layout_constraintStart_toStartOf="@id/start1"
+                                    app:layout_constraintTop_toBottomOf="@+id/labelStatus"
+                                    tools:ignore="RtlSymmetry" />
+
+                                <Spinner
+                                    android:id="@+id/spYear"
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:background="@drawable/spinner_background"
+                                    app:layout_constraintEnd_toEndOf="@id/end1"
+                                    app:layout_constraintStart_toStartOf="@id/start1"
+                                    app:layout_constraintTop_toBottomOf="@+id/tvStatus"
+                                    tools:listitem="@layout/simple_dropdown_item" />
+
+                            </LinearLayout>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/labelTanker"
+                            style="@style/RobotoRegular12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/tanker"
+                            android:textColor="@color/color_dark"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/clYear" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvTanker"
+                            style="@style/StyleInputForTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:drawableEnd="@drawable/spinner_background_only_dropdown_arrow"
+                            android:paddingEnd="@dimen/_0ssp"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelTanker"
+                            tools:ignore="RtlSymmetry" />
+
+                        <Spinner
+                            android:id="@+id/spTanker"
+                            style="@style/SpinnerStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:spinnerMode="dropdown"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelTanker" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/labelTruckNo"
+                            style="@style/RobotoRegular12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/truck_no"
+                            android:textColor="@color/color_dark"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/tvTanker" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvTruckNo"
+                            style="@style/StyleInputForTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:drawableEnd="@drawable/spinner_background_only_dropdown_arrow"
+                            android:paddingEnd="@dimen/_0ssp"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelTruckNo"
+                            tools:ignore="RtlSymmetry" />
+
+                        <Spinner
+                            android:id="@+id/spTruckNo"
+                            style="@style/SpinnerStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:spinnerMode="dropdown"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelTruckNo" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/labelPaymentMode"
+                            style="@style/RobotoRegular12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/payment_mode"
+                            android:textColor="@color/color_dark"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/tvTruckNo" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvPaymentMode"
+                            style="@style/StyleInputForTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:drawableEnd="@drawable/spinner_background_only_dropdown_arrow"
+                            android:paddingEnd="@dimen/_0ssp"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelPaymentMode"
+                            tools:ignore="RtlSymmetry" />
+
+                        <Spinner
+                            android:id="@+id/spPaymentMode"
+                            style="@style/SpinnerStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:spinnerMode="dropdown"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelPaymentMode" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/labelDriverType"
+                            style="@style/RobotoRegular12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/driver_type"
+                            android:textColor="@color/color_dark"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/tvPaymentMode" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvDriverType"
+                            style="@style/StyleInputForTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:drawableEnd="@drawable/spinner_background_only_dropdown_arrow"
+                            android:paddingEnd="@dimen/_0ssp"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelDriverType"
+                            tools:ignore="RtlSymmetry" />
+
+                        <Spinner
+                            android:id="@+id/spDriverType"
+                            style="@style/SpinnerStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:spinnerMode="dropdown"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelDriverType" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/labelDriver"
+                            style="@style/RobotoRegular12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/driver"
+                            android:textColor="@color/color_dark"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/tvDriverType" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvDriver"
+                            style="@style/StyleInputForTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:drawableEnd="@drawable/spinner_background_only_dropdown_arrow"
+                            android:paddingEnd="@dimen/_0ssp"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelDriver"
+                            tools:ignore="RtlSymmetry" />
+
+                        <Spinner
+                            android:id="@+id/spDriver"
+                            style="@style/SpinnerStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:spinnerMode="dropdown"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelDriver" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/labelFillingSite"
+                            style="@style/RobotoRegular12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/filling_site_name"
+                            android:textColor="@color/color_dark"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/tvDriver" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvFillingSite"
+                            style="@style/StyleInputForTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:drawableEnd="@drawable/spinner_background_only_dropdown_arrow"
+                            android:paddingEnd="@dimen/_0ssp"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelFillingSite"
+                            tools:ignore="RtlSymmetry" />
+
+                        <Spinner
+                            android:id="@+id/spFillingSite"
+                            style="@style/SpinnerStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:spinnerMode="dropdown"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelFillingSite" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/labelTankerType"
+                            style="@style/RobotoRegular12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/tanker_type"
+                            android:textColor="@color/color_dark"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/tvFillingSite" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvTankerType"
+                            style="@style/StyleInputForTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:drawableEnd="@drawable/spinner_background_only_dropdown_arrow"
+                            android:paddingEnd="@dimen/_0ssp"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelTankerType"
+                            tools:ignore="RtlSymmetry" />
+
+                        <Spinner
+                            android:id="@+id/spTankerType"
+                            style="@style/SpinnerStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:spinnerMode="dropdown"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelTankerType" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/labelAddedBy"
+                            style="@style/RobotoRegular12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/added_by"
+                            android:textColor="@color/color_dark"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/tvTankerType" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvAddedBy"
+                            style="@style/StyleInputForTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:drawableEnd="@drawable/spinner_background_only_dropdown_arrow"
+                            android:paddingEnd="@dimen/_0ssp"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelAddedBy"
+                            tools:ignore="RtlSymmetry" />
+
+                        <Spinner
+                            android:id="@+id/spAddedBy"
+                            style="@style/SpinnerStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:spinnerMode="dropdown"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelAddedBy" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/labelStatus"
+                            style="@style/RobotoRegular12"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/status"
+                            android:textColor="@color/color_dark"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/tvAddedBy" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvStatus"
+                            style="@style/StyleInputForTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:drawableEnd="@drawable/spinner_background_only_dropdown_arrow"
+                            android:paddingEnd="@dimen/_0ssp"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelStatus"
+                            tools:ignore="RtlSymmetry" />
+
+                        <Spinner
+                            android:id="@+id/spStatus"
+                            style="@style/SpinnerStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:spinnerMode="dropdown"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelStatus" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.core.widget.NestedScrollView>
+
+                <LinearLayout
+                    android:id="@+id/llButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/_25sdp"
+                    android:paddingTop="@dimen/_20sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:ignore="RtlSymmetry">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnApply"
+                        style="@style/BlueButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_30sdp"
+                        android:text="@string/apply" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnClear"
+                        style="@style/BlueButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/selector_btn"
+                        android:text="@string/clear" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/todo"
+            app:backgroundTint="@color/color_dark"
+            app:fabCustomSize="@dimen/_50sdp"
+            app:layout_constraintBottom_toBottomOf="@+id/clFilter"
+            app:layout_constraintEnd_toEndOf="@id/end"
+            app:srcCompat="@drawable/ic_cross"
+            app:tint="@color/white" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

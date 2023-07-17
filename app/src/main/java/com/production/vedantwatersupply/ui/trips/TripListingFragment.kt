@@ -4,6 +4,7 @@ import android.view.View
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentTripListingBinding
+import com.production.vedantwatersupply.ui.dialog.FilterDialogFragment
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.transportermanger.util.filter.FilterItem
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
@@ -75,8 +76,12 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         when (v?.id) {
             R.id.ivBack -> baseActivity?.onBackPressed()
             R.id.btnAdd -> navigateFragment(v, R.id.nav_add_trip)
-            R.id.btnFilter -> {}
+            R.id.btnFilter -> openFilterDialog()
         }
     }
 
+    private fun openFilterDialog() {
+        val filterDialog = FilterDialogFragment()
+        filterDialog.show(childFragmentManager, "Trip Filter Dialog")
+    }
 }

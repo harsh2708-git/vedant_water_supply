@@ -47,7 +47,7 @@
     <string name="payment_mode">Payment Mode</string>
     <string name="permanent_drivers">Permanent Drivers</string>
     <string name="other_driver">Other Driver</string>
-    <string name="filling_site_name">Filling Site Name</string>
+    <string name="filling_site_name">Filling Site</string>
     <string name="destination_site_name">Destination(Site) Name</string>
     <string name="customer_name">Customer Name</string>
     <string name="customer_mo_no">Customer Mobile No.</string>
@@ -66,4 +66,13 @@
     <string name="extra_payment">Extra Payment</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="apply">Apply</string>
+    <string name="clear">Clear</string>
+    <string name="todo">TODO</string>
+    <string name="from_date">From Date</string>
+    <string name="to_date">To Date</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
+    <string name="added_by">Added By</string>
+    <string name="status">Status</string>
 </resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    <dimen name="title_textsize">16sp</dimen>-->
+    <dimen name="space12">8dp</dimen>
+    <dimen name="common_text_size">15sp</dimen>
+    <dimen name="button_text_size">14.5sp</dimen>
+    <dimen name="common_hint_size">12sp</dimen>
+    <dimen name="small_hint_size">10sp</dimen>
+</resources>

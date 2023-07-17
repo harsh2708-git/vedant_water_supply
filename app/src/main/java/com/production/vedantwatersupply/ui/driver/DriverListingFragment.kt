@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentDriverListingBinding
+import com.production.vedantwatersupply.ui.dialog.FilterDialogFragment
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.transportermanger.util.filter.FilterItem
@@ -86,8 +87,13 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         when (v?.id) {
             R.id.ivBack -> baseActivity?.onBackPressed()
             R.id.btnAdd -> navigateFragment(v, R.id.nav_add_driver)
-            R.id.btnFilter -> {}
+            R.id.btnFilter -> openFilterDialog()
         }
+    }
+
+    private fun openFilterDialog() {
+        val filterDialog = FilterDialogFragment()
+        filterDialog.show(childFragmentManager, "Trip Filter Dialog")
     }
 
 }

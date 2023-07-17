@@ -22,8 +22,9 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvScreenTitle"
-            style="@style/RobotoMedium18"
+            style="@style/SpaceRanger20"
             android:layout_width="0dp"
+            android:textSize="@dimen/_26ssp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_15sdp"
             android:textColor="@color/color_0E5BA1"

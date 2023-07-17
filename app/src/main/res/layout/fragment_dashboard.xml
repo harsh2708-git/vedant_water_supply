@@ -60,7 +60,7 @@
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@color/color_0E5BA1"
+                            android:background="@drawable/bg_blue_img"
                             android:padding="@dimen/_20sdp">
 
                             <androidx.appcompat.widget.AppCompatTextView
