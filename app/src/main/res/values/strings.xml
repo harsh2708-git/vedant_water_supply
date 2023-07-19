@@ -119,4 +119,13 @@
     <string name="please_select_added_by">Please Select Added By</string>
     <string name="please_select_status">Please Select Status</string>
     <string name="no_internet_title">No Internet Connection</string>
+    <string name="bala">Bala</string>
+    <string name="somar">Somar</string>
+    <string name="mukund">Mukund</string>
+    <string name="sagar">Sagar</string>
+    <string name="wasim">Wasim</string>
+    <string name="mh_04_ds_6501">MH 04 DS 6501</string>
+    <string name="mh_04_el_0809">MH 04 EL 0809</string>
+    <string name="mh_48_t_7857">MH 48 T 7857</string>
+    <string name="mh_48_j_0158">MH 48 J 0158</string>
 </resources>

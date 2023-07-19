@@ -76,7 +76,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(), View
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btnLogin -> callLoginApi()
+            R.id.btnLogin -> /*callLoginApi()*/ navigateToMainActivity(this)
         }
     }
 
