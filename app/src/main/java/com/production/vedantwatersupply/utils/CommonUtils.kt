@@ -6,7 +6,11 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import com.production.vedantwatersupply.R
+import org.json.JSONException
+import org.json.JSONObject
+import java.util.LinkedHashMap
 
 object CommonUtils {
 
@@ -56,5 +60,26 @@ object CommonUtils {
         } catch (e: Exception) {
             0.0
         }
+    }
+
+    fun <T> toFieldStringMap(model: T): LinkedHashMap<String, Any> {
+        val param: LinkedHashMap<String, Any> = LinkedHashMap<String, Any>()
+        val gson = Gson()
+        val json = gson.toJson(model)
+        var jsonObject: JSONObject? = null
+        try {
+            jsonObject = JSONObject(json)
+            val iterator: Iterator<*> = jsonObject.keys()
+            while (iterator.hasNext()) {
+                val key = iterator.next() as String
+                val value = jsonObject[key]
+                if (value != null && value is String) {
+                    param[key] = value
+                }
+            }
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        return param
     }
 }

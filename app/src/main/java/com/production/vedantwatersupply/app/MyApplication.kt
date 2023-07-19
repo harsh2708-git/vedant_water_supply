@@ -1,5 +1,6 @@
 package com.production.vedantwatersupply.app
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDexApplication
@@ -17,9 +18,12 @@ class MyApplication : MultiDexApplication() {
         super.onCreate()
         appLifecycleObserver = AppLifecycleObserver()
         ProcessLifecycleOwner.get().lifecycle.addObserver(appLifecycleObserver!!)
+        context = this
     }
 
     companion object {
         var appLifecycleObserver: AppLifecycleObserver? = null
+        @SuppressLint("StaticFieldLeak")
+        lateinit var context: Context
     }
 }

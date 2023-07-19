@@ -118,4 +118,5 @@
     <string name="please_select_water_type">Please Select Water Type</string>
     <string name="please_select_added_by">Please Select Added By</string>
     <string name="please_select_status">Please Select Status</string>
+    <string name="no_internet_title">No Internet Connection</string>
 </resources>

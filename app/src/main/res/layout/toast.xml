@@ -3,7 +3,7 @@
     android:id="@+id/llRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_FFB805"
+    android:background="@color/color_0E5BA1"
     android:clickable="true"
     android:focusable="true"
     android:gravity="center_vertical|bottom"
@@ -22,18 +22,6 @@
         android:gravity="center"
         android:text="@string/app_name"
         android:textStyle="bold"
-        android:textColor="@color/color_0E0D12" />
-
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/fvCloseToast"
-        style="@style/IconFont"
-        android:clickable="true"
-        android:enabled="true"
-        android:focusable="true"
-        android:padding="@dimen/_5sdp"
-        android:text="@string/ic_close"
-        android:textColor="@color/color_0E0D12"
-        android:textSize="@dimen/_18ssp" />
+        android:textColor="@color/white" />
 
 </LinearLayout>

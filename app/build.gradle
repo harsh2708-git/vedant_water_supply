@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 //    id 'kotlin-android-extensions'
 //    id 'kotlin-parcelize'
+//    id 'kotlin-kapt'
 }
 
 android {
@@ -51,6 +52,7 @@ dependencies {
     implementation project(path: ':retroapi')
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.databinding:databinding-runtime:8.0.2'
+    implementation 'androidx.room:room-common:2.5.2'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
