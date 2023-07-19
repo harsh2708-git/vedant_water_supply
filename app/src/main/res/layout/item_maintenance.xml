@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cvMain"
+        android:id="@+id/cvMaintenanceMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_5sdp"
@@ -24,12 +24,12 @@
                 android:layout_height="wrap_content"
                 android:text="VWS/MAN/2023/07/0001"
                 android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="@+id/ivOptions"
+                app:layout_constraintBottom_toBottomOf="@+id/ivMaintenanceOptions"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/ivOptions" />
+                app:layout_constraintTop_toTopOf="@id/ivMaintenanceOptions" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/ivOptions"
+                android:id="@+id/ivMaintenanceOptions"
                 style="@style/IconFont"
                 android:layout_width="@dimen/_40sdp"
                 android:layout_height="@dimen/_40sdp"
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:barrierDirection="bottom"
-                app:constraint_referenced_ids="ivOptions" />
+                app:constraint_referenced_ids="ivMaintenanceOptions" />
 
             <View
                 android:id="@+id/divider"
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20sdp"
-                android:text="@string/tanker"
+                android:text="@string/tanker_no"
                 android:textColor="@color/color_868588"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider" />

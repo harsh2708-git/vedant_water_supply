@@ -13,4 +13,5 @@
     <string name="ic_location_marker">&#xf3c5;</string>
     <string name="ic_arrow_left">&#xf060;</string>
     <string name="ic_calendar">&#xf133;</string>
+    <string name="ic_delete">&#xf2ed;</string>
 </resources>

@@ -1,20 +1,25 @@
 package com.production.vedantwatersupply.ui.driver
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentDriverListingBinding
+import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
+import com.production.vedantwatersupply.listener.RecyclerViewClickListener
 import com.production.vedantwatersupply.ui.dialog.FilterDialogFragment
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.transportermanger.util.filter.FilterItem
 import com.transportermanger.util.filter.IFilterItem
 
-class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverViewModel>(), View.OnClickListener {
+class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverViewModel>(), View.OnClickListener, RecyclerViewClickListener {
 
     private var monthFilterAdapter: FilterListAdapter? = null
     private var monthList = ArrayList<FilterItem>()
@@ -79,7 +84,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     }
 
     private fun setDriverAdapter() {
-        val driverAdapter = DriverAdapter(requireContext())
+        val driverAdapter = DriverAdapter(requireContext(), this)
         binding?.rvDrivers?.adapter = driverAdapter
     }
 
@@ -94,6 +99,33 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private fun openFilterDialog() {
         val filterDialog = FilterDialogFragment()
         filterDialog.show(childFragmentManager, "Trip Filter Dialog")
+    }
+
+    override fun onClick(view: View?, position: Int) {
+        when (view?.id) {
+            R.id.cvDriverMain -> navigateFragment(view, R.id.nav_driver_detail)
+            R.id.ivDriverOptions -> showOptionMenu(view)
+        }
+    }
+
+    private fun showOptionMenu(view: View) {
+        val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val vieww = inflater.inflate(R.layout.layout_options, null)
+        val popupWindow = PopupWindow(vieww, requireContext().resources.getDimensionPixelSize(R.dimen._250sdp), LinearLayout.LayoutParams.WRAP_CONTENT, true)
+        val binding: LayoutOptionsBinding = LayoutOptionsBinding.bind(vieww)
+        popupWindow.showAsDropDown(view)
+
+        binding.llCancel.visibility = View.GONE
+        binding.tvEdit.text = getString(R.string.edit_driver_expense)
+        binding.tvDelete.text = getString(R.string.delete_driver_expense)
+
+        binding.llEdit.setOnClickListener {
+            popupWindow.dismiss()
+        }
+
+        binding.llDelete.setOnClickListener {
+            popupWindow.dismiss()
+        }
     }
 
 }

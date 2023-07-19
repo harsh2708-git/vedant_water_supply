@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.trips.TripDetailFragment">
+
+        <include
+            android:id="@+id/clHeader"
+            layout="@layout/layout_header" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clHeader">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clMain"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/start"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="@dimen/_25sdp" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/end"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_end="@dimen/_25sdp" />
+
+                <include
+                    android:id="@+id/clScreenTitle"
+                    layout="@layout/layout_screen_title" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvTripCode"
+                    style="@style/RobotoMedium16"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:text="VWS/DRV/2023/07/0001"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="@+id/ivOptions"
+                    app:layout_constraintEnd_toStartOf="@id/ivOptions"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toTopOf="@id/ivOptions" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/ivOptions"
+                    style="@style/IconFont"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:background="@drawable/circle_f2f2f2"
+                    android:gravity="center"
+                    android:text="@string/ic_vertical_dot"
+                    android:textColor="@color/color_4A494D"
+                    android:textSize="@dimen/_24ssp"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintTop_toBottomOf="@+id/clScreenTitle" />
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/brOptions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="ivOptions" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clAddedByDate"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_50sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:background="@color/color_F2F2F2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/brOptions">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_perform_on"
+                        style="@style/RobotoRegular12"
+                        android:layout_width="0dp"
+                        android:layout_marginVertical="@dimen/_13sdp"
+                        android:layout_marginStart="@dimen/_25sdp"
+                        android:layout_marginEnd="@dimen/_25sdp"
+                        android:text="14/06/2023"
+                        android:textColor="@color/body_text"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelDriverDetail"
+                    style="@style/RobotoMedium14"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:text="@string/driver_detail"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@id/clAddedByDate" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelDriverName"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:text="@string/driver_name"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@id/labelDriverDetail" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvDriverName"
+                    style="@style/MontserratSemiBold14"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/bg_white_round_corner_border_15"
+                    android:gravity="center"
+                    android:paddingVertical="@dimen/_7sdp"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingEnd="@dimen/_16sdp"
+                    android:text="Harsh Prajapati"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@+id/labelDriverName"
+                    app:textAllCaps="true" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelDriverType"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:text="@string/driver_type"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toTopOf="@+id/tvDriverType"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvDriverType"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvDriverType"
+                    style="@style/RobotoRegular14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:text="Own Tanker"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintEnd_toEndOf="@+id/end"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    app:layout_constraintStart_toEndOf="@id/labelDriverType"
+                    app:layout_constraintTop_toBottomOf="@id/tvDriverName" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelDriverPaymentDetail"
+                    style="@style/RobotoMedium14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:text="@string/driver_payment_detail"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDriverType" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelPaidAmount"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:text="@string/paid_amount"
+                    app:layout_constraintEnd_toStartOf="@+id/labelPaymentMode"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@id/labelDriverPaymentDetail" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvPaidAmount"
+                    style="@style/RobotoRegular14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:text="20,000.00"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintEnd_toEndOf="@+id/labelPaidAmount"
+                    app:layout_constraintStart_toStartOf="@id/labelPaidAmount"
+                    app:layout_constraintTop_toBottomOf="@id/labelPaidAmount" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelPaymentMode"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/payment_mode"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintStart_toEndOf="@id/labelPaidAmount"
+                    app:layout_constraintTop_toTopOf="@+id/labelPaidAmount" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvPaymentMode"
+                    style="@style/RobotoRegular14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:text="Cheque"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintEnd_toEndOf="@+id/labelPaymentMode"
+                    app:layout_constraintStart_toStartOf="@id/labelPaymentMode"
+                    app:layout_constraintTop_toBottomOf="@id/labelPaymentMode" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelExtraPayment"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:text="@string/extra_payment"
+                    app:layout_constraintEnd_toStartOf="@+id/labelExtraPaidAmount"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@id/tvPaymentMode" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvExtraPayment"
+                    style="@style/RobotoRegular14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:text="Yes"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintEnd_toEndOf="@+id/labelExtraPayment"
+                    app:layout_constraintStart_toStartOf="@id/labelExtraPayment"
+                    app:layout_constraintTop_toBottomOf="@id/labelExtraPayment" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelExtraPaidAmount"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/extra_paid_amount"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintStart_toEndOf="@id/labelExtraPayment"
+                    app:layout_constraintTop_toTopOf="@+id/labelExtraPayment" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvExtraPaidAmount"
+                    style="@style/RobotoRegular14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:text="1000"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintEnd_toEndOf="@+id/labelExtraPaidAmount"
+                    app:layout_constraintStart_toStartOf="@id/labelExtraPaidAmount"
+                    app:layout_constraintTop_toBottomOf="@id/labelExtraPaidAmount" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelDescription"
+                    style="@style/RobotoMedium14"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:text="@string/description"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@id/tvExtraPaidAmount" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvDescription"
+                    style="@style/RobotoRegular14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:text="Harsh Prajapati Harsh PrajapatiHarsh PrajapatiHarsh Prajapati "
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintEnd_toEndOf="@+id/end"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@id/labelDescription" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/ivUp"
+            style="@style/UpIconStyle"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

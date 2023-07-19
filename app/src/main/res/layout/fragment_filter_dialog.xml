@@ -55,14 +55,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            app:layout_constraintGuide_begin="@dimen/vertical_margin" />
+                            app:layout_constraintGuide_begin="@dimen/_25sdp" />
 
                         <androidx.constraintlayout.widget.Guideline
                             android:id="@+id/end1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            app:layout_constraintGuide_end="@dimen/vertical_margin" />
+                            app:layout_constraintGuide_end="@dimen/_25sdp" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelDate"

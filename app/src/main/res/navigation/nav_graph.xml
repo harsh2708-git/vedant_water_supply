@@ -46,4 +46,22 @@
         android:name="com.production.vedantwatersupply.ui.driver.AddDriverExpenseFragment"
         android:label="@string/add_driver_expense"
         tools:layout="@layout/fragment_add_driver_expense" />
+
+    <fragment
+        android:id="@+id/nav_trip_detail"
+        android:name="com.production.vedantwatersupply.ui.trips.TripDetailFragment"
+        android:label="@string/trip_detail"
+        tools:layout="@layout/fragment_trip_detail" />
+
+    <fragment
+        android:id="@+id/nav_maintenance_detail"
+        android:name="com.production.vedantwatersupply.ui.maintenance.MaintenanceDetailFragment"
+        android:label="@string/maintenance_detail"
+        tools:layout="@layout/fragment_maintenance_detail" />
+
+    <fragment
+        android:id="@+id/nav_driver_detail"
+        android:name="com.production.vedantwatersupply.ui.driver.DriverDetailFragment"
+        android:label="@string/driver_detail"
+        tools:layout="@layout/fragment_driver_detail" />
 </navigation>
