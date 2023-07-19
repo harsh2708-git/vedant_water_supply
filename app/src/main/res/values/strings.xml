@@ -102,4 +102,5 @@
     <string name="delete_driver_expense">Delete Driver Expense</string>
     <string name="edit_driver_expense">Edit Driver Expense</string>
     <string name="tanker_filling_site">Tanker Filling Site</string>
+    <string name="no_internet_title">No Internet Connection</string>
 </resources>
