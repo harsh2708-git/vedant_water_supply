@@ -102,4 +102,20 @@
     <string name="delete_driver_expense">Delete Driver Expense</string>
     <string name="edit_driver_expense">Edit Driver Expense</string>
     <string name="tanker_filling_site">Tanker Filling Site</string>
+    <string name="please_select_year">Please Select Year</string>
+    <string name="please_select_tanker_type">Please Select Tanker Type</string>
+    <string name="own_tanker">Own Tanker</string>
+    <string name="please_select_tanker_no">Please Select Tanker No.</string>
+    <string name="please_select_payment_mode">Please Select Payment Mode</string>
+    <string name="please_select_driver_type">Please Select Driver Type</string>
+    <string name="permanante">Permanante</string>
+    <string name="other_drivers">Other Drivers</string>
+    <string name="please_select_driver">Please Select Driver</string>
+    <string name="please_select_filling_site">Please Select Filling Site</string>
+    <string name="cidco_water">Cidco Water</string>
+    <string name="midc_water">MIDC Water</string>
+    <string name="borewell_water">Borewell Water</string>
+    <string name="please_select_water_type">Please Select Water Type</string>
+    <string name="please_select_added_by">Please Select Added By</string>
+    <string name="please_select_status">Please Select Status</string>
 </resources>
