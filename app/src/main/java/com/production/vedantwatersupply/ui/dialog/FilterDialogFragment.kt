@@ -1,17 +1,18 @@
 package com.production.vedantwatersupply.ui.dialog
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseDialogFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentFilterDialogBinding
+import com.production.vedantwatersupply.utils.CommonUtils
+import com.production.vedantwatersupply.utils.calendar.CaldroidListener
 import com.transportermanger.util.filter.FilterItem
+import java.util.Date
 
 class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
 
@@ -49,6 +50,12 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private var statusId = ""
     private var selectedStatus = ""
 
+    private var fromDate = ""
+    private var toDate = ""
+
+    private var displayFromDate: String? = null
+    private var displayToDate: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, R.style.DialogTheme)
@@ -79,6 +86,8 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         binding?.tvWaterType?.setOnClickListener(this)
         binding?.tvAddedBy?.setOnClickListener(this)
         binding?.tvStatus?.setOnClickListener(this)
+        binding?.tvFromDate?.setOnClickListener(this)
+        binding?.tvToDate?.setOnClickListener(this)
     }
 
     private fun init() {
@@ -93,6 +102,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         setAddedBySpinner()
         setStatusSpinner()
     }
+
     private fun setYearSpinner() {
         if (yearList.isEmpty()) {
             yearList.add(0, FilterItem("", getString(R.string.please_select_year)))
@@ -122,6 +132,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
     }
+
     private fun setTankerTypeSpinner() {
         val tankerTypeList = ArrayList<FilterItem>()
 
@@ -152,6 +163,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
     }
+
     private fun setTankerNoSpinner() {
 
         if (tankerNoList.isEmpty()) {
@@ -181,6 +193,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
     }
+
     private fun setPaymentModeSpinner() {
 
         if (paymentModeList.isEmpty()) {
@@ -210,6 +223,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
     }
+
     private fun setDriverTypeSpinner() {
         val driverTypeList = ArrayList<FilterItem>()
         if (driverTypeList.isEmpty()) {
@@ -239,6 +253,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
     }
+
     private fun setDriverSpinner() {
 
         if (driverList.isEmpty()) {
@@ -268,6 +283,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
     }
+
     private fun setFillingSiteSpinner() {
         val fillingSiteList = ArrayList<FilterItem>()
 
@@ -299,6 +315,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
     }
+
     private fun setWaterTypeSpinner() {
 
         if (waterTypeList.isEmpty()) {
@@ -328,6 +345,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
     }
+
     private fun setAddedBySpinner() {
 
         if (addedByList.isEmpty()) {
@@ -357,6 +375,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
     }
+
     private fun setStatusSpinner() {
 
         val statusList = ArrayList<FilterItem>()
@@ -389,7 +408,45 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
+        var selectedDate: Date? = null
         when (v?.id) {
+
+            R.id.tvFromDate -> {
+                selectedDate = CommonUtils.getDateFromDisplay(fromDate)
+
+                baseActivity?.setNormalCalender(
+                    object : CaldroidListener() {
+                        override fun onSelectDate(date1: Date?, view: View?) {
+                            binding?.tvFromDate?.setText(date1.toString())
+                            selectedDate = date1
+                            fromDate = CommonUtils.getFormattedDateFromV2(date1).toString()
+                            displayFromDate = CommonUtils.getFormattedDateFrom(date1)
+                            binding?.tvFromDate?.setText(displayFromDate)
+                        }
+                    },
+                    selectedDate, null,
+                    if (CommonUtils.isEmpty(binding?.tvToDate?.text.toString())) Date() else CommonUtils.getDateFromDisplay(binding?.tvToDate?.text.toString())
+                )
+            }
+
+            R.id.tvToDate -> {
+
+                selectedDate = CommonUtils.getDateFromDisplay(toDate)
+                baseActivity?.setNormalCalender(
+                    object : CaldroidListener() {
+                        override fun onSelectDate(date1: Date?, view: View?) {
+                            binding?.tvToDate?.setText(date1.toString())
+                            selectedDate = date1
+                            toDate = CommonUtils.getFormattedDateFromV2(date1).toString()
+                            displayToDate = CommonUtils.getFormattedDateFrom(date1)
+                            binding?.tvToDate?.setText(displayToDate)
+                        }
+                    },
+                    selectedDate, CommonUtils.getDateFromDisplay(binding?.tvFromDate?.text.toString()), Date()
+                )
+
+            }
+
             R.id.btnClose -> dismiss()
 
             R.id.btnApply -> {

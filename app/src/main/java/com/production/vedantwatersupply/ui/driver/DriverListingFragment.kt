@@ -13,6 +13,7 @@ import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentDriverListingBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
+import com.production.vedantwatersupply.ui.dialog.DriverFilterDialogFragment
 import com.production.vedantwatersupply.ui.dialog.FilterDialogFragment
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
@@ -97,7 +98,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     }
 
     private fun openFilterDialog() {
-        val filterDialog = FilterDialogFragment()
+        val filterDialog = DriverFilterDialogFragment()
         filterDialog.show(childFragmentManager, "Trip Filter Dialog")
     }
 

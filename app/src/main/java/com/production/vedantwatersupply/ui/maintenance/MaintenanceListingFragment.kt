@@ -14,6 +14,7 @@ import com.production.vedantwatersupply.databinding.FragmentMaintenanceListingBi
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
 import com.production.vedantwatersupply.ui.dialog.FilterDialogFragment
+import com.production.vedantwatersupply.ui.dialog.MaintenanceFilterDialogFragment
 import com.production.vedantwatersupply.ui.trips.TripsAdapter
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
@@ -98,7 +99,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
     }
 
     private fun openFilterDialog() {
-        val filterDialog = FilterDialogFragment()
+        val filterDialog = MaintenanceFilterDialogFragment()
         filterDialog.show(childFragmentManager, "Trip Filter Dialog")
     }
 

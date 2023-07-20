@@ -1,6 +1,7 @@
 package com.production.vedantwatersupply.utils
 
 import android.content.Context
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
@@ -10,9 +11,14 @@ import com.google.gson.Gson
 import com.production.vedantwatersupply.R
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.LinkedHashMap
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 object CommonUtils {
+
+    const val DISPLAY_DATE_FORMAT = "dd/MM/yyyy" // 02/12/1989
+    const val SERVER_DATE_FORMAT_2 = "yyyy/MM/dd"
 
     fun showToast(context: Context?, message: String?, showNativeToast: Boolean = false) {
         if (showNativeToast) {
@@ -82,4 +88,31 @@ object CommonUtils {
         }
         return param
     }
+
+    fun getDateFromDisplay(displayDateStr: String?): Date? {
+        return try {
+            SimpleDateFormat(CommonUtils.DISPLAY_DATE_FORMAT, Locale.ENGLISH).parse(displayDateStr)
+        } catch (ex: java.lang.Exception) {
+            null
+        }
+    }
+
+    fun getFormattedDateFromV2(calendar: Date?): String? {
+        val format = SimpleDateFormat(CommonUtils.SERVER_DATE_FORMAT_2, Locale.ENGLISH)
+        return format.format(calendar)
+    }
+
+    fun getFormattedDateFrom(calendar: Date?): String? {
+        val format = SimpleDateFormat(DISPLAY_DATE_FORMAT, Locale.ENGLISH)
+        return format.format(calendar)
+    }
+
+    fun isEmpty(textView: TextView): Boolean {
+        return isEmpty(textView.text.toString().trim { it <= ' ' })
+    }
+
+    fun isEmpty(text: String?): Boolean {
+        return text == null || TextUtils.isEmpty(text.trim { it <= ' ' })
+    }
+
 }

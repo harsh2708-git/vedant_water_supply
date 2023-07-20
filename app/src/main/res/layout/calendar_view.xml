@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <com.production.vedantwatersupply.custome.CustomTextView
+        android:id="@+id/txtDone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_0E5BA1"
+        android:gravity="center_vertical|center_horizontal"
+        android:padding="@dimen/_8sdp"
+        android:text="@string/calendar"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_16ssp" />
+
+    <LinearLayout
+        android:id="@+id/calendar_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_light_gry"
+        android:gravity="center_vertical">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/calendar_prev_year"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/transparent"
+            android:src="@drawable/left_double_h" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/calendar_left_arrow"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/transparent"
+            android:src="@drawable/left_arrow_s_5a" />
+
+        <com.production.vedantwatersupply.custome.CustomTextView
+            android:id="@+id/calendar_month_year_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="@color/colorBlackText"
+            android:textIsSelectable="true"
+            android:textSize="@dimen/common_hint_size" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/calendar_right_arrow"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/transparent"
+            android:src="@drawable/right_arrow_s_5a" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/calendar_next_year"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/transparent"
+            android:src="@drawable/right_double_h" />
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/weekday_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginRight="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:numColumns="7"
+        android:stretchMode="columnWidth" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginRight="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:background="@color/colorPrimary" />
+
+    <com.production.vedantwatersupply.utils.infiniteviewpager.InfiniteViewPager
+        android:id="@+id/months_infinite_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_16sdp"
+        android:layout_marginRight="@dimen/_16sdp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TimePicker
+            android:id="@+id/tpTime"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:timePickerMode="spinner" />
+
+        <LinearLayout
+            android:id="@+id/llButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <com.production.vedantwatersupply.custome.CustomTextView
+                android:id="@+id/btn_save"
+                style="@style/BlueButton"
+                android:layout_width="0dp"
+                android:layout_margin="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_btn"
+                android:text="@android:string/ok"
+                android:textSize="@dimen/common_text_size" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
