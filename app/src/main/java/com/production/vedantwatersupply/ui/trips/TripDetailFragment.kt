@@ -16,7 +16,6 @@ import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 
 class TripDetailFragment : BaseFragment<FragmentTripDetailBinding, TripViewModel>(), View.OnClickListener {
 
-
     override val layoutId: Int
         get() = R.layout.fragment_trip_detail
 

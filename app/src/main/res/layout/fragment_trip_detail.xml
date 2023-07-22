@@ -258,6 +258,29 @@
                     app:layout_constraintTop_toBottomOf="@id/labelPaymentMode" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelFuelFilledBy"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fuel_filled_by"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintStart_toEndOf="@id/start"
+                   app:layout_constraintTop_toBottomOf="@+id/tvPaymentMode" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFuelFilledBy"
+                    style="@style/RobotoRegular14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:text="By Ajit"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintEnd_toEndOf="@+id/labelFuelFilledBy"
+                    app:layout_constraintStart_toStartOf="@id/labelFuelFilledBy"
+                    app:layout_constraintTop_toBottomOf="@id/labelFuelFilledBy" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelDriverDetail"
                     style="@style/RobotoMedium12"
                     android:layout_width="0dp"
@@ -266,7 +289,7 @@
                     android:text="@string/driver_detail"
                     android:textColor="@color/color_dark"
                     app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@+id/tvPaymentMode" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvFuelFilledBy" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelDriverType"
@@ -315,13 +338,36 @@
                     app:layout_constraintTop_toBottomOf="@id/labelDriverName" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelDriverMoNo"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fuel_filled_by"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintStart_toEndOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDriverName" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvDriverMoNo"
+                    style="@style/RobotoRegular14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:text="1234567890"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintEnd_toEndOf="@+id/labelDriverMoNo"
+                    app:layout_constraintStart_toStartOf="@id/labelDriverMoNo"
+                    app:layout_constraintTop_toBottomOf="@id/labelDriverMoNo" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelSiteDetail"
                     style="@style/RobotoMedium14"
                     android:layout_marginTop="@dimen/_30sdp"
                     android:text="@string/site_detail"
                     android:textColor="@color/color_dark"
                     app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@id/tvDriverName" />
+                    app:layout_constraintTop_toBottomOf="@id/tvDriverMoNo" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/ivSource"
