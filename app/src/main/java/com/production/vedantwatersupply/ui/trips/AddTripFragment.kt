@@ -60,10 +60,10 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         binding?.clDriverRadio?.rgCustom?.setOnCheckedChangeListener { group, checkedId ->
             if (checkedId == binding?.clRadio?.rb1?.id) {
                 binding?.grpDriverSpinner?.visibility = View.VISIBLE
-                binding?.etDriverName?.visibility = View.GONE
+                binding?.grpDriverNameMoNo?.visibility = View.GONE
             } else {
                 binding?.grpDriverSpinner?.visibility = View.GONE
-                binding?.etDriverName?.visibility = View.VISIBLE
+                binding?.grpDriverNameMoNo?.visibility = View.VISIBLE
             }
         }
         binding?.clHeader?.ivBack?.setOnClickListener(this)

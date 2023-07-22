@@ -137,4 +137,5 @@
     <string name="submit">Submit</string>
     <string name="logout">Logout</string>
     <string name="confirmation_logout">Are you sure you want to logout?</string>
+    <string name="driver_mo_no">Driver Mo No.</string>
 </resources>

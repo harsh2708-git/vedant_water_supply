@@ -204,7 +204,7 @@
                     app:layout_constraintStart_toStartOf="@id/start"
                     app:layout_constraintTop_toBottomOf="@id/tvPaymentMode" />
 
-                <com.production.vedantwatersupply.custome.CustomTextView
+               <!-- <com.production.vedantwatersupply.custome.CustomTextView
                     android:id="@+id/labelAddingBy"
                     style="@style/RobotoRegular12"
                     android:layout_width="0dp"
@@ -225,7 +225,7 @@
                     android:inputType="textPersonName"
                     app:layout_constraintEnd_toEndOf="@id/end"
                     app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@id/labelAddingBy" />
+                    app:layout_constraintTop_toBottomOf="@id/labelAddingBy" />-->
 
                 <com.production.vedantwatersupply.custome.CustomTextView
                     android:id="@+id/labelDescription"
@@ -238,7 +238,7 @@
                     app:astrisk="false"
                     app:layout_constraintEnd_toEndOf="@id/end"
                     app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@id/etAddingType" />
+                    app:layout_constraintTop_toBottomOf="@id/tvPaymentMode" />
 
                 <com.production.vedantwatersupply.custome.CustomEditText
                     android:id="@+id/etDescription"

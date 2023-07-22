@@ -298,10 +298,40 @@
                     android:layout_width="0dp"
                     android:imeOptions="actionNext"
                     android:inputType="textPersonName"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@id/end"
                     app:layout_constraintStart_toStartOf="@id/start"
                     app:layout_constraintTop_toBottomOf="@id/spDriverName" />
+
+                <com.production.vedantwatersupply.custome.CustomTextView
+                    android:id="@+id/labelDriverMobileNo"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:text="@string/driver_mo_no"
+                    android:textColor="@color/color_868588"
+                    app:astrisk="false"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@id/etDriverName" />
+
+                <com.production.vedantwatersupply.custome.CustomEditText
+                    android:id="@+id/etDriverMobileNo"
+                    style="@style/StyleInputForTextView"
+                    android:layout_width="0dp"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="10"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@id/labelDriverMobileNo" />
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/grpDriverNameMoNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:constraint_referenced_ids="etDriverName,labelDriverMobileNo,etDriverMobileNo" />
 
                 <com.production.vedantwatersupply.custome.CustomTextView
                     android:id="@+id/labelFillingSiteName"
@@ -314,7 +344,7 @@
                     app:astrisk="true"
                     app:layout_constraintEnd_toEndOf="@id/end"
                     app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@id/etDriverName" />
+                    app:layout_constraintTop_toBottomOf="@id/etDriverMobileNo" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvFillingSiteName"
@@ -432,28 +462,28 @@
                     app:layout_constraintStart_toStartOf="@id/start"
                     app:layout_constraintTop_toBottomOf="@id/labelTankerType" />
 
-                <com.production.vedantwatersupply.custome.CustomTextView
-                    android:id="@+id/labelAddingBy"
-                    style="@style/RobotoRegular12"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:text="@string/adding_by"
-                    android:textColor="@color/color_868588"
-                    app:astrisk="true"
-                    app:layout_constraintEnd_toEndOf="@id/end"
-                    app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@id/etTankerType" />
+                <!-- <com.production.vedantwatersupply.custome.CustomTextView
+                     android:id="@+id/labelAddingBy"
+                     style="@style/RobotoRegular12"
+                     android:layout_width="0dp"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="@dimen/_20sdp"
+                     android:text="@string/adding_by"
+                     android:textColor="@color/color_868588"
+                     app:astrisk="true"
+                     app:layout_constraintEnd_toEndOf="@id/end"
+                     app:layout_constraintStart_toStartOf="@id/start"
+                     app:layout_constraintTop_toBottomOf="@id/etTankerType" />
 
-                <com.production.vedantwatersupply.custome.CustomEditText
-                    android:id="@+id/etAddingType"
-                    style="@style/StyleInputForTextView"
-                    android:layout_width="0dp"
-                    android:imeOptions="actionNext"
-                    android:inputType="textPersonName"
-                    app:layout_constraintEnd_toEndOf="@id/end"
-                    app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@id/labelAddingBy" />
+                 <com.production.vedantwatersupply.custome.CustomEditText
+                     android:id="@+id/etAddingType"
+                     style="@style/StyleInputForTextView"
+                     android:layout_width="0dp"
+                     android:imeOptions="actionNext"
+                     android:inputType="textPersonName"
+                     app:layout_constraintEnd_toEndOf="@id/end"
+                     app:layout_constraintStart_toStartOf="@id/start"
+                     app:layout_constraintTop_toBottomOf="@id/labelAddingBy" />-->
 
                 <com.production.vedantwatersupply.custome.CustomTextView
                     android:id="@+id/labelDescription"
@@ -466,7 +496,7 @@
                     app:astrisk="false"
                     app:layout_constraintEnd_toEndOf="@id/end"
                     app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@id/etAddingType" />
+                    app:layout_constraintTop_toBottomOf="@id/etTankerType" />
 
                 <com.production.vedantwatersupply.custome.CustomEditText
                     android:id="@+id/etDescription"
