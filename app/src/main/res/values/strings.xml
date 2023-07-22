@@ -129,4 +129,12 @@
     <string name="mh_48_t_7857">MH 48 T 7857</string>
     <string name="mh_48_j_0158">MH 48 J 0158</string>
     <string name="calendar">Calendar</string>
+    <string name="fuel_filled_by">Fuel Filled By</string>
+    <string name="please_select_fuel_filled_by">Please Select Fuel Filled By</string>
+    <string name="by_ajit">By Ajit</string>
+    <string name="by_nitish">By Nitish</string>
+    <string name="by_bussiness_card">By Bussiness Card</string>
+    <string name="submit">Submit</string>
+    <string name="logout">Logout</string>
+    <string name="confirmation_logout">Are you sure you want to logout?</string>
 </resources>

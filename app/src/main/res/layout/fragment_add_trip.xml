@@ -205,6 +205,43 @@
                     app:layout_constraintTop_toBottomOf="@id/tvPaymentMode" />
 
                 <com.production.vedantwatersupply.custome.CustomTextView
+                    android:id="@+id/labelFuelFilledBy"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:gravity="center_vertical"
+                    android:text="@string/fuel_filled_by"
+                    android:textColor="@color/color_868588"
+                    app:astrisk="true"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@id/tvPaymentMode" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFuelFilledBy"
+                    style="@style/StyleInputForTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:drawableEnd="@drawable/spinner_background_only_dropdown_arrow"
+                    android:paddingEnd="@dimen/_0ssp"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@id/labelFuelFilledBy"
+                    tools:ignore="RtlSymmetry" />
+
+                <Spinner
+                    android:id="@+id/spFuelFilledBy"
+                    style="@style/SpinnerStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:spinnerMode="dropdown"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@id/tvFuelFilledBy" />
+
+                <com.production.vedantwatersupply.custome.CustomTextView
                     android:id="@+id/labelDriverName"
                     style="@style/RobotoRegular12"
                     android:layout_width="0dp"
@@ -215,7 +252,7 @@
                     app:astrisk="true"
                     app:layout_constraintEnd_toEndOf="@id/end"
                     app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@id/spPaymentMode" />
+                    app:layout_constraintTop_toBottomOf="@id/tvFuelFilledBy" />
 
                 <include
                     android:id="@+id/clDriverRadio"

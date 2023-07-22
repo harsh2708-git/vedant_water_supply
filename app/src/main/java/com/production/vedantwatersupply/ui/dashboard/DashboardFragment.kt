@@ -1,6 +1,7 @@
 package com.production.vedantwatersupply.ui.dashboard
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +12,14 @@ import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentDashboardBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
+import com.production.vedantwatersupply.ui.dialog.AlertDialogFragment
 import com.production.vedantwatersupply.ui.driver.DriverAdapter
 import com.production.vedantwatersupply.ui.login.LoginActivity
 import com.production.vedantwatersupply.ui.maintenance.MaintenanceAdapter
 import com.production.vedantwatersupply.ui.trips.TripsAdapter
+import com.production.vedantwatersupply.utils.CommonUtils
+import com.production.vedantwatersupply.utils.SharedPreferenceUtil
+import com.production.vedantwatersupply.utils.UserUtils
 
 class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(), View.OnClickListener, RecyclerViewClickListener {
 
@@ -64,7 +69,20 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.fabLogout -> baseActivity?.navigateActivity(Intent(requireContext(), LoginActivity::class.java))
+            R.id.fabLogout -> {
+                CommonUtils.showAlert(childFragmentManager,R.drawable.ic_data_not_found
+                    , getString(R.string.logout), getString(R.string.confirmation_logout), getString(R.string.logout), getString(R.string.cancel), true,object: AlertDialogFragment.IAlertDialogFragment{
+                        override fun onPositiveButtonClicked() {
+                            UserUtils.resetUserData(requireContext())
+                            SharedPreferenceUtil.clearData(requireContext())
+                            baseActivity?.navigateActivity(Intent(requireContext(), LoginActivity::class.java))
+                            baseActivity?.finishAffinity()
+                        }
+
+                        override fun onNegativeButtonClicked() {}
+                    })
+
+            }
 
             R.id.llTrip,
             R.id.tvViewAllTrips,

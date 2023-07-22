@@ -7,8 +7,10 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import com.google.gson.Gson
 import com.production.vedantwatersupply.R
+import com.production.vedantwatersupply.ui.dialog.AlertDialogFragment
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -56,7 +58,7 @@ object CommonUtils {
      * @param doubleString number string
      * @return respective no. 0.0 if string is not a valid number.
      */
-     fun getNumeric(doubleString: String): Double {
+    fun getNumeric(doubleString: String): Double {
         var doubleString = doubleString
         return try {
             if (doubleString.contains(",")) {
@@ -113,6 +115,14 @@ object CommonUtils {
 
     fun isEmpty(text: String?): Boolean {
         return text == null || TextUtils.isEmpty(text.trim { it <= ' ' })
+    }
+
+    fun showAlert(
+        fragManager: FragmentManager?, ScreenIcon: Int, title: String?, message: String?, positiveText: String?, negativeText: String?, cancelable: Boolean,
+        listener: AlertDialogFragment.IAlertDialogFragment?
+    ) {
+        val alertFrag: AlertDialogFragment = AlertDialogFragment.newInstance(ScreenIcon, title.toString(), message.toString(), positiveText.toString(), negativeText.toString(), cancelable, listener)
+        fragManager?.let { alertFrag.show(it, AlertDialogFragment::class.java.simpleName) }
     }
 
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/bg_white_round_corner_25"
+    android:insetRight="@dimen/_30sdp"
+    android:insetLeft="@dimen/_30sdp">
+
+</inset>

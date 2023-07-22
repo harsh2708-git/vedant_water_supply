@@ -1,5 +1,6 @@
 package com.production.vedantwatersupply.ui.trips
 
+import android.graphics.Path.FillType
 import android.view.View
 import android.widget.AdapterView
 import com.production.vedantwatersupply.R
@@ -23,6 +24,9 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
     private var fillingSiteId = ""
     private var selectedFillingSite = ""
 
+    private var fuelFilledById = ""
+    private var selectedFuelFilledBy = ""
+
     override val layoutId: Int
         get() = R.layout.fragment_add_trip
 
@@ -40,6 +44,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         setPaymentModeSpinner()
         setDriverSpinner()
         setFillingSiteSpinner()
+        setFuelFilledBy()
     }
 
     override fun initListener() {
@@ -68,6 +73,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         binding?.tvPaymentMode?.setOnClickListener(this)
         binding?.tvDriverName?.setOnClickListener(this)
         binding?.tvFillingSiteName?.setOnClickListener(this)
+        binding?.tvFuelFilledBy?.setOnClickListener(this)
     }
 
     private fun setTankerNoSpinner() {
@@ -198,6 +204,38 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         }
     }
 
+    private fun setFuelFilledBy(){
+
+        val fuelFilledByList = ArrayList<FilterItem>()
+        if (fuelFilledByList.isEmpty()) {
+            fuelFilledByList.add(0, FilterItem("", getString(R.string.please_select_fuel_filled_by)))
+            fuelFilledByList.add(FilterItem(getString(R.string.by_ajit), getString(R.string.by_ajit)))
+            fuelFilledByList.add(FilterItem(getString(R.string.by_nitish), getString(R.string.by_nitish)))
+            fuelFilledByList.add(FilterItem(getString(R.string.by_bussiness_card), getString(R.string.by_bussiness_card)))
+        }
+        val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, fuelFilledByList)
+        binding?.spFuelFilledBy?.adapter = adapter
+
+        if (fuelFilledById.isNotEmpty()) {
+            val filledBy: FilterItem? = fuelFilledByList.find { it.dbValue.equals(fuelFilledById, false) }
+            val spinnerPosition: Int = fuelFilledByList.indexOf(filledBy)
+            selectedFuelFilledBy = filledBy.toString()
+            spinnerPosition.let { binding?.spFuelFilledBy?.setSelection(it) }
+        }
+
+        binding?.spFuelFilledBy?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
+                selectedFuelFilledBy = fuelFilledByList[binding?.spFuelFilledBy?.selectedItemPosition!!].dbValue
+                if (selectedFuelFilledBy.isNotEmpty()) {
+                    adapter.setSelectedPosition(i)
+                    binding?.tvFuelFilledBy?.text = fuelFilledByList[binding?.spFuelFilledBy?.selectedItemPosition!!].displayValue
+                }
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+        }
+    }
+
     override fun addObserver() {}
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -211,6 +249,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
             R.id.tvPaymentMode -> binding?.spPaymentMode?.performClick()
             R.id.tvDriverName -> binding?.spDriverName?.performClick()
             R.id.tvFillingSiteName -> binding?.spFillingSiteName?.performClick()
+            R.id.tvFuelFilledBy -> binding?.spFuelFilledBy?.performClick()
         }
     }
 

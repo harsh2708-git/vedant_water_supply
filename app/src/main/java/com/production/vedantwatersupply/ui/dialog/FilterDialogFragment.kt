@@ -56,6 +56,9 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private var displayFromDate: String? = null
     private var displayToDate: String? = null
 
+    private var fuelFilledById = ""
+    private var selectedFuelFilledBy = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, R.style.DialogTheme)
@@ -88,6 +91,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         binding?.tvStatus?.setOnClickListener(this)
         binding?.tvFromDate?.setOnClickListener(this)
         binding?.tvToDate?.setOnClickListener(this)
+        binding?.tvFuelFilledBy?.setOnClickListener(this)
     }
 
     private fun init() {
@@ -101,6 +105,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         setWaterTypeSpinner()
         setAddedBySpinner()
         setStatusSpinner()
+        setFuelFilledBy()
     }
 
     private fun setYearSpinner() {
@@ -407,6 +412,38 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         }
     }
 
+    private fun setFuelFilledBy(){
+
+        val fuelFilledByList = ArrayList<FilterItem>()
+        if (fuelFilledByList.isEmpty()) {
+            fuelFilledByList.add(0, FilterItem("", getString(R.string.please_select_fuel_filled_by)))
+            fuelFilledByList.add(FilterItem(getString(R.string.by_ajit), getString(R.string.by_ajit)))
+            fuelFilledByList.add(FilterItem(getString(R.string.by_nitish), getString(R.string.by_nitish)))
+            fuelFilledByList.add(FilterItem(getString(R.string.by_bussiness_card), getString(R.string.by_bussiness_card)))
+        }
+        val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, fuelFilledByList)
+        binding?.spFuelFilledBy?.adapter = adapter
+
+        if (fuelFilledById.isNotEmpty()) {
+            val filledBy: FilterItem? = fuelFilledByList.find { it.dbValue.equals(fuelFilledById, false) }
+            val spinnerPosition: Int = fuelFilledByList.indexOf(filledBy)
+            selectedFuelFilledBy = filledBy.toString()
+            spinnerPosition.let { binding?.spFuelFilledBy?.setSelection(it) }
+        }
+
+        binding?.spFuelFilledBy?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
+                selectedFuelFilledBy = fuelFilledByList[binding?.spFuelFilledBy?.selectedItemPosition!!].dbValue
+                if (selectedFuelFilledBy.isNotEmpty()) {
+                    adapter.setSelectedPosition(i)
+                    binding?.tvFuelFilledBy?.text = fuelFilledByList[binding?.spFuelFilledBy?.selectedItemPosition!!].displayValue
+                }
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+        }
+    }
+
     override fun onClick(v: View?) {
         var selectedDate: Date? = null
         when (v?.id) {
@@ -468,6 +505,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             R.id.tvWaterType -> binding?.spWaterType?.performClick()
             R.id.tvAddedBy -> binding?.spAddedBy?.performClick()
             R.id.tvStatus -> binding?.spStatus?.performClick()
+            R.id.tvFuelFilledBy -> binding?.spFuelFilledBy?.performClick()
         }
     }
 
@@ -482,6 +520,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         binding?.spWaterType?.setSelection(0)
         binding?.spAddedBy?.setSelection(0)
         binding?.spStatus?.setSelection(0)
+        binding?.spFuelFilledBy?.setSelection(0)
     }
 
 }
