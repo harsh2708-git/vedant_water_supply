@@ -63,7 +63,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(), View
                 }
 
                 WebServiceSetting.FAILURE -> {
-                    CommonUtils.showToast(this, "Failed")
+                    CommonUtils.showToast(this, it.webServiceSetting?.message)
                 }
 
                 WebServiceSetting.NO_INTERNET -> {

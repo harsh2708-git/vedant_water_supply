@@ -20,6 +20,7 @@ import com.production.vedantwatersupply.ui.trips.TripsAdapter
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.SharedPreferenceUtil
 import com.production.vedantwatersupply.utils.UserUtils
+import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 
 class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(), View.OnClickListener, RecyclerViewClickListener {
 
@@ -34,6 +35,8 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         setTripsAdapter()
         setMaintenanceAdpter()
         setDriverAdapter()
+
+        callDashboardApi()
     }
 
     override fun initListener() {
@@ -54,9 +57,34 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
             if (scrollY != null)
                 binding?.ivUp?.visibility = if (scrollY > 0) View.VISIBLE else View.GONE
         }
+
+        binding?.srlDashboard?.setOnRefreshListener {
+            callDashboardApi()
+        }
     }
 
-    override fun addObserver() {}
+    private fun callDashboardApi() {
+        baseActivity?.showProgress()
+        viewModel?.callDashboardApi()
+    }
+
+    override fun addObserver() {
+        viewModel?.dashboardRepository?.dashboardResponseLiveData?.observe(this) {
+            baseActivity?.hideProgress()
+            when (it?.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+        }
+    }
 
     private fun setTripsAdapter() {
         val tripAdapter = TripsAdapter(requireContext(), this)

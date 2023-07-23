@@ -34,7 +34,7 @@ class ApiClient {
 
             override fun provideHeaderMap(): HashMap<String, String> {
                 val map = HashMap<String, String>()
-                map["Authorization"] = "Bearer" + UserUtils.getUserData(MyApplication.context)?.token
+                map["Authorization"] = "Bearer " + UserUtils.getUserData(MyApplication.context)?.token
                 return map
             }
 
