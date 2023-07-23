@@ -2,6 +2,7 @@ package com.production.vedantwatersupply.utils
 
 import android.content.Context
 import android.text.TextUtils
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
@@ -13,9 +14,11 @@ import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.ui.dialog.AlertDialogFragment
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
 
 object CommonUtils {
 
@@ -123,6 +126,17 @@ object CommonUtils {
     ) {
         val alertFrag: AlertDialogFragment = AlertDialogFragment.newInstance(ScreenIcon, title.toString(), message.toString(), positiveText.toString(), negativeText.toString(), cancelable, listener)
         fragManager?.let { alertFrag.show(it, AlertDialogFragment::class.java.simpleName) }
+    }
+
+    fun currentDate(): String {
+        return SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+    }
+
+    fun currentMonth(): String {
+        val dateFormat: DateFormat = SimpleDateFormat("MMMM")
+        val date = Date()
+        Log.d("Month", dateFormat.format(date))
+        return dateFormat.format(date)
     }
 
 }

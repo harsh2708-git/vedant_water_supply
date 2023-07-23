@@ -11,9 +11,12 @@ import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentDriverFilterDialogBinding
 import com.production.vedantwatersupply.databinding.FragmentFilterDialogBinding
 import com.production.vedantwatersupply.databinding.FragmentMaintenanceFilterDialogBinding
+import com.production.vedantwatersupply.listener.DriverFilterClickListener
+import com.production.vedantwatersupply.listener.MaintenanceFilterClickListener
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.calendar.CaldroidListener
 import com.transportermanger.util.filter.FilterItem
+import java.sql.Driver
 import java.util.Date
 
 class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
@@ -21,25 +24,51 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private var binding: FragmentDriverFilterDialogBinding? = null
 
     private var yearList = ArrayList<FilterItem>()
-    private var yearId = ""
-    private var selectedYear = ""
-
-    private var driverTypeId = ""
-    private var selectedDriverType = ""
-
     private var driverList = ArrayList<FilterItem>()
+    private var paymentModeList = ArrayList<FilterItem>()
+
+    private var yearId = ""
+    private var driverTypeId = ""
     private var driverId = ""
+    private var paymentModeId = ""
+
+    private var selectedYear = ""
+    private var selectedDriverType = ""
     private var selectedDriver = ""
+    private var selectedPaymentMode = ""
 
     private var fromDate = ""
     private var toDate = ""
+    private var displayFromDate = ""
+    private var displayToDate = ""
 
-    private var displayFromDate: String? = null
-    private var displayToDate: String? = null
+    private var callBack: DriverFilterClickListener? = null
 
-    private var paymentModeList = ArrayList<FilterItem>()
-    private var paymentModeId = ""
-    private var selectedPaymentMode = ""
+    companion object {
+        fun getInstance(
+            selectedYear: String,
+            selectedDriverType: String,
+            selectedDriver: String,
+            selectedPaymentMode: String,
+            fromDate: String,
+            toDate: String,
+            displayFromDate: String,
+            displayToDate: String,
+            listener: DriverFilterClickListener
+        ): DriverFilterDialogFragment {
+            val fragment = DriverFilterDialogFragment()
+            fragment.yearId = selectedYear
+            fragment.driverTypeId = selectedDriverType
+            fragment.driverId = selectedDriver
+            fragment.paymentModeId = selectedPaymentMode
+            fragment.fromDate = fromDate
+            fragment.toDate = toDate
+            fragment.displayFromDate = displayFromDate
+            fragment.displayToDate = displayToDate
+            fragment.callBack = listener
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,9 +95,18 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         binding?.tvDriver?.setOnClickListener(this)
         binding?.tvFromDate?.setOnClickListener(this)
         binding?.tvToDate?.setOnClickListener(this)
+        binding?.tvPaymentMode?.setOnClickListener(this)
     }
 
     private fun init() {
+        if (!CommonUtils.isEmpty(displayFromDate)) {
+            binding?.tvYear?.isEnabled = false
+            binding?.tvYear?.alpha = 0.5f
+            binding?.tvFromDate?.setText(displayFromDate)
+        }
+        if (!CommonUtils.isEmpty(displayToDate)) {
+            binding?.tvToDate?.setText(displayToDate)
+        }
         setYearSpinner()
         setPaymentModeSpinner()
         setDriverTypeSpinner()
@@ -86,6 +124,11 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         binding?.spYear?.adapter = adapter
 
         if (yearId.isNotEmpty()) {
+            binding?.tvFromDate?.isEnabled = false
+            binding?.tvToDate?.isEnabled = false
+            binding?.tvFromDate?.alpha = 0.5f
+            binding?.tvToDate?.alpha = 0.5f
+
             val statusName: FilterItem? = yearList.find { it.dbValue.equals(yearId, false) }
             val spinnerPosition: Int = yearList.indexOf(statusName)
             selectedYear = statusName.toString()
@@ -165,7 +208,6 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         }
     }
 
-
     private fun setPaymentModeSpinner() {
 
         if (paymentModeList.isEmpty()) {
@@ -196,12 +238,13 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         }
     }
 
-
     override fun onClick(v: View?) {
         var selectedDate: Date? = null
         when (v?.id) {
 
             R.id.tvFromDate -> {
+                binding?.tvYear?.isEnabled = false
+                binding?.tvYear?.alpha = 0.5f
                 selectedDate = CommonUtils.getDateFromDisplay(fromDate)
 
                 baseActivity?.setNormalCalender(
@@ -210,7 +253,7 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
                             binding?.tvFromDate?.setText(date1.toString())
                             selectedDate = date1
                             fromDate = CommonUtils.getFormattedDateFromV2(date1).toString()
-                            displayFromDate = CommonUtils.getFormattedDateFrom(date1)
+                            displayFromDate = CommonUtils.getFormattedDateFrom(date1).toString()
                             binding?.tvFromDate?.setText(displayFromDate)
                         }
                     },
@@ -228,7 +271,7 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
                             binding?.tvToDate?.setText(date1.toString())
                             selectedDate = date1
                             toDate = CommonUtils.getFormattedDateFromV2(date1).toString()
-                            displayToDate = CommonUtils.getFormattedDateFrom(date1)
+                            displayToDate = CommonUtils.getFormattedDateFrom(date1).toString()
                             binding?.tvToDate?.setText(displayToDate)
                         }
                     },
@@ -240,15 +283,28 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             R.id.btnClose -> dismiss()
 
             R.id.btnApply -> {
+                callBack?.onApply(
+                    fromDate, displayFromDate, toDate, displayToDate,
+                    selectedYear, selectedDriverType, selectedDriver,
+                    selectedPaymentMode
+                )
                 dismiss()
             }
 
             R.id.btnClear -> {
+                callBack?.onClear()
                 resetFilter()
                 dismiss()
             }
 
-            R.id.tvYear -> binding?.spYear?.performClick()
+            R.id.tvYear -> {
+                binding?.tvFromDate?.isEnabled = false
+                binding?.tvToDate?.isEnabled = false
+                binding?.tvFromDate?.alpha = 0.5f
+                binding?.tvToDate?.alpha = 0.5f
+                binding?.spYear?.performClick()
+            }
+
             R.id.tvDriverType -> binding?.spDriverType?.performClick()
             R.id.tvDriver -> binding?.spDriver?.performClick()
             R.id.tvPaymentMode -> binding?.spPaymentMode?.performClick()
@@ -260,6 +316,21 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         binding?.spDriverType?.setSelection(0)
         binding?.spDriver?.setSelection(0)
         binding?.spPaymentMode?.setSelection(0)
+
+        yearId = ""
+        driverTypeId = ""
+        driverId = ""
+        paymentModeId = ""
+
+        selectedYear = ""
+        selectedDriverType = ""
+        selectedDriver = ""
+        selectedPaymentMode = ""
+
+        fromDate = ""
+        toDate = ""
+        displayFromDate = ""
+        displayToDate = ""
     }
 
 }

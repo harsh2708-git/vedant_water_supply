@@ -12,10 +12,12 @@ import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentMaintenanceListingBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
+import com.production.vedantwatersupply.listener.MaintenanceFilterClickListener
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
 import com.production.vedantwatersupply.ui.dialog.FilterDialogFragment
 import com.production.vedantwatersupply.ui.dialog.MaintenanceFilterDialogFragment
 import com.production.vedantwatersupply.ui.trips.TripsAdapter
+import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.transportermanger.util.filter.FilterItem
@@ -26,6 +28,16 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
     private var monthFilterAdapter: FilterListAdapter? = null
     private var monthList = ArrayList<FilterItem>()
     private var monthId = ""
+
+    private var selectedYear = ""
+    private var selectedTankerType = ""
+    private var selectedTankerNo = ""
+    private var selectedPaymentMode = ""
+
+    private var fromDate = ""
+    private var toDate = ""
+    private var displayFromDate = ""
+    private var displayToDate = ""
 
     override val layoutId: Int
         get() = R.layout.fragment_maintenance_listing
@@ -43,6 +55,10 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         binding?.clHeader?.ivBack?.setOnClickListener(this)
         binding?.btnAdd?.setOnClickListener(this)
         binding?.btnFilter?.setOnClickListener(this)
+        binding?.ivUp?.setOnClickListener(this)
+        binding?.appBar?.addOnOffsetChangedListener { _, verticalOffset ->
+            binding?.ivUp?.visibility = if (verticalOffset < 0) View.VISIBLE else View.GONE
+        }
     }
 
     private fun setScreenTitle() {
@@ -52,11 +68,11 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
 
     private fun setSummary() {
         binding?.clSummary?.labelTotal?.text = getString(R.string.total_maintenance)
+        binding?.clSummary?.tvCurrentMonth?.text = CommonUtils.currentMonth()
+        binding?.clSummary?.tvDate?.text = CommonUtils.currentDate()
     }
 
-    override fun addObserver() {
-
-    }
+    override fun addObserver() {}
 
     private fun initFilterView() {
         if (monthList.isEmpty()) {
@@ -95,11 +111,44 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
             R.id.ivBack -> baseActivity?.onBackPressed()
             R.id.btnAdd -> navigateFragment(v, R.id.nav_add_maintenance)
             R.id.btnFilter -> openFilterDialog()
+            R.id.ivUp -> {
+                binding?.appBar?.scrollTo(0, 0)
+                binding?.rvMaintanance?.smoothScrollToPosition(0)
+                binding?.appBar?.setExpanded(true, true)
+            }
         }
     }
 
     private fun openFilterDialog() {
-        val filterDialog = MaintenanceFilterDialogFragment()
+        val filterDialog = MaintenanceFilterDialogFragment.getInstance(
+            selectedYear, selectedTankerType, selectedTankerNo, selectedPaymentMode, fromDate, toDate, displayFromDate, displayToDate, object : MaintenanceFilterClickListener {
+                override fun onApply(
+                    fromDate: String, displayFromDate: String?,
+                    toDate: String, displayToDate: String?, selectedYear: String,
+                    selectedTankerType: String, selectedTankerNo: String, selectedPaymentMode: String
+                ) {
+                    this@MaintenanceListingFragment.fromDate = fromDate
+                    this@MaintenanceListingFragment.displayFromDate = displayFromDate.toString()
+                    this@MaintenanceListingFragment.toDate = toDate
+                    this@MaintenanceListingFragment.displayToDate = displayToDate.toString()
+                    this@MaintenanceListingFragment.selectedYear = selectedYear
+                    this@MaintenanceListingFragment.selectedTankerType = selectedTankerType
+                    this@MaintenanceListingFragment.selectedTankerNo = selectedTankerNo
+                    this@MaintenanceListingFragment.selectedPaymentMode = selectedPaymentMode
+                }
+
+                override fun onClear() {
+                    selectedYear = ""
+                    selectedTankerType = ""
+                    selectedTankerNo = ""
+                    selectedPaymentMode = ""
+                    fromDate = ""
+                    toDate = ""
+                    displayFromDate = ""
+                    displayToDate = ""
+                }
+            }
+        )
         filterDialog.show(childFragmentManager, "Trip Filter Dialog")
     }
 

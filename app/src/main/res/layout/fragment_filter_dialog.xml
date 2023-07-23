@@ -200,7 +200,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/labelTanker" />
+                            app:layout_constraintTop_toBottomOf="@id/tvTanker" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelTankerNo"
@@ -235,7 +235,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/labelTankerNo" />
+                            app:layout_constraintTop_toBottomOf="@id/tvTankerNo" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelPaymentMode"
@@ -270,8 +270,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/labelPaymentMode" />
-
+                            app:layout_constraintTop_toBottomOf="@id/tvPaymentMode" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelFuelFilledBy"
@@ -342,7 +341,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/labelDriverType" />
+                            app:layout_constraintTop_toBottomOf="@id/tvDriverType" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelDriver"
@@ -377,7 +376,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/labelDriver" />
+                            app:layout_constraintTop_toBottomOf="@id/tvDriver" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelFillingSite"
@@ -412,7 +411,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/labelFillingSite" />
+                            app:layout_constraintTop_toBottomOf="@id/tvFillingSite" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelWaterType"
@@ -447,7 +446,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/labelWaterType" />
+                            app:layout_constraintTop_toBottomOf="@id/tvWaterType" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelAddedBy"
@@ -482,7 +481,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/labelAddedBy" />
+                            app:layout_constraintTop_toBottomOf="@id/tvAddedBy" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelStatus"
@@ -517,7 +516,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/labelStatus" />
+                            app:layout_constraintTop_toBottomOf="@id/tvStatus" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

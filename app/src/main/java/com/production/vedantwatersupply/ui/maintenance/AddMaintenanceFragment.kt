@@ -36,6 +36,13 @@ class AddMaintenanceFragment : BaseFragment<FragmentAddMaintenanceBinding, Maint
         binding?.clHeader?.ivBack?.setOnClickListener(this)
         binding?.btnAdd?.setOnClickListener(this)
         binding?.btnDiscard?.setOnClickListener(this)
+        binding?.ivUp?.setOnClickListener(this)
+
+        binding?.nsView?.viewTreeObserver?.addOnScrollChangedListener {
+            val scrollY = binding?.nsView?.scrollY
+            if (scrollY != null)
+                binding?.ivUp?.visibility = if (scrollY > 0) View.VISIBLE else View.GONE
+        }
     }
 
     override fun addObserver() {
@@ -48,6 +55,7 @@ class AddMaintenanceFragment : BaseFragment<FragmentAddMaintenanceBinding, Maint
             R.id.btnDiscard -> baseActivity?.onBackPressed()
 
             R.id.btnAdd -> {}
+            R.id.ivUp -> binding?.nsView?.smoothScrollTo(0, 0)
         }
     }
 

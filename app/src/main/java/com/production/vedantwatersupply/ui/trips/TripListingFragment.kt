@@ -10,7 +10,9 @@ import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentTripListingBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
+import com.production.vedantwatersupply.listener.TripFilterClickListener
 import com.production.vedantwatersupply.ui.dialog.FilterDialogFragment
+import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.transportermanger.util.filter.FilterItem
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
@@ -22,6 +24,23 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
     private var monthList = ArrayList<FilterItem>()
     private var monthId = ""
 
+    private var fromDate = ""
+    private var toDate = ""
+    private var displayFromDate = ""
+    private var displayToDate = ""
+
+    private var selectedYear = ""
+    private var selectedTankerType = ""
+    private var selectedTankerNo = ""
+    private var selectedPaymentMode = ""
+    private var selectedDriverType = ""
+    private var selectedDriver = ""
+    private var selectedFillingSite = ""
+    private var selectedWaterType = ""
+    private var selectedAddedBy = ""
+    private var selectedStatus = ""
+    private var selectedFuelFilledBy = ""
+
     override val layoutId: Int
         get() = R.layout.fragment_trip_listing
 
@@ -30,6 +49,9 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         setScreenTitle()
         initFilterView()
         setTripsAdapter()
+
+        binding?.clSummary?.tvCurrentMonth?.text = CommonUtils.currentMonth()
+        binding?.clSummary?.tvDate?.text = CommonUtils.currentDate()
     }
 
     private fun setScreenTitle() {
@@ -41,6 +63,10 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         binding?.clHeader?.ivBack?.setOnClickListener(this)
         binding?.btnAdd?.setOnClickListener(this)
         binding?.btnFilter?.setOnClickListener(this)
+        binding?.ivUp?.setOnClickListener(this)
+        binding?.appBar?.addOnOffsetChangedListener { _, verticalOffset ->
+            binding?.ivUp?.visibility = if (verticalOffset < 0) View.VISIBLE else View.GONE
+        }
     }
 
     override fun addObserver() {
@@ -83,11 +109,69 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
             R.id.ivBack -> baseActivity?.onBackPressed()
             R.id.btnAdd -> navigateFragment(v, R.id.nav_add_trip)
             R.id.btnFilter -> openFilterDialog()
+            R.id.ivUp -> {
+                binding?.appBar?.scrollTo(0, 0)
+                binding?.rvTrips?.smoothScrollToPosition(0)
+                binding?.appBar?.setExpanded(true, true)
+            }
         }
     }
 
     private fun openFilterDialog() {
-        val filterDialog = FilterDialogFragment()
+        val filterDialog = FilterDialogFragment.getInstance(
+            selectedYear, selectedTankerType, selectedTankerNo, selectedPaymentMode,
+            selectedDriverType, selectedDriver, selectedFillingSite, selectedWaterType,
+            selectedAddedBy, selectedStatus, selectedFuelFilledBy,
+            fromDate, toDate, displayFromDate.toString(), displayToDate.toString(),
+            object : TripFilterClickListener {
+                override fun onApply(
+                    fromDate: String, displayFromDate: String?, toDate: String, displayToDate: String?,
+                    selectedYear: String, selectedTankerType: String, selectedTankerNo: String,
+                    selectedPaymentMode: String, selectedFuelFilledBy: String, selectedDriverType: String,
+                    selectedDriver: String, selectedWaterType: String, selectedAddedBy: String,
+                    selectedStatus: String, selectedFillingSite: String
+                ) {
+                    this@TripListingFragment.fromDate = fromDate
+                    this@TripListingFragment.displayFromDate = displayFromDate.toString()
+                    this@TripListingFragment.toDate = toDate
+                    this@TripListingFragment.displayToDate = displayToDate.toString()
+                    this@TripListingFragment.selectedYear = selectedYear
+                    this@TripListingFragment.selectedTankerType = selectedTankerType
+                    this@TripListingFragment.selectedTankerNo = selectedTankerNo
+                    this@TripListingFragment.selectedPaymentMode = selectedPaymentMode
+                    this@TripListingFragment.selectedFuelFilledBy = selectedFuelFilledBy
+                    this@TripListingFragment.selectedDriverType = selectedDriverType
+                    this@TripListingFragment.selectedDriver = selectedDriver
+                    this@TripListingFragment.selectedWaterType = selectedWaterType
+                    this@TripListingFragment.selectedAddedBy = selectedAddedBy
+                    this@TripListingFragment.selectedStatus = selectedStatus
+                    this@TripListingFragment.selectedFillingSite = selectedFillingSite
+
+                    resetAdapter()
+                }
+
+                override fun onClear() {
+                    fromDate = ""
+                    toDate = ""
+                    displayFromDate = ""
+                    displayToDate = ""
+
+                    selectedYear = ""
+                    selectedTankerType = ""
+                    selectedTankerNo = ""
+                    selectedPaymentMode = ""
+                    selectedDriverType = ""
+                    selectedDriver = ""
+                    selectedFillingSite = ""
+                    selectedWaterType = ""
+                    selectedAddedBy = ""
+                    selectedStatus = ""
+                    selectedFuelFilledBy = ""
+
+                    resetAdapter()
+                }
+            }
+        )
         filterDialog.show(childFragmentManager, "Trip Filter Dialog")
     }
 
@@ -122,4 +206,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         }
     }
 
+    private fun resetAdapter() {
+        setTripsAdapter()
+    }
 }

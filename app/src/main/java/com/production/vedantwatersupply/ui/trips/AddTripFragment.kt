@@ -74,6 +74,13 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         binding?.tvDriverName?.setOnClickListener(this)
         binding?.tvFillingSiteName?.setOnClickListener(this)
         binding?.tvFuelFilledBy?.setOnClickListener(this)
+        binding?.ivUp?.setOnClickListener(this)
+
+        binding?.nsView?.viewTreeObserver?.addOnScrollChangedListener {
+            val scrollY = binding?.nsView?.scrollY
+            if (scrollY != null)
+                binding?.ivUp?.visibility = if (scrollY > 0) View.VISIBLE else View.GONE
+        }
     }
 
     private fun setTankerNoSpinner() {
@@ -250,6 +257,8 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
             R.id.tvDriverName -> binding?.spDriverName?.performClick()
             R.id.tvFillingSiteName -> binding?.spFillingSiteName?.performClick()
             R.id.tvFuelFilledBy -> binding?.spFuelFilledBy?.performClick()
+
+            R.id.ivUp -> binding?.nsView?.smoothScrollTo(0, 0)
         }
     }
 

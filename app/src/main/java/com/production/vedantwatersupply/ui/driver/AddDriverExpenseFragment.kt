@@ -12,7 +12,6 @@ import com.production.vedantwatersupply.databinding.FragmentAddDriverExpenseBind
 
 class AddDriverExpenseFragment : BaseFragment<FragmentAddDriverExpenseBinding, DriverViewModel>(), View.OnClickListener {
 
-
     override val layoutId: Int
         get() = R.layout.fragment_add_driver_expense
 
@@ -48,6 +47,12 @@ class AddDriverExpenseFragment : BaseFragment<FragmentAddDriverExpenseBinding, D
         binding?.clHeader?.ivBack?.setOnClickListener(this)
         binding?.btnAdd?.setOnClickListener(this)
         binding?.btnDiscard?.setOnClickListener(this)
+        binding?.ivUp?.setOnClickListener(this)
+        binding?.nsView?.viewTreeObserver?.addOnScrollChangedListener {
+            val scrollY = binding?.nsView?.scrollY
+            if (scrollY != null)
+                binding?.ivUp?.visibility = if (scrollY > 0) View.VISIBLE else View.GONE
+        }
     }
 
     override fun addObserver() {
@@ -61,6 +66,8 @@ class AddDriverExpenseFragment : BaseFragment<FragmentAddDriverExpenseBinding, D
             R.id.btnDiscard -> baseActivity?.onBackPressed()
 
             R.id.btnAdd -> {}
+
+            R.id.ivUp -> binding?.nsView?.smoothScrollTo(0, 0)
         }
     }
 

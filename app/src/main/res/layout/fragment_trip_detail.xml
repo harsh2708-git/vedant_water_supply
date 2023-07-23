@@ -343,7 +343,7 @@
                     android:layout_width="0dp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_height="wrap_content"
-                    android:text="@string/fuel_filled_by"
+                    android:text="@string/driver_mo_no"
                     app:layout_constraintEnd_toEndOf="@id/end"
                     app:layout_constraintStart_toEndOf="@id/start"
                     app:layout_constraintTop_toBottomOf="@+id/tvDriverName" />

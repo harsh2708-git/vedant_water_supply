@@ -9,6 +9,7 @@ import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseDialogFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentFilterDialogBinding
+import com.production.vedantwatersupply.listener.TripFilterClickListener
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.calendar.CaldroidListener
 import com.transportermanger.util.filter.FilterItem
@@ -19,45 +20,82 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private var binding: FragmentFilterDialogBinding? = null
 
     private var yearList = ArrayList<FilterItem>()
-    private var yearId = ""
-    private var selectedYear = ""
-
-    private var tankerTypeId = ""
-    private var selectedTankerType = ""
-
     private var tankerNoList = ArrayList<FilterItem>()
-    private var tankerNoId = ""
-    private var selectedTankerNo = ""
-
     private var paymentModeList = ArrayList<FilterItem>()
-    private var paymentModeId = ""
-    private var selectedPaymentMode = ""
-
-    private var driverTypeId = ""
-    private var selectedDriverType = ""
-
     private var driverList = ArrayList<FilterItem>()
-    private var driverId = ""
-    private var selectedDriver = ""
-    private var fillingSiteId = ""
-    private var selectedFillingSite = ""
     private var waterTypeList = ArrayList<FilterItem>()
-    private var waterTypeId = ""
-    private var selectedWaterType = ""
     private var addedByList = ArrayList<FilterItem>()
+
+    private var yearId = ""
+    private var tankerTypeId = ""
+    private var tankerNoId = ""
+    private var paymentModeId = ""
+    private var driverTypeId = ""
+    private var driverId = ""
+    private var fillingSiteId = ""
+    private var waterTypeId = ""
     private var addedById = ""
-    private var selectedAddedBy = ""
     private var statusId = ""
+    private var fuelFilledById = ""
+
+    private var selectedYear = ""
+    private var selectedTankerType = ""
+    private var selectedTankerNo = ""
+    private var selectedPaymentMode = ""
+    private var selectedDriverType = ""
+    private var selectedDriver = ""
+    private var selectedFillingSite = ""
+    private var selectedWaterType = ""
+    private var selectedAddedBy = ""
     private var selectedStatus = ""
+    private var selectedFuelFilledBy = ""
 
     private var fromDate = ""
     private var toDate = ""
+    private var displayFromDate = ""
+    private var displayToDate = ""
 
-    private var displayFromDate: String? = null
-    private var displayToDate: String? = null
+    private var callBack: TripFilterClickListener? = null
 
-    private var fuelFilledById = ""
-    private var selectedFuelFilledBy = ""
+    companion object {
+        fun getInstance(
+            selectedYear: String,
+            selectedTankerType: String,
+            selectedTankerNo: String,
+            selectedPaymentMode: String,
+            selectedDriverType: String,
+            selectedDriver: String,
+            selectedFillingSite: String,
+            selectedWaterType: String,
+            selectedAddedBy: String,
+            selectedStatus: String,
+            selectedFuelFilledBy: String,
+            fromDate: String,
+            toDate: String,
+            displayFromDate: String,
+            displayToDate: String,
+            listener: TripFilterClickListener
+        ): FilterDialogFragment {
+            val fragment = FilterDialogFragment()
+            fragment.yearId = selectedYear
+            fragment.tankerTypeId = selectedTankerType
+            fragment.tankerNoId = selectedTankerNo
+            fragment.paymentModeId = selectedPaymentMode
+            fragment.driverTypeId = selectedDriverType
+            fragment.driverId = selectedDriver
+            fragment.fillingSiteId = selectedFillingSite
+            fragment.waterTypeId = selectedWaterType
+            fragment.addedById = selectedAddedBy
+            fragment.statusId = selectedStatus
+            fragment.fuelFilledById = selectedFuelFilledBy
+            fragment.fromDate = fromDate
+            fragment.toDate = toDate
+            fragment.displayFromDate = displayFromDate
+            fragment.displayToDate = displayToDate
+            fragment.callBack = listener
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +133,16 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     }
 
     private fun init() {
+
+        if (!CommonUtils.isEmpty(displayFromDate)) {
+            binding?.tvYear?.isEnabled = false
+            binding?.tvYear?.alpha = 0.5f
+            binding?.tvFromDate?.setText(displayFromDate)
+        }
+        if (!CommonUtils.isEmpty(displayToDate)) {
+            binding?.tvToDate?.setText(displayToDate)
+        }
+
         setYearSpinner()
         setTankerTypeSpinner()
         setTankerNoSpinner()
@@ -119,6 +167,11 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         binding?.spYear?.adapter = adapter
 
         if (yearId.isNotEmpty()) {
+            binding?.tvFromDate?.isEnabled = false
+            binding?.tvToDate?.isEnabled = false
+            binding?.tvFromDate?.alpha = 0.5f
+            binding?.tvToDate?.alpha = 0.5f
+
             val statusName: FilterItem? = yearList.find { it.dbValue.equals(yearId, false) }
             val spinnerPosition: Int = yearList.indexOf(statusName)
             selectedYear = statusName.toString()
@@ -412,7 +465,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         }
     }
 
-    private fun setFuelFilledBy(){
+    private fun setFuelFilledBy() {
 
         val fuelFilledByList = ArrayList<FilterItem>()
         if (fuelFilledByList.isEmpty()) {
@@ -449,6 +502,9 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         when (v?.id) {
 
             R.id.tvFromDate -> {
+                binding?.tvYear?.isEnabled = false
+                binding?.tvYear?.alpha = 0.5f
+
                 selectedDate = CommonUtils.getDateFromDisplay(fromDate)
 
                 baseActivity?.setNormalCalender(
@@ -457,7 +513,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
                             binding?.tvFromDate?.setText(date1.toString())
                             selectedDate = date1
                             fromDate = CommonUtils.getFormattedDateFromV2(date1).toString()
-                            displayFromDate = CommonUtils.getFormattedDateFrom(date1)
+                            displayFromDate = CommonUtils.getFormattedDateFrom(date1).toString()
                             binding?.tvFromDate?.setText(displayFromDate)
                         }
                     },
@@ -475,7 +531,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
                             binding?.tvToDate?.setText(date1.toString())
                             selectedDate = date1
                             toDate = CommonUtils.getFormattedDateFromV2(date1).toString()
-                            displayToDate = CommonUtils.getFormattedDateFrom(date1)
+                            displayToDate = CommonUtils.getFormattedDateFrom(date1).toString()
                             binding?.tvToDate?.setText(displayToDate)
                         }
                     },
@@ -487,15 +543,30 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             R.id.btnClose -> dismiss()
 
             R.id.btnApply -> {
+                callBack?.onApply(
+                    fromDate, displayFromDate, toDate, displayToDate,
+                    selectedYear, selectedTankerType, selectedTankerNo,
+                    selectedPaymentMode, selectedFuelFilledBy, selectedDriverType,
+                    selectedDriver, selectedWaterType, selectedAddedBy,
+                    selectedStatus, selectedFillingSite
+                )
                 dismiss()
             }
 
             R.id.btnClear -> {
+                callBack?.onClear()
                 resetFilter()
                 dismiss()
             }
 
-            R.id.tvYear -> binding?.spYear?.performClick()
+            R.id.tvYear -> {
+                binding?.tvFromDate?.isEnabled = false
+                binding?.tvToDate?.isEnabled = false
+                binding?.tvFromDate?.alpha = 0.5f
+                binding?.tvToDate?.alpha = 0.5f
+                binding?.spYear?.performClick()
+            }
+
             R.id.tvTanker -> binding?.spTanker?.performClick()
             R.id.tvTankerNo -> binding?.spTankerNo?.performClick()
             R.id.tvPaymentMode -> binding?.spPaymentMode?.performClick()
@@ -521,6 +592,39 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         binding?.spAddedBy?.setSelection(0)
         binding?.spStatus?.setSelection(0)
         binding?.spFuelFilledBy?.setSelection(0)
+
+        binding?.tvYear?.isEnabled = true
+        binding?.tvFromDate?.isEnabled = true
+        binding?.tvToDate?.isEnabled = true
+
+        yearId = ""
+        tankerTypeId = ""
+        tankerNoId = ""
+        paymentModeId = ""
+        driverTypeId = ""
+        driverId = ""
+        fillingSiteId = ""
+        waterTypeId = ""
+        addedById = ""
+        statusId = ""
+        fuelFilledById = ""
+
+        selectedYear = ""
+        selectedTankerType = ""
+        selectedTankerNo = ""
+        selectedPaymentMode = ""
+        selectedDriverType = ""
+        selectedDriver = ""
+        selectedFillingSite = ""
+        selectedWaterType = ""
+        selectedAddedBy = ""
+        selectedStatus = ""
+        selectedFuelFilledBy = ""
+
+        fromDate = ""
+        toDate = ""
+        displayFromDate = ""
+        displayToDate = ""
     }
 
 }

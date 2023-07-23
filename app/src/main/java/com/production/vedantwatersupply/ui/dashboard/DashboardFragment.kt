@@ -48,6 +48,12 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         binding?.tvViewAllTripsDrivers?.setOnClickListener(this)
         binding?.ivViewAllDrivers?.setOnClickListener(this)
         binding?.ivUp?.setOnClickListener(this)
+
+        binding?.nsView?.viewTreeObserver?.addOnScrollChangedListener {
+            val scrollY = binding?.nsView?.scrollY
+            if (scrollY != null)
+                binding?.ivUp?.visibility = if (scrollY > 0) View.VISIBLE else View.GONE
+        }
     }
 
     override fun addObserver() {}
@@ -70,17 +76,16 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.fabLogout -> {
-                CommonUtils.showAlert(childFragmentManager,R.drawable.ic_data_not_found
-                    , getString(R.string.logout), getString(R.string.confirmation_logout), getString(R.string.logout), getString(R.string.cancel), true,object: AlertDialogFragment.IAlertDialogFragment{
-                        override fun onPositiveButtonClicked() {
-                            UserUtils.resetUserData(requireContext())
-                            SharedPreferenceUtil.clearData(requireContext())
-                            baseActivity?.navigateActivity(Intent(requireContext(), LoginActivity::class.java))
-                            baseActivity?.finishAffinity()
-                        }
+                CommonUtils.showAlert(childFragmentManager, R.drawable.ic_data_not_found, getString(R.string.logout), getString(R.string.confirmation_logout), getString(R.string.logout), getString(R.string.cancel), true, object : AlertDialogFragment.IAlertDialogFragment {
+                    override fun onPositiveButtonClicked() {
+                        UserUtils.resetUserData(requireContext())
+                        SharedPreferenceUtil.clearData(requireContext())
+                        baseActivity?.navigateActivity(Intent(requireContext(), LoginActivity::class.java))
+                        baseActivity?.finishAffinity()
+                    }
 
-                        override fun onNegativeButtonClicked() {}
-                    })
+                    override fun onNegativeButtonClicked() {}
+                })
 
             }
 
@@ -97,7 +102,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
             R.id.tvViewAllTripsDrivers,
             R.id.ivViewAllDrivers -> navigateFragment(v, R.id.nav_driver_listing)
 
-            R.id.ivUp -> {}
+            R.id.ivUp -> binding?.nsView?.smoothScrollTo(0, 0)
         }
     }
 

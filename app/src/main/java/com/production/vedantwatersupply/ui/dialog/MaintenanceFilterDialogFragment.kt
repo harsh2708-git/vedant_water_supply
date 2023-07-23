@@ -10,6 +10,8 @@ import com.production.vedantwatersupply.core.BaseDialogFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentFilterDialogBinding
 import com.production.vedantwatersupply.databinding.FragmentMaintenanceFilterDialogBinding
+import com.production.vedantwatersupply.listener.MaintenanceFilterClickListener
+import com.production.vedantwatersupply.listener.TripFilterClickListener
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.calendar.CaldroidListener
 import com.transportermanger.util.filter.FilterItem
@@ -20,28 +22,51 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
     private var binding: FragmentMaintenanceFilterDialogBinding? = null
 
     private var yearList = ArrayList<FilterItem>()
-    private var yearId = ""
-    private var selectedYear = ""
-
-    private var tankerTypeId = ""
-    private var selectedTankerType = ""
-
     private var tankerNoList = ArrayList<FilterItem>()
-    private var tankerNoId = ""
-    private var selectedTankerNo = ""
+    private var paymentModeList = ArrayList<FilterItem>()
 
-    private var driverTypeId = ""
-    private var selectedDriverType = ""
+    private var yearId = ""
+    private var tankerTypeId = ""
+    private var tankerNoId = ""
+    private var paymentModeId = ""
+
+    private var selectedYear = ""
+    private var selectedTankerType = ""
+    private var selectedTankerNo = ""
+    private var selectedPaymentMode = ""
 
     private var fromDate = ""
     private var toDate = ""
+    private var displayFromDate = ""
+    private var displayToDate = ""
 
-    private var displayFromDate: String? = null
-    private var displayToDate: String? = null
+    private var callBack: MaintenanceFilterClickListener? = null
 
-    private var paymentModeList = ArrayList<FilterItem>()
-    private var paymentModeId = ""
-    private var selectedPaymentMode = ""
+    companion object {
+        fun getInstance(
+            selectedYear: String,
+            selectedTankerType: String,
+            selectedTankerNo: String,
+            selectedPaymentMode: String,
+            fromDate: String,
+            toDate: String,
+            displayFromDate: String,
+            displayToDate: String,
+            listener: MaintenanceFilterClickListener
+        ): MaintenanceFilterDialogFragment {
+            val fragment = MaintenanceFilterDialogFragment()
+            fragment.yearId = selectedYear
+            fragment.tankerTypeId = selectedTankerType
+            fragment.tankerNoId = selectedTankerNo
+            fragment.paymentModeId = selectedPaymentMode
+            fragment.fromDate = fromDate
+            fragment.toDate = toDate
+            fragment.displayFromDate = displayFromDate
+            fragment.displayToDate = displayToDate
+            fragment.callBack = listener
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,9 +93,19 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
         binding?.tvTankerNo?.setOnClickListener(this)
         binding?.tvFromDate?.setOnClickListener(this)
         binding?.tvToDate?.setOnClickListener(this)
+        binding?.tvPaymentMode?.setOnClickListener(this)
     }
 
     private fun init() {
+        if (!CommonUtils.isEmpty(displayFromDate)) {
+            binding?.tvYear?.isEnabled = false
+            binding?.tvYear?.alpha = 0.5f
+            binding?.tvFromDate?.setText(displayFromDate)
+        }
+        if (!CommonUtils.isEmpty(displayToDate)) {
+            binding?.tvToDate?.setText(displayToDate)
+        }
+
         setYearSpinner()
         setTankerTypeSpinner()
         setTankerNoSpinner()
@@ -88,6 +123,11 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
         binding?.spYear?.adapter = adapter
 
         if (yearId.isNotEmpty()) {
+            binding?.tvFromDate?.isEnabled = false
+            binding?.tvToDate?.isEnabled = false
+            binding?.tvFromDate?.alpha = 0.5f
+            binding?.tvToDate?.alpha = 0.5f
+
             val statusName: FilterItem? = yearList.find { it.dbValue.equals(yearId, false) }
             val spinnerPosition: Int = yearList.indexOf(statusName)
             selectedYear = statusName.toString()
@@ -198,12 +238,13 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
         }
     }
 
-
     override fun onClick(v: View?) {
         var selectedDate: Date? = null
         when (v?.id) {
 
             R.id.tvFromDate -> {
+                binding?.tvYear?.isEnabled = false
+                binding?.tvYear?.alpha = 0.5f
                 selectedDate = CommonUtils.getDateFromDisplay(fromDate)
 
                 baseActivity?.setNormalCalender(
@@ -212,7 +253,7 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
                             binding?.tvFromDate?.setText(date1.toString())
                             selectedDate = date1
                             fromDate = CommonUtils.getFormattedDateFromV2(date1).toString()
-                            displayFromDate = CommonUtils.getFormattedDateFrom(date1)
+                            displayFromDate = CommonUtils.getFormattedDateFrom(date1).toString()
                             binding?.tvFromDate?.setText(displayFromDate)
                         }
                     },
@@ -230,7 +271,7 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
                             binding?.tvToDate?.setText(date1.toString())
                             selectedDate = date1
                             toDate = CommonUtils.getFormattedDateFromV2(date1).toString()
-                            displayToDate = CommonUtils.getFormattedDateFrom(date1)
+                            displayToDate = CommonUtils.getFormattedDateFrom(date1).toString()
                             binding?.tvToDate?.setText(displayToDate)
                         }
                     },
@@ -242,15 +283,28 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
             R.id.btnClose -> dismiss()
 
             R.id.btnApply -> {
+                callBack?.onApply(
+                    fromDate, displayFromDate, toDate, displayToDate,
+                    selectedYear, selectedTankerType, selectedTankerNo,
+                    selectedPaymentMode
+                )
                 dismiss()
             }
 
             R.id.btnClear -> {
+                callBack?.onClear()
                 resetFilter()
                 dismiss()
             }
 
-            R.id.tvYear -> binding?.spYear?.performClick()
+            R.id.tvYear -> {
+                binding?.tvFromDate?.isEnabled = false
+                binding?.tvToDate?.isEnabled = false
+                binding?.tvFromDate?.alpha = 0.5f
+                binding?.tvToDate?.alpha = 0.5f
+                binding?.spYear?.performClick()
+            }
+
             R.id.tvTanker -> binding?.spTanker?.performClick()
             R.id.tvTankerNo -> binding?.spTankerNo?.performClick()
             R.id.tvPaymentMode -> binding?.spPaymentMode?.performClick()
@@ -262,6 +316,25 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
         binding?.spTanker?.setSelection(0)
         binding?.spTankerNo?.setSelection(0)
         binding?.spPaymentMode?.setSelection(0)
+
+        binding?.tvYear?.isEnabled = true
+        binding?.tvFromDate?.isEnabled = true
+        binding?.tvToDate?.isEnabled = true
+
+        yearId = ""
+        tankerTypeId = ""
+        tankerNoId = ""
+        paymentModeId = ""
+
+        selectedYear = ""
+        selectedTankerType = ""
+        selectedTankerNo = ""
+        selectedPaymentMode = ""
+
+        fromDate = ""
+        toDate = ""
+        displayFromDate = ""
+        displayToDate = ""
     }
 
 }

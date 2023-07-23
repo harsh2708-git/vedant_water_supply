@@ -1,20 +1,18 @@
 package com.production.vedantwatersupply.ui.driver
 
 import android.content.Context
-import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentDriverListingBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
+import com.production.vedantwatersupply.listener.DriverFilterClickListener
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
 import com.production.vedantwatersupply.ui.dialog.DriverFilterDialogFragment
-import com.production.vedantwatersupply.ui.dialog.FilterDialogFragment
+import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.transportermanger.util.filter.FilterItem
@@ -25,6 +23,21 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private var monthFilterAdapter: FilterListAdapter? = null
     private var monthList = ArrayList<FilterItem>()
     private var monthId = ""
+
+    private var yearId = ""
+    private var driverTypeId = ""
+    private var driverId = ""
+    private var paymentModeId = ""
+
+    private var selectedYear = ""
+    private var selectedDriverType = ""
+    private var selectedDriver = ""
+    private var selectedPaymentMode = ""
+
+    private var fromDate = ""
+    private var toDate = ""
+    private var displayFromDate = ""
+    private var displayToDate = ""
 
     override val layoutId: Int
         get() = R.layout.fragment_driver_listing
@@ -42,11 +55,13 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         binding?.clHeader?.ivBack?.setOnClickListener(this)
         binding?.btnAdd?.setOnClickListener(this)
         binding?.btnFilter?.setOnClickListener(this)
+        binding?.ivUp?.setOnClickListener(this)
+        binding?.appBar?.addOnOffsetChangedListener { _, verticalOffset ->
+            binding?.ivUp?.visibility = if (verticalOffset < 0) View.VISIBLE else  View.GONE
+        }
     }
 
-    override fun addObserver() {
-
-    }
+    override fun addObserver() {}
 
     private fun setScreenTitle() {
         binding?.clScreenTitle?.tvTitle?.text = getString(R.string.drivers)
@@ -55,6 +70,8 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
 
     private fun setSummary() {
         binding?.clSummary?.labelTotal?.text = getString(R.string.total_drivers_expense)
+        binding?.clSummary?.tvCurrentMonth?.text = CommonUtils.currentMonth()
+        binding?.clSummary?.tvDate?.text = CommonUtils.currentDate()
     }
 
     private fun initFilterView() {
@@ -94,11 +111,46 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
             R.id.ivBack -> baseActivity?.onBackPressed()
             R.id.btnAdd -> navigateFragment(v, R.id.nav_add_driver)
             R.id.btnFilter -> openFilterDialog()
+            R.id.ivUp -> {
+                binding?.appBar?.scrollTo(0, 0)
+                binding?.rvDrivers?.smoothScrollToPosition(0)
+                binding?.appBar?.setExpanded(true, true)
+            }
         }
     }
 
     private fun openFilterDialog() {
-        val filterDialog = DriverFilterDialogFragment()
+        val filterDialog = DriverFilterDialogFragment.getInstance(
+            selectedYear,selectedDriverType,selectedDriver,selectedPaymentMode,fromDate,toDate,displayFromDate,displayToDate,object : DriverFilterClickListener{
+                override fun onApply(fromDate: String, displayFromDate: String?, toDate: String, displayToDate: String?, selectedYear: String, selectedDriverType: String, selectedDriver: String, selectedPaymentMode: String) {
+                    this@DriverListingFragment.fromDate = fromDate
+                    this@DriverListingFragment.displayFromDate = displayFromDate.toString()
+                    this@DriverListingFragment.toDate = toDate
+                    this@DriverListingFragment.displayToDate = displayToDate.toString()
+                    this@DriverListingFragment.selectedYear = selectedYear
+                    this@DriverListingFragment.selectedDriver = selectedDriver
+                    this@DriverListingFragment.selectedDriverType = selectedDriverType
+                    this@DriverListingFragment.selectedPaymentMode = selectedPaymentMode
+                }
+
+                override fun onClear() {
+                  yearId = ""
+                  driverTypeId = ""
+                  driverId = ""
+                  paymentModeId = ""
+
+                  selectedYear = ""
+                  selectedDriverType = ""
+                  selectedDriver = ""
+                  selectedPaymentMode = ""
+
+                  fromDate = ""
+                  toDate = ""
+                  displayFromDate = ""
+                  displayToDate = ""
+                }
+            }
+        )
         filterDialog.show(childFragmentManager, "Trip Filter Dialog")
     }
 

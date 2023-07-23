@@ -200,7 +200,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/labelDriverType" />
+                            app:layout_constraintTop_toBottomOf="@id/tvDriverType" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelDriver"
@@ -235,7 +235,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/labelDriver" />
+                            app:layout_constraintTop_toBottomOf="@id/tvDriver" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelPaymentMode"
@@ -270,8 +270,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/labelPaymentMode" />
-
+                            app:layout_constraintTop_toBottomOf="@id/tvPaymentMode" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

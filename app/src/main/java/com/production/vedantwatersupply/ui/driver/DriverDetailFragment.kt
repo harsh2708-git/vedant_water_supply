@@ -29,6 +29,11 @@ class DriverDetailFragment : BaseFragment<FragmentDriverDetailBinding,DriverView
         binding?.clHeader?.ivBack?.setOnClickListener(this)
         binding?.ivOptions?.setOnClickListener(this)
         binding?.ivUp?.setOnClickListener(this)
+        binding?.nsView?.viewTreeObserver?.addOnScrollChangedListener {
+            val scrollY = binding?.nsView?.scrollY
+            if (scrollY != null)
+                binding?.ivUp?.visibility = if (scrollY > 0) View.VISIBLE else View.GONE
+        }
     }
 
     override fun addObserver() {
@@ -39,7 +44,7 @@ class DriverDetailFragment : BaseFragment<FragmentDriverDetailBinding,DriverView
         when (v?.id) {
             R.id.ivBack -> baseActivity?.onBackPressed()
             R.id.ivOptions -> showOptionMenu(v)
-            R.id.ivUp -> {}
+            R.id.ivUp -> binding?.nsView?.smoothScrollTo(0, 0)
         }
     }
 
