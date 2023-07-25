@@ -15,6 +15,7 @@ import com.production.vedantwatersupply.ui.dialog.AlertDialogFragment
 import org.json.JSONException
 import org.json.JSONObject
 import java.text.DateFormat
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -138,5 +139,135 @@ object CommonUtils {
         Log.d("Month", dateFormat.format(date))
         return dateFormat.format(date)
     }
+
+    /**
+     * Get Formatted number with comma in Locale.ENGLISH format
+     *
+     * @param number Number to be formatted
+     * @return Formatted String
+     */
+    fun getNumberFormat(number: Double): String? {
+        val myFormat = NumberFormat.getInstance(Locale.ENGLISH)
+        myFormat.isGroupingUsed = true
+        //        myFormat.setMaximumFractionDigits(0);
+        return myFormat.format(number)
+    }
+
+    fun getNumberFormat(number: Double, fractionDigits: Int): String? {
+        val myFormat = NumberFormat.getInstance(Locale.ENGLISH)
+        myFormat.isGroupingUsed = true
+        myFormat.maximumFractionDigits = fractionDigits
+        return myFormat.format(number)
+    }
+
+    /**
+     * Restricting given number up to 2 decimal.
+     *
+     * @param number number to be converted.
+     * @return Formatted string
+     */
+    fun getCurrencyFormat(number: Double): String? {
+        return getCurrencyFormat(number, 2)
+    }
+
+    /**
+     * Restricting given number up to given digits.
+     *
+     * @param number number to be converted.
+     * @param digits decimal points.
+     * @return formatted string
+     */
+    fun getCurrencyFormat(number: Double, digits: Int): String? {
+        val myFormat = NumberFormat.getInstance(Locale.ENGLISH)
+        myFormat.isGroupingUsed = true
+        myFormat.minimumFractionDigits = digits
+        myFormat.maximumFractionDigits = digits
+        return myFormat.format(number)
+    }
+
+    fun getNumberFormat(doubleString: String): String? {
+        var doubleString = doubleString
+        return try {
+            if (doubleString.contains(",")) {
+                doubleString = doubleString.replace(",", "")
+            }
+            getNumberFormat(doubleString.toDouble())
+        } catch (e: java.lang.Exception) {
+            doubleString
+        }
+    }
+
+    /**
+     * Restricting given number up to 2 decimal.
+     *
+     * @param doubleString number to be converted.
+     * @return Formatted string
+     */
+    fun getCurrencyFormat(doubleString: String): String? {
+        var doubleString = doubleString
+        return try {
+            if (doubleString.contains(",")) {
+                doubleString = doubleString.replace(",", "")
+            }
+            if (isEmpty(doubleString)) {
+                doubleString = "0"
+            }
+            getCurrencyFormat(doubleString.toDouble())
+        } catch (e: java.lang.Exception) {
+            doubleString
+        }
+    }
+
+    fun getQuantityFormat(quantity: Double, productType: String?): String? {
+        return getQuantityFormat(quantity.toString(), productType)
+    }
+
+    fun getQuantityFormat(quantity: String, productType: String?): String? {
+        var quantity = quantity
+        return if (isEmpty(productType) ) {
+            getCurrencyFormat(quantity)
+        } else {
+            try {
+                if (quantity.contains(",")) {
+                    quantity = quantity.replace(",", "")
+                }
+                if (quantity.contains(".")) {
+                    quantity = quantity.substring(0, quantity.indexOf("."))
+                }
+                val temp = quantity.toInt()
+                val myFormat = NumberFormat.getInstance(Locale.ENGLISH)
+                myFormat.isGroupingUsed = true
+                myFormat.format(temp.toLong())
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+                quantity
+            }
+        }
+    }
+
+    fun getCurrencyFormat(currencyCode: String?, doubleString: String): String? {
+        return String.format(Locale.ENGLISH, "%s%s", currencyCode, getCurrencyFormat(doubleString))
+    }
+
+    fun getCurrencyFormat(currencyCode: String?, number: Double): String? {
+        return String.format(Locale.ENGLISH, "%s%s", currencyCode, getCurrencyFormat(number))
+    }
+
+    /**
+     * Trim comma of string string.
+     *
+     * @param string the string
+     * @return the string
+     */
+    //Trims all the comma of the string and returns
+    fun trimCommaOfString(string: String): String? {
+//        String returnString;
+        return if (string.contains(",")) {
+            string.replace(",", "")
+        } else {
+            string
+        }
+    }
+
 
 }

@@ -12,6 +12,7 @@ import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentDashboardBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
+import com.production.vedantwatersupply.model.response.DashboardResponse
 import com.production.vedantwatersupply.ui.dialog.AlertDialogFragment
 import com.production.vedantwatersupply.ui.driver.DriverAdapter
 import com.production.vedantwatersupply.ui.login.LoginActivity
@@ -73,8 +74,10 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
             baseActivity?.hideProgress()
             when (it?.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
-                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+//                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                    updateUI(it)
                 }
+
                 WebServiceSetting.FAILURE -> {
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
                 }
@@ -84,6 +87,13 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
                 }
             }
         }
+    }
+
+    private fun updateUI(dashboardResponse: DashboardResponse) {
+        binding?.tvTotalTrip?.text = CommonUtils.getCurrencyFormat(dashboardResponse.totalTripsCount.toString())
+        binding?.tvTotalFuelAmount?.text = getString(R.string.indian_rupee).plus(CommonUtils.getCurrencyFormat(dashboardResponse.totalTripsAmount.toString()))
+        binding?.tvTotalMaintanance?.text = CommonUtils.getCurrencyFormat(dashboardResponse.totalMaintainanceCount.toString())
+        binding?.tvTotalMaintananceAmount?.text = getString(R.string.indian_rupee).plus(CommonUtils.getCurrencyFormat(dashboardResponse.totalMaintainanceAmount.toString()))
     }
 
     private fun setTripsAdapter() {
