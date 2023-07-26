@@ -12,7 +12,7 @@ class TripData {
     @Expose
     var reference: String? = null
 
-    @SerializedName("vehicle")
+    @SerializedName("tanker")
     @Expose
     var vehicle: List<Vehicle>? = null
 

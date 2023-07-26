@@ -1,13 +1,22 @@
 package com.production.vedantwatersupply.ui.trips
 
-import android.graphics.Path.FillType
+import android.content.Context
 import android.view.View
 import android.widget.AdapterView
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentAddTripBinding
+import com.production.vedantwatersupply.model.request.AddTripRequest
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_DRIVER
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_TANKER
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OWN_TANKER
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.PERMANENT_DRIVER
+import com.production.vedantwatersupply.utils.CommonUtils
+import com.production.vedantwatersupply.utils.calendar.CaldroidListener
+import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 import com.transportermanger.util.filter.FilterItem
+import java.util.Date
 
 class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), View.OnClickListener {
 
@@ -27,6 +36,16 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
     private var fuelFilledById = ""
     private var selectedFuelFilledBy = ""
 
+    private var addUpdateTripRequest = AddTripRequest()
+
+    private var fromDate = ""
+    private var displayFromDate = ""
+
+    private var isOwnTanker = true
+    private var isOtherTanker = false
+    private var isPermanentDriver = true
+    private var isOtherDriver = false
+
     override val layoutId: Int
         get() = R.layout.fragment_add_trip
 
@@ -40,6 +59,9 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         binding?.clDriverRadio?.rb1?.text = getString(R.string.permanent_drivers)
         binding?.clDriverRadio?.rb2?.text = getString(R.string.other_driver)
 
+        addUpdateTripRequest.tankerType = OWN_TANKER
+        addUpdateTripRequest.driverType = PERMANENT_DRIVER
+
         setTankerNoSpinner()
         setPaymentModeSpinner()
         setDriverSpinner()
@@ -52,18 +74,30 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
             if (checkedId == binding?.clRadio?.rb1?.id) {
                 binding?.grpTruckSpinner?.visibility = View.VISIBLE
                 binding?.etTankerNo?.visibility = View.GONE
+                addUpdateTripRequest.tankerType = OWN_TANKER
+                isOwnTanker = true
+                isOtherTanker = false
             } else {
                 binding?.grpTruckSpinner?.visibility = View.GONE
                 binding?.etTankerNo?.visibility = View.VISIBLE
+                addUpdateTripRequest.tankerType = OTHER_TANKER
+                isOwnTanker = false
+                isOtherTanker = true
             }
         }
         binding?.clDriverRadio?.rgCustom?.setOnCheckedChangeListener { group, checkedId ->
             if (checkedId == binding?.clRadio?.rb1?.id) {
                 binding?.grpDriverSpinner?.visibility = View.VISIBLE
                 binding?.grpDriverNameMoNo?.visibility = View.GONE
+                addUpdateTripRequest.driverType = PERMANENT_DRIVER
+                isPermanentDriver = true
+                isOtherDriver = false
             } else {
                 binding?.grpDriverSpinner?.visibility = View.GONE
                 binding?.grpDriverNameMoNo?.visibility = View.VISIBLE
+                addUpdateTripRequest.driverType = OTHER_DRIVER
+                isPermanentDriver = false
+                isOtherDriver = true
             }
         }
         binding?.clHeader?.ivBack?.setOnClickListener(this)
@@ -75,11 +109,56 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         binding?.tvFillingSiteName?.setOnClickListener(this)
         binding?.tvFuelFilledBy?.setOnClickListener(this)
         binding?.ivUp?.setOnClickListener(this)
+        binding?.ivUp?.setOnClickListener(this)
+        binding?.tvDate?.setOnClickListener(this)
 
         binding?.nsView?.viewTreeObserver?.addOnScrollChangedListener {
             val scrollY = binding?.nsView?.scrollY
             if (scrollY != null)
                 binding?.ivUp?.visibility = if (scrollY > 0) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun callAddUpdateTripApi() {
+        baseActivity?.showProgress()
+        addUpdateTripRequest.tripId = ""
+
+        addUpdateTripRequest.tankerId = if (isOwnTanker) selectedTankerNo else ""
+        addUpdateTripRequest.tankerNo = if (isOtherTanker) binding?.etTankerNo?.getTrimmedText().toString() else ""
+        addUpdateTripRequest.tripDate = fromDate
+        addUpdateTripRequest.fuelAmount = binding?.etDieselAmount?.text.toString()
+        addUpdateTripRequest.paymentMode = selectedPaymentMode
+        addUpdateTripRequest.fuelFilledby = selectedFuelFilledBy
+        addUpdateTripRequest.driverId = if (isPermanentDriver) selectedDriver else ""
+        addUpdateTripRequest.driverName = if (isOtherDriver) binding?.etDriverName?.text.toString() else ""
+        addUpdateTripRequest.driverMoNo = if (isOtherDriver) binding?.etDriverMobileNo?.text.toString() else ""
+        addUpdateTripRequest.fillingSite = selectedFillingSite
+        addUpdateTripRequest.destinationSite = binding?.etDestinationName?.text.toString()
+        addUpdateTripRequest.customerName = binding?.etCustomerName?.text.toString()
+        addUpdateTripRequest.customerMobile = binding?.etCustomerMoNo?.text.toString()
+        addUpdateTripRequest.waterType = binding?.etTankerType?.text.toString()
+        addUpdateTripRequest.description = binding?.etDescription?.text.toString()
+
+//        viewModel?.callAddUpdateTripApi(addUpdateTripRequest)
+    }
+
+    override fun addObserver() {
+        viewModel?.tripRepository?.addTripMutableLiveData?.observe(this) {
+            baseActivity?.hideProgress()
+            when (it?.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+//                    baseActivity?.onBackPressed()
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
         }
     }
 
@@ -179,6 +258,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
     }
+
     private fun setFillingSiteSpinner() {
         val fillingSiteList = ArrayList<FilterItem>()
 
@@ -211,7 +291,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         }
     }
 
-    private fun setFuelFilledBy(){
+    private fun setFuelFilledBy() {
 
         val fuelFilledByList = ArrayList<FilterItem>()
         if (fuelFilledByList.isEmpty()) {
@@ -243,14 +323,19 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         }
     }
 
-    override fun addObserver() {}
     override fun onClick(v: View?) {
+        var selectedDate: Date? = null
         when (v?.id) {
 
             R.id.ivBack,
             R.id.btnDiscard -> baseActivity?.onBackPressed()
 
-            R.id.btnAdd -> {}
+            R.id.btnAdd -> {
+                if (isAllValid(requireContext(), addUpdateTripRequest) == true) {
+                    CommonUtils.showToast(requireContext(), "Checked")
+                    callAddUpdateTripApi()
+                } /*callAddUpdateTripApi()*/
+            }
 
             R.id.tvTankerNo -> binding?.spTankerNo?.performClick()
             R.id.tvPaymentMode -> binding?.spPaymentMode?.performClick()
@@ -259,8 +344,63 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
             R.id.tvFuelFilledBy -> binding?.spFuelFilledBy?.performClick()
 
             R.id.ivUp -> binding?.nsView?.smoothScrollTo(0, 0)
+
+            R.id.tvDate -> {
+                selectedDate = CommonUtils.getDateFromDisplay(fromDate)
+
+                baseActivity?.setNormalCalender(
+                    object : CaldroidListener() {
+                        override fun onSelectDate(date1: Date?, view: View?) {
+                            binding?.tvDate?.setText(date1.toString())
+                            selectedDate = date1
+                            fromDate = CommonUtils.getFormattedDateFromV2(date1).toString()
+                            displayFromDate = CommonUtils.getFormattedDateFrom(date1).toString()
+                            binding?.tvDate?.setText(displayFromDate)
+                        }
+                    }, selectedDate, null, null
+                )
+            }
         }
     }
 
+
+    fun isAllValid(context: Context, request: AddTripRequest): Boolean {
+        return if (request.tankerType.equals(OWN_TANKER, ignoreCase = true) && binding?.spTankerNo?.selectedItemPosition == 0) {
+            CommonUtils.showToast(context, context.getString(R.string.please_select_tanker_no))
+            false
+        } else if (request.tankerType.equals(OTHER_TANKER, ignoreCase = true) && binding?.etTankerNo?.text?.isEmpty() == true) {
+            CommonUtils.showToast(context, context.getString(R.string.please_enter_tanker_no))
+            false
+        } else if (binding?.tvDate?.text?.isEmpty() == true) {
+            CommonUtils.showToast(context, context.getString(R.string.please_select_date))
+            false
+        } else if (binding?.etDieselAmount?.text?.isEmpty() == true) {
+            CommonUtils.showToast(context, context.getString(R.string.please_enter_fuel_amount))
+            false
+        } else if (request.paymentMode.isEmpty()) {
+            CommonUtils.showToast(context, context.getString(R.string.please_select_payment_mode))
+            false
+        } else if (request.fuelFilledby.isEmpty()) {
+            CommonUtils.showToast(context, context.getString(R.string.please_select_fuel_filled_by))
+            false
+        } else if (request.driverType.equals(PERMANENT_DRIVER, ignoreCase = true) && request.driverId == "" && request.driverId.isEmpty()) {
+            CommonUtils.showToast(context, context.getString(R.string.please_select_driver))
+            false
+        } else if (request.driverType.equals(OTHER_DRIVER, ignoreCase = true) && request.driverName == "" && request.driverName.isEmpty()) {
+            CommonUtils.showToast(context, context.getString(R.string.please_enter_driver_name))
+            false
+        } else if (request.fillingSite.isEmpty()) {
+            CommonUtils.showToast(context, context.getString(R.string.please_select_filling_site))
+            false
+        } else if (request.destinationSite.isEmpty()) {
+            CommonUtils.showToast(context, context.getString(R.string.please_enter_destination_site))
+            false
+        } else if (request.customerName.isEmpty()) {
+            CommonUtils.showToast(context, context.getString(R.string.please_enter_customer_name))
+            false
+        } else {
+            true
+        }
+    }
 
 }

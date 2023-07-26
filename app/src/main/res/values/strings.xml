@@ -140,4 +140,10 @@
     <string name="driver_mo_no">Driver Mo No.</string>
     <string name="total_fuel_amount">Total Fuel Amount</string>
     <string name="indian_rupee">&#8377;</string>
+    <string name="please_enter_tanker_no">Please enter tanker no</string>
+    <string name="please_select_date">Please select date</string>
+    <string name="please_enter_fuel_amount">Please enter fuel amount</string>
+    <string name="please_enter_driver_name">Please enter driver name</string>
+    <string name="please_enter_destination_site">Please enter destination site</string>
+    <string name="please_enter_customer_name">Please enter customer name</string>
 </resources>

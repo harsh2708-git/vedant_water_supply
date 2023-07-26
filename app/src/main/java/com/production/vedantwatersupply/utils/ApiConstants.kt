@@ -7,5 +7,11 @@ interface ApiConstants {
 
         const val API_LOGIN = "login"
         const val API_DASHBOARD = "dashboard"
+
+        interface Trip{
+            companion object{
+                const val API_ADD_UPDATE_TRIP = "trip/addUpdateTrip"
+            }
+        }
     }
 }
