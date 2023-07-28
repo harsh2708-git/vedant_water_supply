@@ -105,13 +105,13 @@
     <string name="please_select_year">Please Select Year</string>
     <string name="please_select_tanker_type">Please Select Tanker Type</string>
     <string name="own_tanker">Own Tanker</string>
-    <string name="please_select_tanker_no">Please Select Tanker No.</string>
-    <string name="please_select_payment_mode">Please Select Payment Mode</string>
+    <string name="please_select_tanker_no">Please select tanker no</string>
+    <string name="please_select_payment_mode">Please select payment mode</string>
     <string name="please_select_driver_type">Please Select Driver Type</string>
     <string name="permanante">Permanante</string>
     <string name="other_drivers">Other Drivers</string>
-    <string name="please_select_driver">Please Select Driver</string>
-    <string name="please_select_filling_site">Please Select Filling Site</string>
+    <string name="please_select_driver">Please select driver</string>
+    <string name="please_select_filling_site">Please select filling site</string>
     <string name="cidco_water">Cidco Water</string>
     <string name="midc_water">MIDC Water</string>
     <string name="borewell_water">Borewell Water</string>
@@ -130,7 +130,7 @@
     <string name="mh_48_j_0158">MH 48 J 0158</string>
     <string name="calendar">Calendar</string>
     <string name="fuel_filled_by">Fuel Filled By</string>
-    <string name="please_select_fuel_filled_by">Please Select Fuel Filled By</string>
+    <string name="please_select_fuel_filled_by">Please select fuel filled by</string>
     <string name="by_ajit">By Ajit</string>
     <string name="by_nitish">By Nitish</string>
     <string name="by_bussiness_card">By Bussiness Card</string>
@@ -146,4 +146,7 @@
     <string name="please_enter_driver_name">Please enter driver name</string>
     <string name="please_enter_destination_site">Please enter destination site</string>
     <string name="please_enter_customer_name">Please enter customer name</string>
+    <string name="all">All</string>
+    <string name="please_wait">Please Wait</string>
+    <string name="na">N/A</string>
 </resources>

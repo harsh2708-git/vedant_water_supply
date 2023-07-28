@@ -9,14 +9,10 @@ import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseDialogFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentDriverFilterDialogBinding
-import com.production.vedantwatersupply.databinding.FragmentFilterDialogBinding
-import com.production.vedantwatersupply.databinding.FragmentMaintenanceFilterDialogBinding
 import com.production.vedantwatersupply.listener.DriverFilterClickListener
-import com.production.vedantwatersupply.listener.MaintenanceFilterClickListener
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.calendar.CaldroidListener
-import com.transportermanger.util.filter.FilterItem
-import java.sql.Driver
+import com.production.vedantwatersupply.utils.filter.FilterItem
 import java.util.Date
 
 class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {

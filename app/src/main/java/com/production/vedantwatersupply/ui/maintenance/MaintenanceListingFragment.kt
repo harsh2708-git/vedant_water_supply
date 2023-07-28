@@ -1,11 +1,8 @@
 package com.production.vedantwatersupply.ui.maintenance
 
 import android.content.Context
-import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import com.production.vedantwatersupply.R
@@ -14,13 +11,11 @@ import com.production.vedantwatersupply.databinding.FragmentMaintenanceListingBi
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.MaintenanceFilterClickListener
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
-import com.production.vedantwatersupply.ui.dialog.FilterDialogFragment
 import com.production.vedantwatersupply.ui.dialog.MaintenanceFilterDialogFragment
-import com.production.vedantwatersupply.ui.trips.TripsAdapter
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
-import com.transportermanger.util.filter.FilterItem
+import com.production.vedantwatersupply.utils.filter.FilterItem
 import com.transportermanger.util.filter.IFilterItem
 
 class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBinding, MaintenanceViewModel>(), View.OnClickListener, RecyclerViewClickListener {

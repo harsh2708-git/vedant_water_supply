@@ -2,8 +2,9 @@ package com.production.vedantwatersupply.model.response
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.production.vedantwatersupply.webservice.baseresponse.BaseWebserviceResponse
 
-class TripData {
+class TripData: BaseWebserviceResponse() {
     @SerializedName("_id")
     @Expose
     var id: String? = null
@@ -14,27 +15,27 @@ class TripData {
 
     @SerializedName("tanker")
     @Expose
-    var vehicle: List<Vehicle>? = null
+    var tanker: Tanker? = null
 
     @SerializedName("driver")
     @Expose
-    var driver: List<Driver>? = null
+    var driver: Driver? = null
 
     @SerializedName("addedBy")
     @Expose
-    var addedBy: List<AddedBy>? = null
+    var addedBy: AddedBy? = null
 
     @SerializedName("tripDate")
     @Expose
     var tripDate: String? = null
 
-    @SerializedName("fromDestination")
+    @SerializedName("fillingSite")
     @Expose
-    var fromDestination: String? = null
+    var fillingSite: String? = null
 
-    @SerializedName("toDestination")
+    @SerializedName("destinationSite")
     @Expose
-    var toDestination: String? = null
+    var destinationSite: String? = null
 
     @SerializedName("fuelFilledBy")
     @Expose
@@ -52,9 +53,9 @@ class TripData {
     @Expose
     var waterType: String? = null
 
-    @SerializedName("amount")
+    @SerializedName("fuelAmount")
     @Expose
-    var amount: Int? = null
+    var fuelAmount: Double? = null
 
     @SerializedName("paymentMode")
     @Expose
@@ -76,7 +77,9 @@ class TripData {
     @Expose
     var updatedAt: String? = null
 
-    @SerializedName("__v")
+    @SerializedName("tripDate_readable")
     @Expose
-    var v: Int? = null
+    var tripDateReadable: String? = null
+
+
 }

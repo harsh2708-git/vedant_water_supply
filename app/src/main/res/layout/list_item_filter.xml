@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.transportermanger.util.filter.FilterItem" />
+            type="com.production.vedantwatersupply.utils.filter.FilterItem" />
     </data>
 
     <androidx.appcompat.widget.AppCompatTextView

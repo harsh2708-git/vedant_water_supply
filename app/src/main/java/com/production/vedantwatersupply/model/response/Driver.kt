@@ -17,4 +17,8 @@ class Driver {
     @Expose
     var isParmanent: Boolean? = null
 
+    @SerializedName("driverMobile")
+    @Expose
+    var driverMobile: String? = null
+
 }

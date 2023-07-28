@@ -15,7 +15,7 @@ import com.production.vedantwatersupply.ui.dialog.DriverFilterDialogFragment
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
-import com.transportermanger.util.filter.FilterItem
+import com.production.vedantwatersupply.utils.filter.FilterItem
 import com.transportermanger.util.filter.IFilterItem
 
 class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverViewModel>(), View.OnClickListener, RecyclerViewClickListener {

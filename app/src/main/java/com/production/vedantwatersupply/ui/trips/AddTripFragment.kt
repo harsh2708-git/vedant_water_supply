@@ -1,8 +1,10 @@
 package com.production.vedantwatersupply.ui.trips
 
-import android.content.Context
+import android.app.DatePickerDialog
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
+import com.google.gson.Gson
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
@@ -13,9 +15,9 @@ import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OWN_TANKER
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.PERMANENT_DRIVER
 import com.production.vedantwatersupply.utils.CommonUtils
-import com.production.vedantwatersupply.utils.calendar.CaldroidListener
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
-import com.transportermanger.util.filter.FilterItem
+import com.production.vedantwatersupply.utils.filter.FilterItem
+import java.util.Calendar
 import java.util.Date
 
 class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), View.OnClickListener {
@@ -46,6 +48,8 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
     private var isPermanentDriver = true
     private var isOtherDriver = false
 
+    private var scheduledDate: Calendar? = null
+
     override val layoutId: Int
         get() = R.layout.fragment_add_trip
 
@@ -62,6 +66,8 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         addUpdateTripRequest.tankerType = OWN_TANKER
         addUpdateTripRequest.driverType = PERMANENT_DRIVER
 
+        scheduledDate = Calendar.getInstance()
+
         setTankerNoSpinner()
         setPaymentModeSpinner()
         setDriverSpinner()
@@ -77,12 +83,15 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
                 addUpdateTripRequest.tankerType = OWN_TANKER
                 isOwnTanker = true
                 isOtherTanker = false
+                binding?.etTankerNo?.setText("")
             } else {
                 binding?.grpTruckSpinner?.visibility = View.GONE
                 binding?.etTankerNo?.visibility = View.VISIBLE
                 addUpdateTripRequest.tankerType = OTHER_TANKER
                 isOwnTanker = false
                 isOtherTanker = true
+                binding?.spTankerNo?.setSelection(0)
+                binding?.tvTankerNo?.text = ""
             }
         }
         binding?.clDriverRadio?.rgCustom?.setOnCheckedChangeListener { group, checkedId ->
@@ -92,12 +101,16 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
                 addUpdateTripRequest.driverType = PERMANENT_DRIVER
                 isPermanentDriver = true
                 isOtherDriver = false
+                binding?.etDriverName?.setText("")
+                binding?.etDriverMobileNo?.setText("")
             } else {
                 binding?.grpDriverSpinner?.visibility = View.GONE
                 binding?.grpDriverNameMoNo?.visibility = View.VISIBLE
                 addUpdateTripRequest.driverType = OTHER_DRIVER
                 isPermanentDriver = false
                 isOtherDriver = true
+                binding?.spDriverName?.setSelection(0)
+                binding?.tvDriverName?.text = ""
             }
         }
         binding?.clHeader?.ivBack?.setOnClickListener(this)
@@ -124,22 +137,22 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         addUpdateTripRequest.tripId = ""
 
         addUpdateTripRequest.tankerId = if (isOwnTanker) selectedTankerNo else ""
-        addUpdateTripRequest.tankerNo = if (isOtherTanker) binding?.etTankerNo?.getTrimmedText().toString() else ""
-        addUpdateTripRequest.tripDate = fromDate
-        addUpdateTripRequest.fuelAmount = binding?.etDieselAmount?.text.toString()
+        addUpdateTripRequest.tankerNumber = if (isOtherTanker) binding?.etTankerNo?.getTrimmedText().toString() else ""
+        addUpdateTripRequest.tripDate = scheduledDate?.time?.let { CommonUtils.formatAPIDate(it) }.toString()
+        addUpdateTripRequest.fuelAmount = binding?.etDieselAmount?.numericValue!!
         addUpdateTripRequest.paymentMode = selectedPaymentMode
-        addUpdateTripRequest.fuelFilledby = selectedFuelFilledBy
+        addUpdateTripRequest.fuelFilledBy = selectedFuelFilledBy
         addUpdateTripRequest.driverId = if (isPermanentDriver) selectedDriver else ""
         addUpdateTripRequest.driverName = if (isOtherDriver) binding?.etDriverName?.text.toString() else ""
-        addUpdateTripRequest.driverMoNo = if (isOtherDriver) binding?.etDriverMobileNo?.text.toString() else ""
+        addUpdateTripRequest.driverMobile = if (isOtherDriver) binding?.etDriverMobileNo?.text.toString() else ""
         addUpdateTripRequest.fillingSite = selectedFillingSite
         addUpdateTripRequest.destinationSite = binding?.etDestinationName?.text.toString()
         addUpdateTripRequest.customerName = binding?.etCustomerName?.text.toString()
         addUpdateTripRequest.customerMobile = binding?.etCustomerMoNo?.text.toString()
         addUpdateTripRequest.waterType = binding?.etTankerType?.text.toString()
         addUpdateTripRequest.description = binding?.etDescription?.text.toString()
-
-//        viewModel?.callAddUpdateTripApi(addUpdateTripRequest)
+        Log.e("Add Update Request", "callAddUpdateTripApi: " + Gson().toJson(addUpdateTripRequest))
+        viewModel?.callAddUpdateTripApi(addUpdateTripRequest)
     }
 
     override fun addObserver() {
@@ -331,10 +344,10 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
             R.id.btnDiscard -> baseActivity?.onBackPressed()
 
             R.id.btnAdd -> {
-                if (isAllValid(requireContext(), addUpdateTripRequest) == true) {
+                if (isAllValid(addUpdateTripRequest)) {
                     CommonUtils.showToast(requireContext(), "Checked")
                     callAddUpdateTripApi()
-                } /*callAddUpdateTripApi()*/
+                }
             }
 
             R.id.tvTankerNo -> binding?.spTankerNo?.performClick()
@@ -346,7 +359,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
             R.id.ivUp -> binding?.nsView?.smoothScrollTo(0, 0)
 
             R.id.tvDate -> {
-                selectedDate = CommonUtils.getDateFromDisplay(fromDate)
+                /*selectedDate = CommonUtils.getDateFromDisplay(fromDate)
 
                 baseActivity?.setNormalCalender(
                     object : CaldroidListener() {
@@ -358,45 +371,59 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
                             binding?.tvDate?.setText(displayFromDate)
                         }
                     }, selectedDate, null, null
+                )*/
+
+                val dialogLicense = DatePickerDialog(
+                    requireContext(), 0,
+                    { view, year, month, dayOfMonth ->
+                        scheduledDate?.set(Calendar.YEAR, year)
+                        scheduledDate?.set(Calendar.MONTH, month)
+                        scheduledDate?.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                        binding?.tvDate?.let { CommonUtils.showFormattedDate(it, scheduledDate?.time) }
+                    },
+                    scheduledDate!![Calendar.YEAR],
+                    scheduledDate!![Calendar.MONTH],
+                    scheduledDate!![Calendar.DAY_OF_MONTH]
                 )
+                dialogLicense.datePicker.maxDate = Calendar.getInstance().timeInMillis
+                dialogLicense.show()
             }
         }
     }
 
-
-    fun isAllValid(context: Context, request: AddTripRequest): Boolean {
+    private fun isAllValid(request: AddTripRequest): Boolean {
         return if (request.tankerType.equals(OWN_TANKER, ignoreCase = true) && binding?.spTankerNo?.selectedItemPosition == 0) {
-            CommonUtils.showToast(context, context.getString(R.string.please_select_tanker_no))
+            CommonUtils.showToast(requireContext(), getString(R.string.please_select_tanker_no))
             false
         } else if (request.tankerType.equals(OTHER_TANKER, ignoreCase = true) && binding?.etTankerNo?.text?.isEmpty() == true) {
-            CommonUtils.showToast(context, context.getString(R.string.please_enter_tanker_no))
+            CommonUtils.showToast(requireContext(), getString(R.string.please_enter_tanker_no))
             false
         } else if (binding?.tvDate?.text?.isEmpty() == true) {
-            CommonUtils.showToast(context, context.getString(R.string.please_select_date))
+            CommonUtils.showToast(requireContext(), getString(R.string.please_select_date))
             false
         } else if (binding?.etDieselAmount?.text?.isEmpty() == true) {
-            CommonUtils.showToast(context, context.getString(R.string.please_enter_fuel_amount))
+            CommonUtils.showToast(requireContext(), getString(R.string.please_enter_fuel_amount))
             false
-        } else if (request.paymentMode.isEmpty()) {
-            CommonUtils.showToast(context, context.getString(R.string.please_select_payment_mode))
+        } else if (binding?.spPaymentMode?.selectedItemPosition == 0) {
+            CommonUtils.showToast(requireContext(), getString(R.string.please_select_payment_mode))
             false
-        } else if (request.fuelFilledby.isEmpty()) {
-            CommonUtils.showToast(context, context.getString(R.string.please_select_fuel_filled_by))
+        } else if (binding?.spFuelFilledBy?.selectedItemPosition == 0) {
+            CommonUtils.showToast(requireContext(), getString(R.string.please_select_fuel_filled_by))
             false
-        } else if (request.driverType.equals(PERMANENT_DRIVER, ignoreCase = true) && request.driverId == "" && request.driverId.isEmpty()) {
-            CommonUtils.showToast(context, context.getString(R.string.please_select_driver))
+        } else if (request.driverType.equals(PERMANENT_DRIVER, ignoreCase = true) && binding?.spDriverName?.selectedItemPosition == 0) {
+            CommonUtils.showToast(requireContext(), getString(R.string.please_select_driver))
             false
-        } else if (request.driverType.equals(OTHER_DRIVER, ignoreCase = true) && request.driverName == "" && request.driverName.isEmpty()) {
-            CommonUtils.showToast(context, context.getString(R.string.please_enter_driver_name))
+        } else if (request.driverType.equals(OTHER_DRIVER, ignoreCase = true) && binding?.etDriverName?.text?.isEmpty() == true) {
+            CommonUtils.showToast(requireContext(), getString(R.string.please_enter_driver_name))
             false
-        } else if (request.fillingSite.isEmpty()) {
-            CommonUtils.showToast(context, context.getString(R.string.please_select_filling_site))
+        } else if (binding?.spFillingSiteName?.selectedItemPosition == 0) {
+            CommonUtils.showToast(requireContext(), getString(R.string.please_select_filling_site))
             false
-        } else if (request.destinationSite.isEmpty()) {
-            CommonUtils.showToast(context, context.getString(R.string.please_enter_destination_site))
+        } else if (binding?.etDestinationName?.text?.isEmpty() == true) {
+            CommonUtils.showToast(requireContext(), getString(R.string.please_enter_destination_site))
             false
-        } else if (request.customerName.isEmpty()) {
-            CommonUtils.showToast(context, context.getString(R.string.please_enter_customer_name))
+        } else if (binding?.etCustomerName?.text?.isEmpty() == true) {
+            CommonUtils.showToast(requireContext(), getString(R.string.please_enter_customer_name))
             false
         } else {
             true

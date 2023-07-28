@@ -47,7 +47,6 @@
                     android:hint="@string/enter_your_email"
                     android:imeOptions="actionNext"
                     android:inputType="textWebEmailAddress"
-                    android:text="rahulprajapati@gmail.com"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/labelLetsSign" />
@@ -59,7 +58,6 @@
                     android:layout_marginTop="@dimen/_20sdp"
                     android:hint="@string/password"
                     android:imeOptions="actionDone"
-                    android:text="Rahul@123"
                     android:inputType="textPassword"
                     app:drawable_hide="@drawable/img_showpassword"
                     app:drawable_show="@drawable/img_hidepassword"

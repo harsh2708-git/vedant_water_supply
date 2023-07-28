@@ -10,9 +10,11 @@ import com.production.vedantwatersupply.core.BaseDialogFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentFilterDialogBinding
 import com.production.vedantwatersupply.listener.TripFilterClickListener
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_TANKER
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OWN_TANKER
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.calendar.CaldroidListener
-import com.transportermanger.util.filter.FilterItem
+import com.production.vedantwatersupply.utils.filter.FilterItem
 import java.util.Date
 
 class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
@@ -196,8 +198,8 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
 
         if (tankerTypeList.isEmpty()) {
             tankerTypeList.add(0, FilterItem("", getString(R.string.please_select_tanker_type)))
-            tankerTypeList.add(FilterItem(getString(R.string.own_tanker), getString(R.string.own_tanker)))
-            tankerTypeList.add(FilterItem(getString(R.string.other_tanker), getString(R.string.other_tanker)))
+            tankerTypeList.add(FilterItem(OWN_TANKER, getString(R.string.own_tanker)))
+            tankerTypeList.add(FilterItem(OTHER_TANKER, getString(R.string.other_tanker)))
         }
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, tankerTypeList)
         binding?.spTanker?.adapter = adapter

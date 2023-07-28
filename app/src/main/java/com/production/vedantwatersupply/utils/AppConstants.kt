@@ -13,10 +13,16 @@ object AppConstants {
 
     interface Trip {
         companion object {
-            const val OWN_TANKER = "Own Tanker"
-            const val OTHER_TANKER = "Other Tanker"
-            const val PERMANENT_DRIVER = "Parmanent Driver"
-            const val OTHER_DRIVER = "Other Driver"
+            const val OWN_TANKER = "ownTanker"
+            const val OTHER_TANKER = "otherTanker"
+            const val PERMANENT_DRIVER = "ownDriver"
+            const val OTHER_DRIVER = "otherDriver"
+        }
+    }
+
+    interface Bundle{
+        companion object{
+            const val ARG_TRIP_ID = "tripID"
         }
     }
 

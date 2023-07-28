@@ -3,15 +3,15 @@ package com.production.vedantwatersupply.model.response
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Vehicle {
+class Tanker {
 
     @SerializedName("_id")
     @Expose
     var id: String? = null
 
-    @SerializedName("truckNumber")
+    @SerializedName("tankerNumber")
     @Expose
-    var truckNumber: String? = null
+    var tankerNumber: String? = null
 
     @SerializedName("is_owned")
     @Expose

@@ -1,7 +1,10 @@
 package com.production.vedantwatersupply.utils
 
 import android.content.Context
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextUtils
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -24,7 +27,12 @@ import java.util.Locale
 object CommonUtils {
 
     const val DISPLAY_DATE_FORMAT = "dd/MM/yyyy" // 02/12/1989
+    const val DISPLAY_DATE_FORMAT_2 = "dd MMM, yyyy" // 02 July, 1989
     const val SERVER_DATE_FORMAT_2 = "yyyy/MM/dd"
+    const val SERVER_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss" //2018-05-18 13:53:17
+    const val EMPTY_DATE = "0000-00-00 00:00:00"
+    const val SERVER_DATE_FORMAT_D = "yyyy-MM-dd"
+
 
     fun showToast(context: Context?, message: String?, showNativeToast: Boolean = false) {
         if (showNativeToast) {
@@ -95,13 +103,13 @@ object CommonUtils {
         return param
     }
 
-    fun getDateFromDisplay(displayDateStr: String?): Date? {
-        return try {
-            SimpleDateFormat(CommonUtils.DISPLAY_DATE_FORMAT, Locale.ENGLISH).parse(displayDateStr)
-        } catch (ex: java.lang.Exception) {
-            null
-        }
-    }
+//    fun getDateFromDisplay(displayDateStr: String?): Date? {
+//        return try {
+//            SimpleDateFormat(CommonUtils.DISPLAY_DATE_FORMAT, Locale.ENGLISH).parse(displayDateStr)
+//        } catch (ex: java.lang.Exception) {
+//            null
+//        }
+//    }
 
     fun getFormattedDateFromV2(calendar: Date?): String? {
         val format = SimpleDateFormat(CommonUtils.SERVER_DATE_FORMAT_2, Locale.ENGLISH)
@@ -269,5 +277,77 @@ object CommonUtils {
         }
     }
 
+    fun showFormattedDate(textView: TextView, date: Date?) {
+        val format = SimpleDateFormat(DISPLAY_DATE_FORMAT, Locale.ENGLISH)
+        if (date == null) {
+            textView.text = ""
+        } else {
+            textView.text = format.format(date)
+        }
+    }
+
+    fun formatAPIDate(date: Date): String {
+        return SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).format(date)
+    }
+
+    fun getServerDateFromDisplay(displayDateStr: String?): String? {
+        var serverDateStr: String? = ""
+        try {
+            val displayDate = SimpleDateFormat(DISPLAY_DATE_FORMAT, Locale.ENGLISH).parse(displayDateStr)
+            serverDateStr = SimpleDateFormat(CommonUtils.SERVER_DATE_FORMAT, Locale.ENGLISH).format(displayDate)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+        return serverDateStr
+    }
+
+    fun getDateFromDisplay(displayDateStr: String): Date? {
+        return try {
+            SimpleDateFormat(DISPLAY_DATE_FORMAT, Locale.ENGLISH).parse(displayDateStr)
+        } catch (ex: java.lang.Exception) {
+            null
+        }
+    }
+
+    fun getDisplayDateFromServer(serverDateStr: String): String? {
+        return getDisplayDateFromServer(serverDateStr, "")
+    }
+
+    fun getDisplayDateFromServer(serverDateStr: String, defaultValue: String?): String? {
+        if (!isEmpty(serverDateStr)) {
+            return defaultValue
+        }
+        var displayDateStr: String? = ""
+        try {
+            val serverDate: Date
+            serverDate = if (serverDateStr.length == 10) {
+                SimpleDateFormat(CommonUtils.SERVER_DATE_FORMAT_D, Locale.ENGLISH).parse(serverDateStr)
+            } else {
+                SimpleDateFormat(CommonUtils.SERVER_DATE_FORMAT, Locale.ENGLISH).parse(serverDateStr)
+            }
+            displayDateStr = SimpleDateFormat(DISPLAY_DATE_FORMAT, Locale.ENGLISH).format(serverDate)
+        } catch (ignored: java.lang.Exception) {
+        }
+        return displayDateStr
+    }
+
+    fun getSpannableText(firstPart: String, separator: String, secondPart: String, firstColor: Int, secondColor: Int): Spannable? {
+        val temp = firstPart + separator
+        val fullText = temp + secondPart
+        val spannable: Spannable = SpannableString(fullText)
+        spannable.setSpan(ForegroundColorSpan(firstColor), 0, temp.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannable.setSpan(ForegroundColorSpan(secondColor), temp.length, fullText.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return spannable
+    }
+
+    fun getSpannableThreeText(firstPart: String, secondPart: String?, thirdPart: String?, firstColor: Int, secondColor: Int, thirdColor: Int): Spannable? {
+        val firstString: Spannable = SpannableString(firstPart)
+        firstString.setSpan(ForegroundColorSpan(firstColor), 0, firstPart.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val secondString: Spannable = SpannableString(secondPart)
+        secondString.setSpan(ForegroundColorSpan(secondColor), 0, secondString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        val thirdString: Spannable = SpannableString(thirdPart)
+        thirdString.setSpan(ForegroundColorSpan(thirdColor), 0, thirdString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return SpannableString(TextUtils.concat(firstString, secondString, thirdString))
+    }
 
 }

@@ -9,8 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
 import com.production.vedantwatersupply.databinding.ItemTripBinding
+import com.production.vedantwatersupply.model.response.TripData
+import com.production.vedantwatersupply.utils.CommonUtils
+import java.util.Date
 
-class TripsAdapter(context: Context, val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<TripsAdapter.ViewHolder>() {
+class TripsAdapter(context: Context, private var tripDataList: ArrayList<TripData>, val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<TripsAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemTripBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         init {
@@ -34,6 +37,22 @@ class TripsAdapter(context: Context, val clickListener: RecyclerViewClickListene
     override fun getItemCount(): Int = 3
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+//        val response = tripDataList[position]
+//        holder.binding.apply {
+//            tvTripCode.text = response.reference
+//            tvStatus.text = response.status
+//
+//            tvStatus.visibility = if (response.status?.isEmpty() == true) View.GONE else View.VISIBLE
+//            tvTruck.text = response.tanker?.truckNumber
+//            tvDriver.text = response.driver?.driverName
+//            tvScheduledDate.text = CommonUtils.getDisplayDateFromServer(response.tripDateReadable.toString())
+//            tvFilledSiteName.text = response.fillingSite
+//            tvDestination.text = response.destinationSite
+//
+//        }
+    }
 
+    fun getItemAt(position: Int): TripData {
+        return tripDataList[position]
     }
 }

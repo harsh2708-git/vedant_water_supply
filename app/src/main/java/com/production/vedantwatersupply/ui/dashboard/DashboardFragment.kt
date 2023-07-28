@@ -3,6 +3,7 @@ package com.production.vedantwatersupply.ui.dashboard
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -18,9 +19,12 @@ import com.production.vedantwatersupply.ui.driver.DriverAdapter
 import com.production.vedantwatersupply.ui.login.LoginActivity
 import com.production.vedantwatersupply.ui.maintenance.MaintenanceAdapter
 import com.production.vedantwatersupply.ui.trips.TripsAdapter
+import com.production.vedantwatersupply.utils.AppConstants
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.SharedPreferenceUtil
 import com.production.vedantwatersupply.utils.UserUtils
+import com.production.vedantwatersupply.utils.formatPriceWithDecimal
+import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 
 class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(), View.OnClickListener, RecyclerViewClickListener {
@@ -90,14 +94,14 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
     }
 
     private fun updateUI(dashboardResponse: DashboardResponse) {
-        binding?.tvTotalTrip?.text = CommonUtils.getCurrencyFormat(dashboardResponse.totalTripsCount.toString())
-        binding?.tvTotalFuelAmount?.text = getString(R.string.indian_rupee).plus(CommonUtils.getCurrencyFormat(dashboardResponse.totalTripsAmount.toString()))
-        binding?.tvTotalMaintanance?.text = CommonUtils.getCurrencyFormat(dashboardResponse.totalMaintainanceCount.toString())
-        binding?.tvTotalMaintananceAmount?.text = getString(R.string.indian_rupee).plus(CommonUtils.getCurrencyFormat(dashboardResponse.totalMaintainanceAmount.toString()))
+        binding?.tvTotalTrip?.text = dashboardResponse.totalTripsCount.toString().formatPriceWithoutDecimal()
+        binding?.tvTotalFuelAmount?.text = getString(R.string.indian_rupee).plus(dashboardResponse.totalTripsAmount.toString().formatPriceWithDecimal())
+        binding?.tvTotalMaintanance?.text = dashboardResponse.totalMaintainanceCount.toString().formatPriceWithoutDecimal()
+        binding?.tvTotalMaintananceAmount?.text = getString(R.string.indian_rupee).plus(dashboardResponse.totalMaintainanceAmount.toString().formatPriceWithDecimal())
     }
 
     private fun setTripsAdapter() {
-        val tripAdapter = TripsAdapter(requireContext(), this)
+        val tripAdapter = TripsAdapter(requireContext(),ArrayList(), this)
         binding?.rvTrips?.adapter = tripAdapter
     }
 
@@ -146,7 +150,11 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
 
     override fun onClick(view: View?, position: Int) {
         when (view?.id) {
-            R.id.cvTripMain -> navigateFragment(view, R.id.nav_trip_detail)
+            R.id.cvTripMain -> {
+                val bundle = Bundle()
+                bundle.putString(AppConstants.Bundle.ARG_TRIP_ID, "64c27d61b6d1c28ac6248a26")
+                navigateFragment(view, R.id.nav_trip_detail, bundle)
+            }
             R.id.cvMaintenanceMain -> navigateFragment(view, R.id.nav_maintenance_detail)
             R.id.cvDriverMain -> navigateFragment(view, R.id.nav_driver_detail)
             R.id.ivTripOptions -> showTripOptionMenu(view)

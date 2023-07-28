@@ -9,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.databinding.ListItemFilterBinding
-import com.transportermanger.util.filter.FilterItem
 import com.transportermanger.util.filter.IFilterItem
 
 class FilterListAdapter(var filterItems: List<FilterItem>, var callback: IFilterItem) :
