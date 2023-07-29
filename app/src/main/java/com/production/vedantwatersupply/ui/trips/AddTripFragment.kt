@@ -1,15 +1,22 @@
 package com.production.vedantwatersupply.ui.trips
 
 import android.app.DatePickerDialog
+import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
+import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentAddTripBinding
 import com.production.vedantwatersupply.model.request.AddTripRequest
+import com.production.vedantwatersupply.model.request.TripDetailRequest
+import com.production.vedantwatersupply.model.response.TripData
+import com.production.vedantwatersupply.utils.AppConstants
+import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_IS_FOR_TRIP_UPDATE
+import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_TRIP_ID
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_DRIVER
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_TANKER
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OWN_TANKER
@@ -17,6 +24,7 @@ import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.PERMAN
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 import com.production.vedantwatersupply.utils.filter.FilterItem
+import com.production.vedantwatersupply.utils.formatPriceWithDecimal
 import java.util.Calendar
 import java.util.Date
 
@@ -50,14 +58,36 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
 
     private var scheduledDate: Calendar? = null
 
+    private var tripId = ""
+    private var isForTripUpdate = false
+
     override val layoutId: Int
         get() = R.layout.fragment_add_trip
 
     override fun getViewModel(): Class<TripViewModel> = TripViewModel::class.java
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (arguments != null) {
+            tripId = arguments?.getString(ARG_TRIP_ID).toString()
+            isForTripUpdate = arguments?.getBoolean(ARG_IS_FOR_TRIP_UPDATE, false) == true
+        }
+    }
+
     override fun init() {
-        binding?.clScreenSummary?.tvTitle?.text = getString(R.string.add_trip_details)
-        binding?.clScreenSummary?.tvDescription?.text = getString(R.string.here_you_can_add_trip_details)
+
+        if (isForTripUpdate) {
+            binding?.clScreenSummary?.tvTitle?.text = getString(R.string.update_trip_details)
+            binding?.clScreenSummary?.tvDescription?.text = getString(R.string.here_you_can_update_trip_details)
+            binding?.btnAdd?.text = getString(R.string.update)
+            callTripDetailApi()
+        } else {
+            binding?.clScreenSummary?.tvTitle?.text = getString(R.string.add_trip_details)
+            binding?.clScreenSummary?.tvDescription?.text = getString(R.string.here_you_can_add_trip_details)
+            binding?.btnAdd?.text = getString(R.string.add)
+        }
+
         binding?.clRadio?.rb1?.text = getString(R.string.own_tankers)
         binding?.clRadio?.rb2?.text = getString(R.string.other_tanker)
         binding?.clDriverRadio?.rb1?.text = getString(R.string.permanent_drivers)
@@ -162,6 +192,23 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
                 WebServiceSetting.SUCCESS -> {
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
 //                    baseActivity?.onBackPressed()
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+        }
+
+        viewModel?.tripRepository?.tripDetailResponseMutableLiveData?.observe(this) {
+            baseActivity?.hideProgress()
+            when (it?.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    updateUI(it)
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -428,6 +475,42 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         } else {
             true
         }
+    }
+
+    private fun callTripDetailApi(){
+        baseActivity?.showProgress()
+        val tripDetailRequest = TripDetailRequest()
+        tripDetailRequest.id = tripId
+        viewModel?.callTripDetailApi(tripDetailRequest)
+    }
+
+    private fun updateUI(it: TripData) {
+        /*binding?.tvTripCode?.text = it.reference
+        binding?.tvStatus?.text = it.status
+        binding?.tvStatus?.visibility = if (it.status?.isEmpty() == true) View.GONE else View.VISIBLE
+        binding?.tvAddedByDate?.text = CommonUtils.getSpannableThreeText(
+            "By ",
+            it.addedBy?.firstName.plus(" " + it.addedBy?.lastName),
+            CommonUtils.getDisplayDateFromServer(it.tripDateReadable.toString()),
+            ContextCompat.getColor(requireContext(), R.color.color_dark),
+            ContextCompat.getColor(requireContext(), R.color.color_dark),
+            ContextCompat.getColor(requireContext(), R.color.body_text)
+        )
+        binding?.tvTruckNo?.text = it.tanker?.tankerNumber
+        binding?.tvTankerType?.text = ""
+        binding?.tvWaterType?.text = it.waterType?.ifEmpty { getString(R.string.na) }
+        binding?.tvFuelAmount?.text = it.fuelAmount.toString().formatPriceWithDecimal()
+        binding?.tvPaymentMode?.text = it.paymentMode
+        binding?.tvFuelFilledBy?.text = it.fuelFilledBy
+        binding?.tvDriveType?.text = ""
+        binding?.tvDriverName?.text = it.driver?.driverName
+        binding?.tvDriverMoNo?.text = it.driver?.driverMobile?.ifEmpty { getString(R.string.na) }
+        binding?.tvFilledSiteName?.text = it.fillingSite
+        binding?.tvDestination?.text = it.destinationSite
+        binding?.tvCustomerName?.text = it.customerName
+        binding?.tvCustomerMoNo?.text = it.customerMobile?.ifEmpty { getString(R.string.na) }
+        binding?.tvDescription?.text = it.description?.ifEmpty { getString(R.string.na) }*/
+
     }
 
 }

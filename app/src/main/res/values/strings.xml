@@ -149,4 +149,7 @@
     <string name="all">All</string>
     <string name="please_wait">Please Wait</string>
     <string name="na">N/A</string>
+    <string name="update_trip_details">Update Trip Details</string>
+    <string name="here_you_can_update_trip_details">Here you can update your trip details.</string>
+    <string name="update">Update</string>
 </resources>

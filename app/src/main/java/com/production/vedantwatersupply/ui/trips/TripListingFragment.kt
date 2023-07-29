@@ -16,10 +16,13 @@ import com.production.vedantwatersupply.listener.RecyclerViewClickListener
 import com.production.vedantwatersupply.listener.TripFilterClickListener
 import com.production.vedantwatersupply.model.request.GetAllTripRequest
 import com.production.vedantwatersupply.model.request.TripDetailRequest
+import com.production.vedantwatersupply.model.response.Driver
 import com.production.vedantwatersupply.model.response.FilterResponse
 import com.production.vedantwatersupply.model.response.GetAllTripResponse
+import com.production.vedantwatersupply.model.response.Tanker
 import com.production.vedantwatersupply.model.response.TripData
 import com.production.vedantwatersupply.ui.dialog.FilterDialogFragment
+import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_IS_FOR_TRIP_UPDATE
 import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_TRIP_ID
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
@@ -58,6 +61,11 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
 
     private var tripAdapter: TripsAdapter? = null
     private var filterResponse = FilterResponse()
+
+    private var tankerList = ArrayList<Tanker>()
+    private var driverList = ArrayList<Driver>()
+    private var waterTypeList = ArrayList<FilterItem>()
+    private var addedByList = ArrayList<FilterItem>()
 
     override val layoutId: Int
         get() = R.layout.fragment_trip_listing
@@ -148,6 +156,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
     }
 
     private fun callFilterApi() {
+        baseActivity?.showProgress()
         viewModel?.callFilterApi()
     }
 
@@ -234,9 +243,24 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         }
 
         viewModel?.tripRepository?.filterResponseMutableLiveData?.observe(this) {
+            baseActivity?.hideProgress()
             when (it?.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
                     filterResponse = it
+
+                    tankerList.clear()
+                    filterResponse.vehicle?.let { tanker -> tankerList.addAll(tanker) }
+
+                    driverList.clear()
+                    filterResponse.driver?.let { driver -> driverList.addAll(driver) }
+
+                    waterTypeList.clear()
+                    filterResponse.waterType?.let { waterType -> waterTypeList.addAll(waterType) }
+
+                    addedByList.clear()
+                    filterResponse.addedBy?.let { addedBy -> addedByList.addAll(addedBy) }
+
+                    openFilterDialog()
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -278,7 +302,11 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         when (v?.id) {
             R.id.ivBack -> baseActivity?.onBackPressed()
             R.id.btnAdd -> navigateFragment(v, R.id.nav_add_trip)
-            R.id.btnFilter -> openFilterDialog()
+            R.id.btnFilter -> {
+                if (tankerList.isEmpty() || driverList.isEmpty() || waterTypeList.isEmpty() || addedByList.isEmpty()) callFilterApi()
+                else openFilterDialog()
+            }
+
             R.id.ivUp -> {
                 binding?.appBar?.scrollTo(0, 0)
                 binding?.rvTrips?.smoothScrollToPosition(0)
@@ -292,7 +320,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
             selectedYear, selectedTankerType, selectedTankerNo, selectedPaymentMode,
             selectedDriverType, selectedDriver, selectedFillingSite, selectedWaterType,
             selectedAddedBy, selectedStatus, selectedFuelFilledBy,
-            fromDate, toDate, displayFromDate.toString(), displayToDate.toString(),
+            fromDate, toDate, displayFromDate, displayToDate, tankerList, driverList, waterTypeList, addedByList,
             object : TripFilterClickListener {
                 override fun onApply(
                     fromDate: String, displayFromDate: String?, toDate: String, displayToDate: String?,
@@ -372,6 +400,10 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         binding.tvDelete.text = getString(R.string.delete_trip)
 
         binding.llEdit.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(ARG_TRIP_ID, "64c27d61b6d1c28ac6248a26")
+            bundle.putBoolean(ARG_IS_FOR_TRIP_UPDATE, true)
+            navigateFragment(view, R.id.nav_add_trip, bundle)
             popupWindow.dismiss()
         }
 

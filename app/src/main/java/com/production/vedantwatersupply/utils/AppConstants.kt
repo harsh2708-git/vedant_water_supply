@@ -23,6 +23,7 @@ object AppConstants {
     interface Bundle{
         companion object{
             const val ARG_TRIP_ID = "tripID"
+            const val ARG_IS_FOR_TRIP_UPDATE = "isForTripUpdate"
         }
     }
 
