@@ -355,10 +355,16 @@
                         layout="@layout/layout_no_data_found"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@id/end"
                         app:layout_constraintStart_toStartOf="@id/start"
                         app:layout_constraintTop_toBottomOf="@id/labelTrip" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/brTripData"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="tripNoData,rvTrips"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/labelMaintanance"
@@ -367,7 +373,7 @@
                         android:text="@string/maintenance"
                         android:textColor="@color/color_0E0D12"
                         app:layout_constraintStart_toStartOf="@id/start"
-                        app:layout_constraintTop_toBottomOf="@id/rvTrips" />
+                        app:layout_constraintTop_toBottomOf="@id/brTripData" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvViewAllTripsMaintanance"

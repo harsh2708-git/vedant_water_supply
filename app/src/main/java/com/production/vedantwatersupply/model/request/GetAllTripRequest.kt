@@ -18,4 +18,5 @@ class GetAllTripRequest {
        var addedBy =  ""
        var status =  ""
        var fuelFilledBy =  ""
+       var month =  ""
 }

@@ -4,11 +4,11 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonElement
 import com.production.vedantwatersupply.BuildConfig
 import com.production.vedantwatersupply.model.request.AddTripRequest
+import com.production.vedantwatersupply.model.request.FilterRequest
 import com.production.vedantwatersupply.model.request.GetAllTripRequest
 import com.production.vedantwatersupply.model.request.TripDetailRequest
 import com.production.vedantwatersupply.model.response.AddTripResponse
 import com.production.vedantwatersupply.model.response.CommonEmptyResponse
-import com.production.vedantwatersupply.model.response.DashboardResponse
 import com.production.vedantwatersupply.model.response.FilterResponse
 import com.production.vedantwatersupply.model.response.GetAllTripResponse
 import com.production.vedantwatersupply.model.response.TripData
@@ -237,8 +237,8 @@ class TripRepository {
     }
 
     val filterResponseMutableLiveData = MutableLiveData<FilterResponse>()
-    fun callFilterApi() {
-        ApiClient.iApiEndPoints.filterApi()
+    fun callFilterApi(filterRequest: FilterRequest) {
+        ApiClient.iApiEndPoints.filterApi(CommonUtils.toFieldStringMap(filterRequest))
             .enqueue(object : Callback<WSGenericResponse<JsonElement>> {
                 override fun onResponse(call: Call<WSGenericResponse<JsonElement>>, response: Response<WSGenericResponse<JsonElement>>) {
                     if (response.body() != null) {
@@ -268,6 +268,42 @@ class TripRepository {
                     val message = if (BuildConfig.DEBUG) if (t.message.isNullOrEmpty()) "Internal server error" else t.message else "Internal server error"
                     filterResponse.webServiceSetting = WebServiceSetting.createMock(WebServiceSetting.FAILURE, message.toString())
                     filterResponseMutableLiveData.postValue(filterResponse)
+                }
+            })
+    }
+
+    val getTankerAndDriverFixedResponseMutableLiveData = MutableLiveData<FilterResponse>()
+    fun callGetTankerAndDriverFixed() {
+        ApiClient.iApiEndPoints.getTankerAndDriverFixed()
+            .enqueue(object : Callback<WSGenericResponse<JsonElement>> {
+                override fun onResponse(call: Call<WSGenericResponse<JsonElement>>, response: Response<WSGenericResponse<JsonElement>>) {
+                    if (response.body() != null) {
+                        var tankerAndDriverFixed = FilterResponse()
+                        if (response.body()?.settings?.success == WebServiceSetting.SUCCESS) {
+                            tankerAndDriverFixed = response.body()?.data?.let {
+                                Generics.with(it).getAsObject(FilterResponse::class.java)
+                            } ?: FilterResponse()
+                            tankerAndDriverFixed.webServiceSetting = response.body()?.settings?.message?.let {
+                                WebServiceSetting.createMock(WebServiceSetting.SUCCESS, it)
+                            }
+                        } else
+                            tankerAndDriverFixed.webServiceSetting = response.body()?.settings?.message?.let {
+                                WebServiceSetting.createMock(WebServiceSetting.FAILURE, it)
+                            }
+
+                        getTankerAndDriverFixedResponseMutableLiveData.postValue(tankerAndDriverFixed)
+                    } else {
+                        val tankerAndDriverFixed = FilterResponse()
+                        tankerAndDriverFixed.webServiceSetting = WebServiceSetting.createMock(WebServiceSetting.FAILURE, response.message())
+                        getTankerAndDriverFixedResponseMutableLiveData.postValue(tankerAndDriverFixed)
+                    }
+                }
+
+                override fun onFailure(call: Call<WSGenericResponse<JsonElement>>, t: Throwable) {
+                    val tankerAndDriverFixed = FilterResponse()
+                    val message = if (BuildConfig.DEBUG) if (t.message.isNullOrEmpty()) "Internal server error" else t.message else "Internal server error"
+                    tankerAndDriverFixed.webServiceSetting = WebServiceSetting.createMock(WebServiceSetting.FAILURE, message.toString())
+                    getTankerAndDriverFixedResponseMutableLiveData.postValue(tankerAndDriverFixed)
                 }
             })
     }

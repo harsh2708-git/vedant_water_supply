@@ -13,6 +13,7 @@ import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentAddTripBinding
 import com.production.vedantwatersupply.model.request.AddTripRequest
 import com.production.vedantwatersupply.model.request.TripDetailRequest
+import com.production.vedantwatersupply.model.response.FilterResponse
 import com.production.vedantwatersupply.model.response.TripData
 import com.production.vedantwatersupply.utils.AppConstants
 import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_IS_FOR_TRIP_UPDATE
@@ -37,7 +38,6 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
     private var paymentModeId = ""
     private var selectedPaymentMode = ""
 
-    private var driverList = ArrayList<FilterItem>()
     private var driverId = ""
     private var selectedDriver = ""
     private var fillingSiteId = ""
@@ -61,6 +61,12 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
     private var tripId = ""
     private var isForTripUpdate = false
 
+    private var getTankerAndDriverFixed = FilterResponse()
+    private var tankerList = ArrayList<FilterItem>()
+    private var driverList = ArrayList<FilterItem>()
+
+    private var tripData = TripData()
+
     override val layoutId: Int
         get() = R.layout.fragment_add_trip
 
@@ -76,7 +82,6 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
     }
 
     override fun init() {
-
         if (isForTripUpdate) {
             binding?.clScreenSummary?.tvTitle?.text = getString(R.string.update_trip_details)
             binding?.clScreenSummary?.tvDescription?.text = getString(R.string.here_you_can_update_trip_details)
@@ -88,6 +93,8 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
             binding?.btnAdd?.text = getString(R.string.add)
         }
 
+        callGetTankerAndDriverFixed()
+
         binding?.clRadio?.rb1?.text = getString(R.string.own_tankers)
         binding?.clRadio?.rb2?.text = getString(R.string.other_tanker)
         binding?.clDriverRadio?.rb1?.text = getString(R.string.permanent_drivers)
@@ -98,9 +105,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
 
         scheduledDate = Calendar.getInstance()
 
-        setTankerNoSpinner()
         setPaymentModeSpinner()
-        setDriverSpinner()
         setFillingSiteSpinner()
         setFuelFilledBy()
     }
@@ -162,14 +167,20 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         }
     }
 
+    private fun callGetTankerAndDriverFixed() {
+        showProgress()
+        viewModel?.callGetTankerAndDriverFixed()
+    }
+
     private fun callAddUpdateTripApi() {
         baseActivity?.showProgress()
-        addUpdateTripRequest.tripId = ""
+        addUpdateTripRequest.tripId = if (isForTripUpdate) tripData.id.toString() else ""
 
         addUpdateTripRequest.tankerId = if (isOwnTanker) selectedTankerNo else ""
         addUpdateTripRequest.tankerNumber = if (isOtherTanker) binding?.etTankerNo?.getTrimmedText().toString() else ""
         addUpdateTripRequest.tripDate = scheduledDate?.time?.let { CommonUtils.formatAPIDate(it) }.toString()
-        addUpdateTripRequest.fuelAmount = binding?.etDieselAmount?.numericValue!!
+        addUpdateTripRequest.fuelAmount = binding?.etDieselAmount?.numericValue.toString()
+//        addUpdateTripRequest.fuelAmount = binding?.etDieselAmount?.numericValue!!
         addUpdateTripRequest.paymentMode = selectedPaymentMode
         addUpdateTripRequest.fuelFilledBy = selectedFuelFilledBy
         addUpdateTripRequest.driverId = if (isPermanentDriver) selectedDriver else ""
@@ -187,11 +198,11 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
 
     override fun addObserver() {
         viewModel?.tripRepository?.addTripMutableLiveData?.observe(this) {
-            baseActivity?.hideProgress()
+            hideProgress()
             when (it?.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
-//                    baseActivity?.onBackPressed()
+                    baseActivity?.onBackPressed()
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -205,10 +216,40 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         }
 
         viewModel?.tripRepository?.tripDetailResponseMutableLiveData?.observe(this) {
-            baseActivity?.hideProgress()
+            hideProgress()
             when (it?.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
-                    updateUI(it)
+
+                    tripData = it
+                    updateUI()
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+        }
+
+        viewModel?.tripRepository?.getTankerAndDriverFixedResponseMutableLiveData?.observe(this) {
+            hideProgress()
+            when (it?.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    getTankerAndDriverFixed = it
+
+                    tankerList.clear()
+                    tankerList.add(0, FilterItem("", getString(R.string.please_select_tanker_no)))
+                    getTankerAndDriverFixed.vehicle?.let { tanker -> tankerList.addAll(tanker) }
+
+                    driverList.clear()
+                    driverList.add(0, FilterItem("", getString(R.string.please_select_driver)))
+                    getTankerAndDriverFixed.driver?.let { driver -> driverList.addAll(driver) }
+
+                    setTankerNoSpinner()
+                    setDriverSpinner()
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -224,31 +265,31 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
 
     private fun setTankerNoSpinner() {
 
-        val tankerNoList = ArrayList<FilterItem>()
+        /* val tankerNoList = ArrayList<FilterItem>()
 
-        if (tankerNoList.isEmpty()) {
-            tankerNoList.add(0, FilterItem("", getString(R.string.please_select_tanker_no)))
-            tankerNoList.add(FilterItem(getString(R.string.mh_04_ds_6501), getString(R.string.mh_04_ds_6501)))
-            tankerNoList.add(FilterItem(getString(R.string.mh_04_el_0809), getString(R.string.mh_04_el_0809)))
-            tankerNoList.add(FilterItem(getString(R.string.mh_48_t_7857), getString(R.string.mh_48_t_7857)))
-            tankerNoList.add(FilterItem(getString(R.string.mh_48_j_0158), getString(R.string.mh_48_j_0158)))
-        }
-        val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, tankerNoList)
+         if (tankerNoList.isEmpty()) {
+
+             tankerNoList.add(FilterItem(getString(R.string.mh_04_ds_6501), getString(R.string.mh_04_ds_6501)))
+             tankerNoList.add(FilterItem(getString(R.string.mh_04_el_0809), getString(R.string.mh_04_el_0809)))
+             tankerNoList.add(FilterItem(getString(R.string.mh_48_t_7857), getString(R.string.mh_48_t_7857)))
+             tankerNoList.add(FilterItem(getString(R.string.mh_48_j_0158), getString(R.string.mh_48_j_0158)))
+         }*/
+        val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, tankerList)
         binding?.spTankerNo?.adapter = adapter
 
         if (tankerNoId.isNotEmpty()) {
-            val takerNo: FilterItem? = tankerNoList.find { it.dbValue.equals(tankerNoId, false) }
-            val spinnerPosition: Int = tankerNoList.indexOf(takerNo)
+            val takerNo: FilterItem? = tankerList.find { it.dbValue.equals(tankerNoId, false) }
+            val spinnerPosition: Int = tankerList.indexOf(takerNo)
             selectedTankerNo = takerNo.toString()
             spinnerPosition.let { binding?.spTankerNo?.setSelection(it) }
         }
 
         binding?.spTankerNo?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
-                selectedTankerNo = tankerNoList[binding?.spTankerNo?.selectedItemPosition!!].dbValue
+                selectedTankerNo = tankerList[binding?.spTankerNo?.selectedItemPosition!!].dbValue
                 if (selectedTankerNo.isNotEmpty()) {
                     adapter.setSelectedPosition(i)
-                    binding?.tvTankerNo?.text = tankerNoList[binding?.spTankerNo?.selectedItemPosition!!].displayValue
+                    binding?.tvTankerNo?.text = tankerList[binding?.spTankerNo?.selectedItemPosition!!].displayValue
                 }
             }
 
@@ -288,14 +329,14 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
 
     private fun setDriverSpinner() {
 
-        if (driverList.isEmpty()) {
-            driverList.add(0, FilterItem("", getString(R.string.please_select_driver)))
+        /*if (driverList.isEmpty()) {
+
             driverList.add(FilterItem(getString(R.string.bala), getString(R.string.bala)))
             driverList.add(FilterItem(getString(R.string.somar), getString(R.string.somar)))
             driverList.add(FilterItem(getString(R.string.mukund), getString(R.string.mukund)))
             driverList.add(FilterItem(getString(R.string.sagar), getString(R.string.sagar)))
             driverList.add(FilterItem(getString(R.string.wasim), getString(R.string.wasim)))
-        }
+        }*/
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, driverList)
         binding?.spDriverName?.adapter = adapter
 
@@ -384,7 +425,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
     }
 
     override fun onClick(v: View?) {
-        var selectedDate: Date? = null
+//        var selectedDate: Date? = null
         when (v?.id) {
 
             R.id.ivBack,
@@ -392,7 +433,6 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
 
             R.id.btnAdd -> {
                 if (isAllValid(addUpdateTripRequest)) {
-                    CommonUtils.showToast(requireContext(), "Checked")
                     callAddUpdateTripApi()
                 }
             }
@@ -477,40 +517,46 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         }
     }
 
-    private fun callTripDetailApi(){
+    private fun callTripDetailApi() {
         baseActivity?.showProgress()
         val tripDetailRequest = TripDetailRequest()
         tripDetailRequest.id = tripId
         viewModel?.callTripDetailApi(tripDetailRequest)
     }
 
-    private fun updateUI(it: TripData) {
-        /*binding?.tvTripCode?.text = it.reference
-        binding?.tvStatus?.text = it.status
-        binding?.tvStatus?.visibility = if (it.status?.isEmpty() == true) View.GONE else View.VISIBLE
-        binding?.tvAddedByDate?.text = CommonUtils.getSpannableThreeText(
-            "By ",
-            it.addedBy?.firstName.plus(" " + it.addedBy?.lastName),
-            CommonUtils.getDisplayDateFromServer(it.tripDateReadable.toString()),
-            ContextCompat.getColor(requireContext(), R.color.color_dark),
-            ContextCompat.getColor(requireContext(), R.color.color_dark),
-            ContextCompat.getColor(requireContext(), R.color.body_text)
-        )
-        binding?.tvTruckNo?.text = it.tanker?.tankerNumber
-        binding?.tvTankerType?.text = ""
-        binding?.tvWaterType?.text = it.waterType?.ifEmpty { getString(R.string.na) }
-        binding?.tvFuelAmount?.text = it.fuelAmount.toString().formatPriceWithDecimal()
-        binding?.tvPaymentMode?.text = it.paymentMode
-        binding?.tvFuelFilledBy?.text = it.fuelFilledBy
-        binding?.tvDriveType?.text = ""
-        binding?.tvDriverName?.text = it.driver?.driverName
-        binding?.tvDriverMoNo?.text = it.driver?.driverMobile?.ifEmpty { getString(R.string.na) }
-        binding?.tvFilledSiteName?.text = it.fillingSite
-        binding?.tvDestination?.text = it.destinationSite
-        binding?.tvCustomerName?.text = it.customerName
-        binding?.tvCustomerMoNo?.text = it.customerMobile?.ifEmpty { getString(R.string.na) }
-        binding?.tvDescription?.text = it.description?.ifEmpty { getString(R.string.na) }*/
+    private fun updateUI() {
+        if (tripData.tanker?.isOwned == true) {
+            binding?.clRadio?.rb1?.isChecked = true
+            tankerNoId = tripData.tanker?.id.toString()
+            setTankerNoSpinner()
+        } else {
+            binding?.clRadio?.rb2?.isChecked = true
+            binding?.etTankerNo?.setText(tripData.tanker?.tankerNumber)
+        }
 
+        binding?.tvDate?.text = CommonUtils.getDisplayDateFromServer(tripData.tripDateReadable.toString())
+        binding?.etDieselAmount?.setText(tripData.fuelAmount.toString())
+
+        paymentModeId = tripData.paymentMode.toString()
+        setPaymentModeSpinner()
+
+        if (tripData.driver?.isParmanent == true) {
+            binding?.clDriverRadio?.rb1?.isChecked = true
+            driverId = tripData.driver?.id.toString()
+            setDriverSpinner()
+        } else {
+            binding?.clDriverRadio?.rb2?.isChecked = true
+            binding?.etDriverName?.setText(tripData.driver?.driverName)
+            binding?.etDriverMobileNo?.setText(tripData.driver?.driverMobile)
+        }
+
+        fillingSiteId = tripData.fillingSite.toString()
+        setFillingSiteSpinner()
+        binding?.etDestinationName?.setText(tripData.destinationSite)
+        binding?.etCustomerName?.setText(tripData.customerName)
+        binding?.etCustomerMoNo?.setText(tripData.customerMobile)
+        binding?.etTankerType?.setText(tripData.waterType)
+        binding?.etDescription?.setText(tripData.description)
     }
 
 }

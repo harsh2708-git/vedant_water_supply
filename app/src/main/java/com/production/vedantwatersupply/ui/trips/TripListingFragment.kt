@@ -2,28 +2,30 @@ package com.production.vedantwatersupply.ui.trips
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentTripListingBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
 import com.production.vedantwatersupply.listener.TripFilterClickListener
+import com.production.vedantwatersupply.model.request.FilterRequest
 import com.production.vedantwatersupply.model.request.GetAllTripRequest
 import com.production.vedantwatersupply.model.request.TripDetailRequest
-import com.production.vedantwatersupply.model.response.Driver
 import com.production.vedantwatersupply.model.response.FilterResponse
 import com.production.vedantwatersupply.model.response.GetAllTripResponse
-import com.production.vedantwatersupply.model.response.Tanker
 import com.production.vedantwatersupply.model.response.TripData
 import com.production.vedantwatersupply.ui.dialog.FilterDialogFragment
 import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_IS_FOR_TRIP_UPDATE
 import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_TRIP_ID
+import com.production.vedantwatersupply.utils.AppConstants.Filter.Companion.TRIP
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.production.vedantwatersupply.utils.filter.FilterItem
@@ -62,19 +64,27 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
     private var tripAdapter: TripsAdapter? = null
     private var filterResponse = FilterResponse()
 
-    private var tankerList = ArrayList<Tanker>()
-    private var driverList = ArrayList<Driver>()
+    private var yearList = ArrayList<FilterItem>()
+    private var tankerList = ArrayList<FilterItem>()
+    private var driverList = ArrayList<FilterItem>()
     private var waterTypeList = ArrayList<FilterItem>()
     private var addedByList = ArrayList<FilterItem>()
+
+    private var tripList = ArrayList<TripData>()
 
     override val layoutId: Int
         get() = R.layout.fragment_trip_listing
 
     override fun getViewModel(): Class<TripViewModel> = TripViewModel::class.java
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        callMonthFilterApi()
+    }
+
     override fun init() {
         setScreenTitle()
 
-        callMonthFilterApi()
         //setTripsAdapter()
 
         binding?.clSummary?.tvCurrentMonth?.text = CommonUtils.currentMonth()
@@ -115,29 +125,38 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
                 }
             }
         })
+
+        binding?.swipeLayout?.setOnRefreshListener {
+            pageIndex = 1
+            callGetAllTripApi()
+        }
     }
 
     private fun callMonthFilterApi() {
+        showProgress()
         viewModel?.callMonthFilterApi()
     }
 
     private fun callGetAllTripApi() {
+        showProgress()
         val getAllTripRequest = GetAllTripRequest()
         getAllTripRequest.page = pageIndex.toString()
         getAllTripRequest.limit = "10"
-        getAllTripRequest.fromDate = ""
-        getAllTripRequest.toDate = ""
-        getAllTripRequest.year = ""
-        getAllTripRequest.tankerType = ""
-        getAllTripRequest.tankerId = ""
-        getAllTripRequest.driverType = ""
-        getAllTripRequest.driverId = ""
-        getAllTripRequest.paymentmode = ""
-        getAllTripRequest.fillingSite = ""
-        getAllTripRequest.fuelFilledBy = ""
-        getAllTripRequest.waterType = ""
-        getAllTripRequest.addedBy = ""
-        getAllTripRequest.status = ""
+        getAllTripRequest.month = monthId
+        getAllTripRequest.fromDate = fromDate
+        getAllTripRequest.toDate = toDate
+        getAllTripRequest.year = selectedYear
+        getAllTripRequest.tankerType = selectedTankerType
+        getAllTripRequest.tankerId = selectedTankerNo
+        getAllTripRequest.driverType = selectedDriverType
+        getAllTripRequest.driverId = selectedDriver
+        getAllTripRequest.paymentmode = selectedPaymentMode
+        getAllTripRequest.fillingSite = selectedFillingSite
+        getAllTripRequest.fuelFilledBy = selectedFuelFilledBy
+        getAllTripRequest.waterType = selectedWaterType
+        getAllTripRequest.addedBy = selectedAddedBy
+        getAllTripRequest.status = selectedStatus
+        Log.d("Trip Listing Params", "callGetAllTripApi: " + Gson().toJson(getAllTripRequest))
         viewModel?.callGetAllTripListingApi(getAllTripRequest)
     }
 
@@ -157,7 +176,9 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
 
     private fun callFilterApi() {
         baseActivity?.showProgress()
-        viewModel?.callFilterApi()
+        val filterRequest = FilterRequest()
+        filterRequest.filterFor = TRIP
+        viewModel?.callFilterApi(filterRequest)
     }
 
     override fun addObserver() {
@@ -168,6 +189,9 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
                     monthList.add(0, FilterItem("", getString(R.string.all), true))
                     it?.data?.let { it1 -> monthList.addAll(it1) }
                     initFilterView()
+
+                    monthId = monthFilterAdapter?.getSelectedItem()?.dbValue.toString()
+                    resetAdapter()
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -184,15 +208,11 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         viewModel?.tripRepository?.getAllTripResponseMutableLiveData?.observe(this) {
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
-//                    isNextPage = it.webServiceSetting.nextPage.equals("1")
-//                    isLoading = false
-//                    binding?.llLoading?.visibility = View.GONE
-                    if (it != null) {
-                        showData(binding?.rvTrips, binding?.tripNoData?.tvNoData)
-                        updateUI(it)
-                    } else {
-                        hideData(binding?.rvTrips, binding?.tripNoData?.tvNoData)
-                    }
+                    isNextPage = it.webServiceSetting?.currentPage.equals("1")
+                    isLoading = false
+                    binding?.llLoading?.visibility = View.GONE
+                    binding?.swipeLayout?.isRefreshing = false
+                    updateUI(it)
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -210,7 +230,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
-//                    callGetAllTripApi()
+                    callGetAllTripApi()
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -228,7 +248,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
-//                    callGetAllTripApi()
+                    callGetAllTripApi()
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -248,16 +268,24 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
                 WebServiceSetting.SUCCESS -> {
                     filterResponse = it
 
+                    yearList.clear()
+                    yearList.add(0, FilterItem("", getString(R.string.please_select_year)))
+                    filterResponse.years?.let { tanker -> yearList.addAll(tanker) }
+
                     tankerList.clear()
+                    tankerList.add(0, FilterItem("", getString(R.string.please_select_tanker_no)))
                     filterResponse.vehicle?.let { tanker -> tankerList.addAll(tanker) }
 
                     driverList.clear()
+                    driverList.add(0, FilterItem("", getString(R.string.please_select_driver)))
                     filterResponse.driver?.let { driver -> driverList.addAll(driver) }
 
                     waterTypeList.clear()
+                    waterTypeList.add(0, FilterItem("", getString(R.string.please_select_water_type)))
                     filterResponse.waterType?.let { waterType -> waterTypeList.addAll(waterType) }
 
                     addedByList.clear()
+                    addedByList.add(0, FilterItem("", getString(R.string.please_select_added_by)))
                     filterResponse.addedBy?.let { addedBy -> addedByList.addAll(addedBy) }
 
                     openFilterDialog()
@@ -275,6 +303,17 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
     }
 
     private fun updateUI(it: GetAllTripResponse?) {
+        binding?.clSummary?.tvTotal?.text = it?.totalTripsCount.toString()
+
+        tripList.clear()
+        it?.tripData?.let { it1 -> tripList.addAll(it1) }
+
+        if (tripList.isEmpty()) {
+            hideData()
+        } else {
+            showData()
+            setTripsAdapter()
+        }
 
     }
 
@@ -282,7 +321,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         monthFilterAdapter = FilterListAdapter(monthList, object : IFilterItem {
             override fun onFilterItemSelected(view: View?, pos: Int) {
                 monthId = monthList[pos].dbValue
-//                resetAdapter()
+                resetAdapter()
             }
         })
         val resources = resources
@@ -294,7 +333,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
     }
 
     private fun setTripsAdapter() {
-        tripAdapter = TripsAdapter(requireContext(), ArrayList(), this)
+        tripAdapter = TripsAdapter(requireContext(), tripList, this)
         binding?.rvTrips?.adapter = tripAdapter
     }
 
@@ -320,7 +359,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
             selectedYear, selectedTankerType, selectedTankerNo, selectedPaymentMode,
             selectedDriverType, selectedDriver, selectedFillingSite, selectedWaterType,
             selectedAddedBy, selectedStatus, selectedFuelFilledBy,
-            fromDate, toDate, displayFromDate, displayToDate, tankerList, driverList, waterTypeList, addedByList,
+            fromDate, toDate, displayFromDate, displayToDate, tankerList, driverList, waterTypeList, addedByList, yearList,
             object : TripFilterClickListener {
                 override fun onApply(
                     fromDate: String, displayFromDate: String?, toDate: String, displayToDate: String?,
@@ -378,7 +417,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         when (view?.id) {
             R.id.cvTripMain -> {
                 val bundle = Bundle()
-                bundle.putString(ARG_TRIP_ID, "64c27d61b6d1c28ac6248a26")
+                bundle.putString(ARG_TRIP_ID, response?.id)
                 navigateFragment(view, R.id.nav_trip_detail, bundle)
             }
 
@@ -401,9 +440,9 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
 
         binding.llEdit.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString(ARG_TRIP_ID, "64c27d61b6d1c28ac6248a26")
+            bundle.putString(ARG_TRIP_ID, response?.id)
             bundle.putBoolean(ARG_IS_FOR_TRIP_UPDATE, true)
-            navigateFragment(view, R.id.nav_add_trip, bundle)
+            navigateFragment(binding.llEdit, R.id.nav_add_trip, bundle)
             popupWindow.dismiss()
         }
 
@@ -419,7 +458,21 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
     }
 
     private fun resetAdapter() {
+        binding?.swipeLayout?.isRefreshing = false
+        pageIndex = 1
+        callGetAllTripApi()
         setTripsAdapter()
+    }
+
+    private fun showData() {
+        binding?.rvTrips?.visibility = View.VISIBLE
+        binding?.tripNoData?.tvNoData?.visibility = View.GONE
+    }
+
+    private fun hideData() {
+        binding?.rvTrips?.visibility = View.GONE
+        binding?.tripNoData?.tvNoData?.visibility = View.VISIBLE
+        binding?.tripNoData?.tvNoData?.text = getString(R.string.no_trips_data_found)
     }
 
 }

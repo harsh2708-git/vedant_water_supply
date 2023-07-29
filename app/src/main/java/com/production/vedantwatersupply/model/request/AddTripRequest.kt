@@ -7,7 +7,8 @@ class AddTripRequest {
     var tankerId = ""
     var tankerNumber = ""
     var tripDate = ""
-    var fuelAmount: Double = 0.0
+    var fuelAmount = ""
+//    var fuelAmount : Double = 0.0
     var paymentMode = ""
     var fuelFilledBy = ""
     var driverType = ""

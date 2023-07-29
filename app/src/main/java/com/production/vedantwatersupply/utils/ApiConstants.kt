@@ -9,6 +9,7 @@ interface ApiConstants {
         const val API_DASHBOARD = "dashboard"
         const val API_MONTH_LIST = "dashboard/monthList"
         const val API_FILTERS = "filters"
+        const val API_GET_TANKER_AND_DRIVER_FIXED = "filters/getTankerAndDriversFixed"
 
         interface Trip{
             companion object{

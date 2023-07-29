@@ -500,15 +500,14 @@
 
                 <com.production.vedantwatersupply.custome.CustomEditText
                     android:id="@+id/etDescription"
-                    style="@style/InputStyle"
+                    style="@style/StyleInputForTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:gravity="top|left"
-                    android:imeOptions="actionDone"
-                    android:inputType="text|textMultiLine"
                     android:lines="2"
-                    android:singleLine="false"
+                    android:imeOptions="actionDone"
+                    android:inputType="textMultiLine"
                     app:layout_constraintEnd_toEndOf="@id/end"
                     app:layout_constraintStart_toStartOf="@id/start"
                     app:layout_constraintTop_toBottomOf="@+id/labelDescription" />

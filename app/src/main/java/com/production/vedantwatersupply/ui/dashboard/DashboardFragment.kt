@@ -1,7 +1,6 @@
 package com.production.vedantwatersupply.ui.dashboard
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +12,9 @@ import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentDashboardBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
+import com.production.vedantwatersupply.model.request.TripDetailRequest
 import com.production.vedantwatersupply.model.response.DashboardResponse
+import com.production.vedantwatersupply.model.response.TripData
 import com.production.vedantwatersupply.ui.dialog.AlertDialogFragment
 import com.production.vedantwatersupply.ui.driver.DriverAdapter
 import com.production.vedantwatersupply.ui.login.LoginActivity
@@ -29,6 +30,9 @@ import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSettin
 
 class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(), View.OnClickListener, RecyclerViewClickListener {
 
+    private var tripAdapter: TripsAdapter? = null
+    private var dashboardResponse: DashboardResponse? = null
+
     override val layoutId: Int
         get() = R.layout.fragment_dashboard
 
@@ -37,9 +41,9 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
     override fun init() {
 
         binding?.clHeader?.ivBack?.visibility = View.GONE
-        setTripsAdapter()
-        setMaintenanceAdpter()
-        setDriverAdapter()
+//        setTripsAdapter()
+//        setMaintenanceAdpter()
+//        setDriverAdapter()
 
         callDashboardApi()
     }
@@ -78,8 +82,10 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
             baseActivity?.hideProgress()
             when (it?.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
+                    binding?.srlDashboard?.isRefreshing = false
+                    dashboardResponse = it
 //                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
-                    updateUI(it)
+                    updateUI()
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -91,17 +97,74 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
                 }
             }
         }
+
+        viewModel?.tripRepository?.tripDeleteResponseMutableLiveData?.observe(this) {
+            when (it.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                    callDashboardApi()
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+            hideProgress()
+        }
+
+        viewModel?.tripRepository?.tripCancelResponseMutableLiveData?.observe(this) {
+            when (it.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                    callDashboardApi()
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+            hideProgress()
+        }
     }
 
-    private fun updateUI(dashboardResponse: DashboardResponse) {
-        binding?.tvTotalTrip?.text = dashboardResponse.totalTripsCount.toString().formatPriceWithoutDecimal()
-        binding?.tvTotalFuelAmount?.text = getString(R.string.indian_rupee).plus(dashboardResponse.totalTripsAmount.toString().formatPriceWithDecimal())
-        binding?.tvTotalMaintanance?.text = dashboardResponse.totalMaintainanceCount.toString().formatPriceWithoutDecimal()
-        binding?.tvTotalMaintananceAmount?.text = getString(R.string.indian_rupee).plus(dashboardResponse.totalMaintainanceAmount.toString().formatPriceWithDecimal())
+    private fun updateUI() {
+        binding?.tvTotalTrip?.text = dashboardResponse?.totalTripsCount.toString().formatPriceWithoutDecimal()
+        binding?.tvTotalFuelAmount?.text = getString(R.string.indian_rupee).plus(dashboardResponse?.totalTripsAmount.toString().formatPriceWithDecimal())
+        binding?.tvTotalMaintanance?.text = dashboardResponse?.totalMaintainanceCount.toString().formatPriceWithoutDecimal()
+        binding?.tvTotalMaintananceAmount?.text = getString(R.string.indian_rupee).plus(dashboardResponse?.totalMaintainanceAmount.toString().formatPriceWithDecimal())
+
+        if (dashboardResponse?.tripData?.isEmpty() == true) {
+            hideData()
+        } else {
+            showData()
+            setTripsAdapter()
+        }
+
+        setMaintenanceAdpter()
+        setDriverAdapter()
+    }
+
+    private fun showData(){
+        binding?.rvTrips?.visibility = View.VISIBLE
+        binding?.tripNoData?.tvNoData?.visibility = View.GONE
+    }
+
+    private fun hideData(){
+        binding?.rvTrips?.visibility = View.GONE
+        binding?.tripNoData?.tvNoData?.visibility = View.VISIBLE
+        binding?.tripNoData?.tvNoData?.text = getString(R.string.no_trips_data_found)
     }
 
     private fun setTripsAdapter() {
-        val tripAdapter = TripsAdapter(requireContext(),ArrayList(), this)
+        tripAdapter = dashboardResponse?.tripData?.let { TripsAdapter(requireContext(), it, this) }
         binding?.rvTrips?.adapter = tripAdapter
     }
 
@@ -149,21 +212,23 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
     }
 
     override fun onClick(view: View?, position: Int) {
+        val tripResponse = tripAdapter?.getItemAt(position)
         when (view?.id) {
             R.id.cvTripMain -> {
                 val bundle = Bundle()
-                bundle.putString(AppConstants.Bundle.ARG_TRIP_ID, "64c27d61b6d1c28ac6248a26")
+                bundle.putString(AppConstants.Bundle.ARG_TRIP_ID, tripResponse?.id)
                 navigateFragment(view, R.id.nav_trip_detail, bundle)
             }
+
             R.id.cvMaintenanceMain -> navigateFragment(view, R.id.nav_maintenance_detail)
             R.id.cvDriverMain -> navigateFragment(view, R.id.nav_driver_detail)
-            R.id.ivTripOptions -> showTripOptionMenu(view)
+            R.id.ivTripOptions -> showTripOptionMenu(view, tripResponse)
             R.id.ivMaintenanceOptions -> showMaintenanceOptionMenu(view)
             R.id.ivDriverOptions -> showDriverOptionMenu(view)
         }
     }
 
-    private fun showTripOptionMenu(view: View) {
+    private fun showTripOptionMenu(view: View, response: TripData?) {
         val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val vieww = inflater.inflate(R.layout.layout_options, null)
         val popupWindow = PopupWindow(vieww, requireContext().resources.getDimensionPixelSize(R.dimen._250sdp), LinearLayout.LayoutParams.WRAP_CONTENT, true)
@@ -175,14 +240,20 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         binding.tvDelete.text = getString(R.string.delete_trip)
 
         binding.llEdit.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(AppConstants.Bundle.ARG_TRIP_ID, response?.id)
+            bundle.putBoolean(AppConstants.Bundle.ARG_IS_FOR_TRIP_UPDATE, true)
+            navigateFragment(binding.llEdit, R.id.nav_add_trip, bundle)
             popupWindow.dismiss()
         }
 
         binding.llDelete.setOnClickListener {
+            callTripDeleteApi(response?.id)
             popupWindow.dismiss()
         }
 
         binding.llCancel.setOnClickListener {
+            callTripCancelApi(response?.id)
             popupWindow.dismiss()
         }
     }
@@ -227,4 +298,17 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         }
     }
 
+    private fun callTripDeleteApi(id: String?) {
+        baseActivity?.showProgress()
+        val tripId = TripDetailRequest()
+        tripId.id = id.toString()
+        viewModel?.callTripDeleteApi(tripId)
+    }
+
+    private fun callTripCancelApi(id: String?) {
+        baseActivity?.showProgress()
+        val tripId = TripDetailRequest()
+        tripId.id = id.toString()
+        viewModel?.callTripCancelApi(tripId)
+    }
 }

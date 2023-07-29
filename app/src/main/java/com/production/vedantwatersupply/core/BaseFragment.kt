@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.production.vedantwatersupply.databinding.LayoutNoDataFoundBinding
 
 abstract class BaseFragment<VD : ViewDataBinding, VM : BaseViewModel> : Fragment() {
 
@@ -68,15 +68,6 @@ abstract class BaseFragment<VD : ViewDataBinding, VM : BaseViewModel> : Fragment
         baseActivity?.hideProgress()
     }
 
-    fun showData(rv: RecyclerView?, noData : TextView?){
-        rv?.visibility = View.VISIBLE
-        noData?.visibility = View.GONE
-    }
-
-    fun hideData(rv: RecyclerView?, noData : TextView?){
-        rv?.visibility = View.GONE
-        noData?.visibility = View.VISIBLE
-    }
 
 //    fun callMonthFilterApi(){
 //        viewModel?.callMonthFilterApi()

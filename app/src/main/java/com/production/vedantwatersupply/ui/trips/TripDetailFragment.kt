@@ -16,6 +16,10 @@ import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.model.request.TripDetailRequest
 import com.production.vedantwatersupply.model.response.TripData
 import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_TRIP_ID
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OEN_TANKER_DISPLAY
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_DRIVER_DISPLAY
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_TANKER_DISPLAY
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.PERMANENT_DRIVER_DISPLAY
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.formatPriceWithDecimal
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
@@ -140,18 +144,18 @@ class TripDetailFragment : BaseFragment<FragmentTripDetailBinding, TripViewModel
         binding?.tvAddedByDate?.text = CommonUtils.getSpannableThreeText(
             "By ",
             it.addedBy?.firstName.plus(" " + it.addedBy?.lastName),
-            CommonUtils.getDisplayDateFromServer(it.tripDateReadable.toString()),
+            " "+it.tripDateReadable.toString(),
             ContextCompat.getColor(requireContext(), R.color.color_dark),
             ContextCompat.getColor(requireContext(), R.color.color_dark),
             ContextCompat.getColor(requireContext(), R.color.body_text)
         )
         binding?.tvTruckNo?.text = it.tanker?.tankerNumber
-        binding?.tvTankerType?.text = ""
+        binding?.tvTankerType?.text = if (it.tanker?.isOwned == true) OEN_TANKER_DISPLAY else OTHER_TANKER_DISPLAY
         binding?.tvWaterType?.text = it.waterType?.ifEmpty { getString(R.string.na) }
         binding?.tvFuelAmount?.text = it.fuelAmount.toString().formatPriceWithDecimal()
         binding?.tvPaymentMode?.text = it.paymentMode
         binding?.tvFuelFilledBy?.text = it.fuelFilledBy
-        binding?.tvDriveType?.text = ""
+        binding?.tvDriveType?.text = if (it.driver?.isParmanent == true) PERMANENT_DRIVER_DISPLAY else OTHER_DRIVER_DISPLAY
         binding?.tvDriverName?.text = it.driver?.driverName
         binding?.tvDriverMoNo?.text = it.driver?.driverMobile?.ifEmpty { getString(R.string.na) }
         binding?.tvFilledSiteName?.text = it.fillingSite

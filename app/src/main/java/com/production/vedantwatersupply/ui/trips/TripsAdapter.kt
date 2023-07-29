@@ -10,10 +10,12 @@ import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
 import com.production.vedantwatersupply.databinding.ItemTripBinding
 import com.production.vedantwatersupply.model.response.TripData
+import com.production.vedantwatersupply.utils.AppConstants.CANCELLED
 import com.production.vedantwatersupply.utils.CommonUtils
+import com.production.vedantwatersupply.utils.formatPriceWithDecimal
 import java.util.Date
 
-class TripsAdapter(context: Context, private var tripDataList: ArrayList<TripData>, val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<TripsAdapter.ViewHolder>() {
+class TripsAdapter(context: Context, private var tripDataList: List<TripData>, val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<TripsAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemTripBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         init {
@@ -34,22 +36,25 @@ class TripsAdapter(context: Context, private var tripDataList: ArrayList<TripDat
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = 3
+    override fun getItemCount() = tripDataList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        val response = tripDataList[position]
-//        holder.binding.apply {
-//            tvTripCode.text = response.reference
-//            tvStatus.text = response.status
-//
-//            tvStatus.visibility = if (response.status?.isEmpty() == true) View.GONE else View.VISIBLE
-//            tvTruck.text = response.tanker?.truckNumber
-//            tvDriver.text = response.driver?.driverName
-//            tvScheduledDate.text = CommonUtils.getDisplayDateFromServer(response.tripDateReadable.toString())
-//            tvFilledSiteName.text = response.fillingSite
-//            tvDestination.text = response.destinationSite
-//
-//        }
+        val response = tripDataList[position]
+        holder.binding.apply {
+            tvTripCode.text = response.reference
+            tvStatus.text = response.status
+
+            tvStatus.visibility = if (response.status?.isEmpty() == true) View.GONE else View.VISIBLE
+            tvTruck.text = response.tanker?.tankerNumber
+            tvDriver.text = response.driver?.driverName
+            tvFuelAmount.text = response.fuelAmount.toString().formatPriceWithDecimal()
+            tvScheduledDate.text = response.tripDateReadable.toString()
+            tvFilledSiteName.text = response.fillingSite
+            tvDestination.text = response.destinationSite
+
+            ivTripOptions.visibility = if (response.status?.equals(CANCELLED) == true) View.GONE else View.VISIBLE
+
+        }
     }
 
     fun getItemAt(position: Int): TripData {

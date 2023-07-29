@@ -6,7 +6,7 @@ class FilterItem {
     @SerializedName("value")
     var displayValue: String = ""
 
-    @SerializedName("id")
+    @SerializedName("id", alternate = ["_id"])
     var dbValue: String = ""
     var isSelected: Boolean = false
 

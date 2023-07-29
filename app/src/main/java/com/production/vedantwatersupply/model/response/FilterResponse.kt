@@ -7,13 +7,18 @@ import com.production.vedantwatersupply.webservice.baseresponse.BaseWebserviceRe
 
 class FilterResponse: BaseWebserviceResponse() {
 
-    @SerializedName("vehicle")
-    @Expose
-    var vehicle: List<Tanker>? = null
 
-    @SerializedName("driver")
+    @SerializedName("years")
     @Expose
-    var driver: List<Driver>? = null
+    var years: List<FilterItem>? = null
+
+    @SerializedName("tanker", alternate = ["tankers"])
+    @Expose
+    var vehicle: List<FilterItem>? = null
+
+    @SerializedName("driver", alternate = ["drivers"])
+    @Expose
+    var driver: List<FilterItem>? = null
 
     @SerializedName("waterType")
     @Expose

@@ -10,6 +10,9 @@ class WebServiceSetting {
     @SerializedName("message")
     var message: String? = null
 
+    @SerializedName("currentPage")
+    var currentPage: String? = null
+
     companion object {
         val SUCCESS = "1"
         val FAILURE = "0"

@@ -152,4 +152,5 @@
     <string name="update_trip_details">Update Trip Details</string>
     <string name="here_you_can_update_trip_details">Here you can update your trip details.</string>
     <string name="update">Update</string>
+    <string name="no_trips_data_found">No Trips Data Found</string>
 </resources>

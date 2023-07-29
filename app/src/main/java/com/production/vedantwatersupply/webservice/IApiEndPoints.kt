@@ -3,6 +3,7 @@ package com.production.vedantwatersupply.webservice
 import com.google.gson.JsonElement
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_DASHBOARD
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_FILTERS
+import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_GET_TANKER_AND_DRIVER_FIXED
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_LOGIN
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_MONTH_LIST
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.Trip.Companion.API_ADD_UPDATE_TRIP
@@ -48,7 +49,11 @@ interface IApiEndPoints {
     @POST(API_CANCEL_TRIP)
     fun cancelTripApi(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
 
-    @GET(API_FILTERS)
-    fun filterApi(): Call<WSGenericResponse<JsonElement>>
+    @FormUrlEncoded
+    @POST(API_FILTERS)
+    fun filterApi(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
+
+    @POST(API_GET_TANKER_AND_DRIVER_FIXED)
+    fun getTankerAndDriverFixed(): Call<WSGenericResponse<JsonElement>>
 
 }

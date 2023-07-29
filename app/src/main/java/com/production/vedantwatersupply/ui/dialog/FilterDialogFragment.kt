@@ -10,9 +10,6 @@ import com.production.vedantwatersupply.core.BaseDialogFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentFilterDialogBinding
 import com.production.vedantwatersupply.listener.TripFilterClickListener
-import com.production.vedantwatersupply.model.response.AddedBy
-import com.production.vedantwatersupply.model.response.Driver
-import com.production.vedantwatersupply.model.response.Tanker
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_TANKER
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OWN_TANKER
 import com.production.vedantwatersupply.utils.CommonUtils
@@ -25,9 +22,9 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private var binding: FragmentFilterDialogBinding? = null
 
     private var yearList = ArrayList<FilterItem>()
-    private var tankerNoList = ArrayList<Tanker>()
+    private var tankerNoList = ArrayList<FilterItem>()
     private var paymentModeList = ArrayList<FilterItem>()
-    private var driverList = ArrayList<Driver>()
+    private var driverList = ArrayList<FilterItem>()
     private var waterTypeList = ArrayList<FilterItem>()
     private var addedByList = ArrayList<FilterItem>()
 
@@ -79,10 +76,11 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             toDate: String,
             displayFromDate: String,
             displayToDate: String,
-            tankerList: ArrayList<Tanker>,
-            driverList: ArrayList<Driver>,
+            tankerList: ArrayList<FilterItem>,
+            driverList: ArrayList<FilterItem>,
             waterType: ArrayList<FilterItem>,
             addedBy: ArrayList<FilterItem>,
+            yearList: ArrayList<FilterItem>,
             listener: TripFilterClickListener
         ): FilterDialogFragment {
             val fragment = FilterDialogFragment()
@@ -105,6 +103,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             fragment.driverList = driverList
             fragment.waterTypeList = waterType
             fragment.addedByList = addedBy
+            fragment.yearList = yearList
             fragment.callBack = listener
             return fragment
         }
@@ -170,12 +169,12 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     }
 
     private fun setYearSpinner() {
-        if (yearList.isEmpty()) {
-            yearList.add(0, FilterItem("", getString(R.string.please_select_year)))
+        /*if (yearList.isEmpty()) {
             yearList.add(FilterItem("2023", "2023"))
             yearList.add(FilterItem("2022", "2022"))
             yearList.add(FilterItem("2021", "2021"))
-        }
+        }*/
+
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, yearList)
         binding?.spYear?.adapter = adapter
 
@@ -238,15 +237,16 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private fun setTankerNoSpinner() {
 
        /* if (tankerNoList.isEmpty()) {
-            tankerNoList.add(0, FilterItem("", getString(R.string.please_select_tanker_no)))
+
             tankerNoList.add(FilterItem("MH 01 AB  4545", "MH 01 AB  4545"))
             tankerNoList.add(FilterItem("MH 02 AV  4545", "MH 02 AV  4545"))
         }*/
+
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, tankerNoList)
         binding?.spTankerNo?.adapter = adapter
 
         if (tankerNoId.isNotEmpty()) {
-            val takerNo: Tanker? = tankerNoList.find { it.id.equals(tankerNoId, false) }
+            val takerNo: FilterItem? = tankerNoList.find { it.dbValue.equals(tankerNoId, false) }
             val spinnerPosition: Int = tankerNoList.indexOf(takerNo)
             selectedTankerNo = takerNo.toString()
             spinnerPosition.let { binding?.spTankerNo?.setSelection(it) }
@@ -254,10 +254,10 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
 
         binding?.spTankerNo?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
-                selectedTankerNo = tankerNoList[binding?.spTankerNo?.selectedItemPosition!!].id.toString()
+                selectedTankerNo = tankerNoList[binding?.spTankerNo?.selectedItemPosition!!].dbValue
                 if (selectedTankerNo.isNotEmpty()) {
                     adapter.setSelectedPosition(i)
-                    binding?.tvTankerNo?.text = tankerNoList[binding?.spTankerNo?.selectedItemPosition!!].tankerNumber
+                    binding?.tvTankerNo?.text = tankerNoList[binding?.spTankerNo?.selectedItemPosition!!].displayValue
                 }
             }
 
@@ -328,15 +328,16 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private fun setDriverSpinner() {
 
         /*if (driverList.isEmpty()) {
-            driverList.add(0, FilterItem("", getString(R.string.please_select_driver)))
+
             driverList.add(FilterItem("Harsh Prajapati", "Harsh Prajapati"))
             driverList.add(FilterItem("Ravi Paramar", "Harsh Paramar"))
         }*/
+
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, driverList)
         binding?.spDriver?.adapter = adapter
 
         if (driverId.isNotEmpty()) {
-            val driver: Driver? = driverList.find { it.id.equals(driverId, false) }
+            val driver: FilterItem? = driverList.find { it.dbValue.equals(driverId, false) }
             val spinnerPosition: Int = driverList.indexOf(driver)
             selectedDriver = driver.toString()
             spinnerPosition.let { binding?.spDriver?.setSelection(it) }
@@ -344,10 +345,10 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
 
         binding?.spDriver?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
-                selectedDriver = driverList[binding?.spDriver?.selectedItemPosition!!].id.toString()
+                selectedDriver = driverList[binding?.spDriver?.selectedItemPosition!!].dbValue
                 if (selectedDriver.isNotEmpty()) {
                     adapter.setSelectedPosition(i)
-                    binding?.tvDriver?.text = driverList[binding?.spDriver?.selectedItemPosition!!].driverName
+                    binding?.tvDriver?.text = driverList[binding?.spDriver?.selectedItemPosition!!].displayValue
                 }
             }
 
@@ -390,10 +391,12 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private fun setWaterTypeSpinner() {
 
         /*if (waterTypeList.isEmpty()) {
-            waterTypeList.add(0, FilterItem("", getString(R.string.please_select_water_type)))
+
             waterTypeList.add(FilterItem("Drinking Water", "Drinking Water"))
             waterTypeList.add(FilterItem("Normal Water", "Normal Water"))
         }*/
+
+
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, waterTypeList)
         binding?.spWaterType?.adapter = adapter
 
@@ -419,11 +422,12 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
 
     private fun setAddedBySpinner() {
 
-        if (addedByList.isEmpty()) {
+        /*if (addedByList.isEmpty()) {
             addedByList.add(0, FilterItem("", getString(R.string.please_select_added_by)))
             addedByList.add(FilterItem("Harsh Prajapati", "Harsh Prajapati"))
             addedByList.add(FilterItem("Ravi Paramar", "Harsh Paramar"))
-        }
+        }*/
+
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, addedByList)
         binding?.spAddedBy?.adapter = adapter
 

@@ -11,20 +11,36 @@ object AppConstants {
         }
     }
 
+    interface Bundle {
+        companion object {
+            const val ARG_TRIP_ID = "tripID"
+            const val ARG_IS_FOR_TRIP_UPDATE = "isForTripUpdate"
+        }
+    }
+
     interface Trip {
         companion object {
             const val OWN_TANKER = "ownTanker"
             const val OTHER_TANKER = "otherTanker"
             const val PERMANENT_DRIVER = "ownDriver"
             const val OTHER_DRIVER = "otherDriver"
+
+            const val OEN_TANKER_DISPLAY = "Own Tanker"
+            const val OTHER_TANKER_DISPLAY = "Other Tanker"
+            const val PERMANENT_DRIVER_DISPLAY = "Permanent Driver"
+            const val OTHER_DRIVER_DISPLAY = "Other Driver"
+
         }
     }
 
-    interface Bundle{
+    interface Filter {
         companion object{
-            const val ARG_TRIP_ID = "tripID"
-            const val ARG_IS_FOR_TRIP_UPDATE = "isForTripUpdate"
+            const val TRIP = "trip"
+            const val MAINTAINANCE = "maintainance"
+            const val DRIVERMAINTAINANCE = "driverMaintainance"
         }
     }
+
+    const val CANCELLED = "cancelled"
 
 }

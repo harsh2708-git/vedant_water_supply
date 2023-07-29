@@ -1,18 +1,11 @@
 package com.production.vedantwatersupply.ui.trips
 
 import android.app.Application
-import android.content.Context
-import com.production.vedantwatersupply.R
-import com.production.vedantwatersupply.core.BaseRepository
 import com.production.vedantwatersupply.core.BaseViewModel
 import com.production.vedantwatersupply.model.request.AddTripRequest
+import com.production.vedantwatersupply.model.request.FilterRequest
 import com.production.vedantwatersupply.model.request.GetAllTripRequest
 import com.production.vedantwatersupply.model.request.TripDetailRequest
-import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_DRIVER
-import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_TANKER
-import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OWN_TANKER
-import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.PERMANENT_DRIVER
-import com.production.vedantwatersupply.utils.CommonUtils
 
 class TripViewModel(app: Application) : BaseViewModel(app) {
 
@@ -41,7 +34,11 @@ class TripViewModel(app: Application) : BaseViewModel(app) {
         tripRepository.callTripCancelApi(tripId)
     }
 
-    fun callFilterApi() {
-        tripRepository.callFilterApi()
+    fun callFilterApi(filterRequest: FilterRequest) {
+        tripRepository.callFilterApi(filterRequest)
+    }
+
+    fun callGetTankerAndDriverFixed() {
+        tripRepository.callGetTankerAndDriverFixed()
     }
 }

@@ -9,12 +9,12 @@ class Settings {
     @SerializedName("message")
     var message = ""
 
-//    @SerializedName("curr_page")
-//    var currPage = "0"
-//
+    @SerializedName("currentPage")
+    var currPage = "0"
+
 //    @SerializedName("prev_page")
 //    var prevPage = "0"
-//
+
 //    @SerializedName("next_page")
 //    var nextPage = "0"
 
@@ -24,9 +24,6 @@ class Settings {
 
     val isNetworkError: Boolean
         get() = success != null && success!!.equals(NETWORK_ERROR, ignoreCase = true)
-
-    val isAuthenticationError: Boolean
-        get() = success != null && success!!.equals(AUTHENTICATION_ERROR, ignoreCase = true)
 
     /*constructor(success: String, message: String, currPage: String, prevPage: String, nextPage: String) {
         this.success = success
