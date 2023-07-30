@@ -153,4 +153,8 @@
     <string name="here_you_can_update_trip_details">Here you can update your trip details.</string>
     <string name="update">Update</string>
     <string name="no_trips_data_found">No Trips Data Found</string>
+    <string name="no_maintenance_data_found">No Maintenance Data Found</string>
+    <string name="no_driver_data_found">No Driver Data Found</string>
+    <string name="update_maintenance">Update Maintenance</string>
+    <string name="here_you_can_update_maintenance_details">Here you can update your maintenance details.</string>
 </resources>

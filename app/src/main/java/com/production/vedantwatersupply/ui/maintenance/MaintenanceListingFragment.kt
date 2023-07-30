@@ -1,21 +1,38 @@
 package com.production.vedantwatersupply.ui.maintenance
 
 import android.content.Context
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentMaintenanceListingBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.MaintenanceFilterClickListener
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
+import com.production.vedantwatersupply.model.request.FilterRequest
+import com.production.vedantwatersupply.model.request.GetAllMaintenanceRequest
+import com.production.vedantwatersupply.model.request.MaintenanceIdRequest
+import com.production.vedantwatersupply.model.request.MonthFilterRequest
+import com.production.vedantwatersupply.model.response.FilterResponse
+import com.production.vedantwatersupply.model.response.GetAllMaintenanceResponse
+import com.production.vedantwatersupply.model.response.MaintenanceData
 import com.production.vedantwatersupply.ui.dialog.MaintenanceFilterDialogFragment
+import com.production.vedantwatersupply.utils.AppConstants
+import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_IS_FOR_MAINTENANCE_UPDATE
+import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_MAINTENANCE_ID
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.production.vedantwatersupply.utils.filter.FilterItem
+import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
+import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 import com.transportermanger.util.filter.IFilterItem
 
 class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBinding, MaintenanceViewModel>(), View.OnClickListener, RecyclerViewClickListener {
@@ -28,22 +45,39 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
     private var selectedTankerType = ""
     private var selectedTankerNo = ""
     private var selectedPaymentMode = ""
+    private var selectedAddedBy = ""
 
     private var fromDate = ""
     private var toDate = ""
     private var displayFromDate = ""
     private var displayToDate = ""
 
+    private var isNextPage = false
+    private var isLoading = false
+    private var pageIndex = 1
+    private var visibleThreshold = 2
+
+    private var maintenanceAdapter: MaintenanceAdapter? = null
+    private var maintenanceList = ArrayList<MaintenanceData>()
+
+    private var filterResponse = FilterResponse()
+    private var yearList = ArrayList<FilterItem>()
+    private var tankerList = ArrayList<FilterItem>()
+    private var addedByList = ArrayList<FilterItem>()
+
     override val layoutId: Int
         get() = R.layout.fragment_maintenance_listing
 
     override fun getViewModel(): Class<MaintenanceViewModel> = MaintenanceViewModel::class.java
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        callMonthFilterApi(CommonUtils.getCurrentYear().toString())
+    }
+
     override fun init() {
         setScreenTitle()
         setSummary()
-        initFilterView()
-        setMaintenanceAdpter()
     }
 
     override fun initListener() {
@@ -54,6 +88,33 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         binding?.appBar?.addOnOffsetChangedListener { _, verticalOffset ->
             binding?.ivUp?.visibility = if (verticalOffset < 0) View.VISIBLE else View.GONE
         }
+
+        /*
+        * Load more
+        */
+        binding?.rvMaintanance?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val scrollOffset = if (dy < 0) -1 * dy else dy
+                if (binding?.rvMaintanance?.layoutManager != null) {
+                    val lastVisibleItem = (binding?.rvMaintanance?.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                    val totalItemCount: Int = binding?.rvMaintanance?.layoutManager?.itemCount!!
+                    if (scrollOffset > 0 && isNextPage && !isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
+                        isLoading = true
+                        pageIndex++
+                        binding!!.llLoading.visibility = View.VISIBLE
+
+                    }
+                }
+            }
+        })
+
+        binding?.swipeLayout?.setOnRefreshListener {
+            pageIndex = 1
+            callGetAllMaintenanceApi()
+        }
+
     }
 
     private fun setScreenTitle() {
@@ -67,25 +128,159 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         binding?.clSummary?.tvDate?.text = CommonUtils.currentDate()
     }
 
-    override fun addObserver() {}
+    private fun callMonthFilterApi(selectedYear: String) {
+        showProgress()
+        val monthFilterRequest = MonthFilterRequest()
+        monthFilterRequest.year = selectedYear
+        viewModel?.callMonthFilterApi(monthFilterRequest)
+    }
 
-    private fun initFilterView() {
-        if (monthList.isEmpty()) {
-            monthList.add(0, FilterItem("all", "All", true))
-            monthList.add(FilterItem("july", "July"))
-            monthList.add(FilterItem("june", "June"))
-            monthList.add(FilterItem("may", "May"))
-            monthList.add(FilterItem("april", "April"))
-            monthList.add(FilterItem("march", "March"))
-            monthList.add(FilterItem("february", "February"))
-            monthList.add(FilterItem("january", "January"))
+    private fun callGetAllMaintenanceApi() {
+        showProgress()
+        val getAllMaintenanceRequest = GetAllMaintenanceRequest()
+        getAllMaintenanceRequest.page = pageIndex.toString()
+        getAllMaintenanceRequest.limit = "10"
+        getAllMaintenanceRequest.fromDate = fromDate
+        getAllMaintenanceRequest.toDate = toDate
+        getAllMaintenanceRequest.year = selectedYear
+        getAllMaintenanceRequest.month = monthId
+        getAllMaintenanceRequest.tankerType = selectedTankerType
+        getAllMaintenanceRequest.tankerId = selectedTankerNo
+        getAllMaintenanceRequest.paymentmode = selectedPaymentMode
+        getAllMaintenanceRequest.addedBy = selectedAddedBy
+        Log.d("Maintenance Listing Params", "callGetAllMaintenanceApi: " + Gson().toJson(getAllMaintenanceRequest))
+        viewModel?.callGetAllMaintenanceApi(getAllMaintenanceRequest)
+    }
+
+    private fun callMaintenanceDeleteApi(id: String?) {
+        baseActivity?.showProgress()
+        val tripId = MaintenanceIdRequest()
+        tripId.maintainanceId = id.toString()
+        viewModel?.callMaintenanceDeleteApi(tripId)
+    }
+
+    private fun callFilterApi() {
+        baseActivity?.showProgress()
+        val filterRequest = FilterRequest()
+        filterRequest.filterFor = AppConstants.Filter.MAINTAINANCE
+        viewModel?.callFilterApi(filterRequest)
+    }
+
+    override fun addObserver() {
+        viewModel?.tripRepository?.monthFilterLiveData?.observe(this) {
+            when (it.settings?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    monthList.clear()
+                    monthList.add(0, FilterItem("", getString(R.string.all), true))
+                    it?.data?.let { it1 -> monthList.addAll(it1) }
+                    initFilterView()
+
+                    if (selectedYear.isEmpty()) {
+                        monthId = monthFilterAdapter?.getSelectedItem()?.dbValue.toString()
+                        resetAdapter()
+                    }
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.settings?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+            hideProgress()
         }
 
+        viewModel?.maintenanceRepository?.getAllMaintenanceResponseMutableLiveData?.observe(this) {
+            when (it.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    isNextPage = it.webServiceSetting?.currentPage.equals("1")
+                    isLoading = false
+                    binding?.llLoading?.visibility = View.GONE
+                    binding?.swipeLayout?.isRefreshing = false
+                    updateUI(it)
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+            hideProgress()
+        }
+
+        viewModel?.maintenanceRepository?.maintenanceDeleteResponseMutableLiveData?.observe(this) {
+            when (it.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                    callGetAllMaintenanceApi()
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+            hideProgress()
+        }
+
+        viewModel?.tripRepository?.filterResponseMutableLiveData?.observe(this) {
+            baseActivity?.hideProgress()
+            when (it?.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    filterResponse = it
+
+                    yearList.clear()
+                    yearList.add(0, FilterItem("", getString(R.string.please_select_year)))
+                    filterResponse.years?.let { tanker -> yearList.addAll(tanker) }
+
+                    tankerList.clear()
+                    tankerList.add(0, FilterItem("", getString(R.string.please_select_tanker_no)))
+                    filterResponse.vehicle?.let { tanker -> tankerList.addAll(tanker) }
+
+                    addedByList.clear()
+                    addedByList.add(0, FilterItem("", getString(R.string.please_select_added_by)))
+                    filterResponse.addedBy?.let { addedBy -> addedByList.addAll(addedBy) }
+
+                    openFilterDialog()
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+        }
+    }
+
+    private fun updateUI(it: GetAllMaintenanceResponse?) {
+        binding?.clSummary?.tvTotal?.text = it?.totalMaintainanceCount?.toString()?.formatPriceWithoutDecimal()
+        maintenanceList.clear()
+        it?.maintainanceData?.let { it1 -> maintenanceList.addAll(it1) }
+
+        if (maintenanceList.isEmpty()) {
+            hideData()
+        } else {
+            showData()
+            setMaintenanceAdapter()
+        }
+    }
+
+    private fun initFilterView() {
         monthFilterAdapter = FilterListAdapter(monthList, object : IFilterItem {
             override fun onFilterItemSelected(view: View?, pos: Int) {
                 monthId = monthList[pos].dbValue
-//                resetAdapter()
-
+                resetAdapter()
             }
         })
         val resources = resources
@@ -96,8 +291,8 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         binding?.rvMonthFilter?.adapter = monthFilterAdapter
     }
 
-    private fun setMaintenanceAdpter() {
-        val maintenanceAdapter = MaintenanceAdapter(requireContext(), this)
+    private fun setMaintenanceAdapter() {
+        maintenanceAdapter = MaintenanceAdapter(requireContext(), maintenanceList, this)
         binding?.rvMaintanance?.adapter = maintenanceAdapter
     }
 
@@ -105,7 +300,11 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         when (v?.id) {
             R.id.ivBack -> baseActivity?.onBackPressed()
             R.id.btnAdd -> navigateFragment(v, R.id.nav_add_maintenance)
-            R.id.btnFilter -> openFilterDialog()
+            R.id.btnFilter -> {
+                if (yearList.isEmpty() || tankerList.isEmpty() || addedByList.isEmpty()) callFilterApi()
+                else openFilterDialog()
+            }
+
             R.id.ivUp -> {
                 binding?.appBar?.scrollTo(0, 0)
                 binding?.rvMaintanance?.smoothScrollToPosition(0)
@@ -116,11 +315,14 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
 
     private fun openFilterDialog() {
         val filterDialog = MaintenanceFilterDialogFragment.getInstance(
-            selectedYear, selectedTankerType, selectedTankerNo, selectedPaymentMode, fromDate, toDate, displayFromDate, displayToDate, object : MaintenanceFilterClickListener {
+            selectedYear, selectedTankerType, selectedTankerNo,
+            selectedPaymentMode, fromDate, toDate, displayFromDate, displayToDate,selectedAddedBy,
+            yearList,tankerList,addedByList,
+            object : MaintenanceFilterClickListener {
                 override fun onApply(
                     fromDate: String, displayFromDate: String?,
                     toDate: String, displayToDate: String?, selectedYear: String,
-                    selectedTankerType: String, selectedTankerNo: String, selectedPaymentMode: String
+                    selectedTankerType: String, selectedTankerNo: String, selectedPaymentMode: String, selectedAddedBy: String
                 ) {
                     this@MaintenanceListingFragment.fromDate = fromDate
                     this@MaintenanceListingFragment.displayFromDate = displayFromDate.toString()
@@ -130,6 +332,19 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
                     this@MaintenanceListingFragment.selectedTankerType = selectedTankerType
                     this@MaintenanceListingFragment.selectedTankerNo = selectedTankerNo
                     this@MaintenanceListingFragment.selectedPaymentMode = selectedPaymentMode
+                    this@MaintenanceListingFragment.selectedAddedBy = selectedAddedBy
+
+                    if (fromDate.isNotEmpty() && toDate.isNotEmpty()) {
+                        binding?.rvMonthFilter?.visibility = View.GONE
+                        monthId = ""
+                    }
+
+                    if (selectedYear.isNotEmpty()) {
+                        callMonthFilterApi(selectedYear)
+                        monthFilterAdapter?.setSelected(0)
+                    }
+                        resetAdapter()
+
                 }
 
                 override fun onClear() {
@@ -141,6 +356,13 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
                     toDate = ""
                     displayFromDate = ""
                     displayToDate = ""
+                    selectedAddedBy = ""
+
+                    binding?.rvMonthFilter?.visibility = View.VISIBLE
+
+                    callMonthFilterApi(CommonUtils.getCurrentYear().toString())
+                    monthId = ""
+                    monthFilterAdapter?.setSelected(0)
                 }
             }
         )
@@ -148,13 +370,19 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
     }
 
     override fun onClick(view: View?, position: Int) {
+        val response = maintenanceAdapter?.getItemAt(position)
         when (view?.id) {
-            R.id.cvMaintenanceMain -> navigateFragment(view, R.id.nav_maintenance_detail)
-            R.id.ivMaintenanceOptions -> showOptionMenu(view)
+            R.id.cvMaintenanceMain -> {
+                val bundle = Bundle()
+                bundle.putString(ARG_MAINTENANCE_ID, response?.id)
+                navigateFragment(view, R.id.nav_maintenance_detail, bundle)
+            }
+
+            R.id.ivMaintenanceOptions -> showOptionMenu(view, response)
         }
     }
 
-    private fun showOptionMenu(view: View) {
+    private fun showOptionMenu(view: View, response: MaintenanceData?) {
         val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val vieww = inflater.inflate(R.layout.layout_options, null)
         val popupWindow = PopupWindow(vieww, requireContext().resources.getDimensionPixelSize(R.dimen._250sdp), LinearLayout.LayoutParams.WRAP_CONTENT, true)
@@ -166,12 +394,41 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         binding.tvDelete.text = getString(R.string.delete_maintenance)
 
         binding.llEdit.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(ARG_MAINTENANCE_ID, response?.id)
+            bundle.putBoolean(ARG_IS_FOR_MAINTENANCE_UPDATE, true)
+            navigateFragment(view, R.id.nav_add_maintenance, bundle)
             popupWindow.dismiss()
         }
 
         binding.llDelete.setOnClickListener {
+            callMaintenanceDeleteApi(response?.id)
             popupWindow.dismiss()
         }
     }
 
+    private fun resetAdapter() {
+        binding?.swipeLayout?.isRefreshing = false
+        pageIndex = 1
+        callGetAllMaintenanceApi()
+        setMaintenanceAdapter()
+    }
+
+    private fun showData() {
+        binding?.rvMaintanance?.visibility = View.VISIBLE
+        binding?.maintenanceNoData?.tvNoData?.visibility = View.GONE
+    }
+
+    private fun hideData() {
+        binding?.rvMaintanance?.visibility = View.GONE
+        binding?.maintenanceNoData?.tvNoData?.visibility = View.VISIBLE
+        binding?.maintenanceNoData?.tvNoData?.text = getString(R.string.no_maintenance_data_found)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        yearList = ArrayList()
+        tankerList = ArrayList()
+        addedByList = ArrayList()
+    }
 }

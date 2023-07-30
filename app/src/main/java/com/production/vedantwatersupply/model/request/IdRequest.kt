@@ -1,6 +1,6 @@
 package com.production.vedantwatersupply.model.request
 
-class TripDetailRequest {
+class IdRequest {
 
     var id = ""
 }

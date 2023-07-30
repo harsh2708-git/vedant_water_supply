@@ -1,21 +1,18 @@
 package com.production.vedantwatersupply.ui.trips
 
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentAddTripBinding
 import com.production.vedantwatersupply.model.request.AddTripRequest
-import com.production.vedantwatersupply.model.request.TripDetailRequest
+import com.production.vedantwatersupply.model.request.IdRequest
 import com.production.vedantwatersupply.model.response.FilterResponse
 import com.production.vedantwatersupply.model.response.TripData
-import com.production.vedantwatersupply.utils.AppConstants
 import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_IS_FOR_TRIP_UPDATE
 import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_TRIP_ID
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_DRIVER
@@ -26,7 +23,6 @@ import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.calendar.CaldroidListener
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 import com.production.vedantwatersupply.utils.filter.FilterItem
-import com.production.vedantwatersupply.utils.formatPriceWithDecimal
 import java.util.Calendar
 import java.util.Date
 
@@ -157,7 +153,6 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         binding?.tvDriverName?.setOnClickListener(this)
         binding?.tvFillingSiteName?.setOnClickListener(this)
         binding?.tvFuelFilledBy?.setOnClickListener(this)
-        binding?.ivUp?.setOnClickListener(this)
         binding?.ivUp?.setOnClickListener(this)
         binding?.tvDate?.setOnClickListener(this)
 
@@ -466,7 +461,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
                             displayFromDate = CommonUtils.getFormattedDateFrom(date1).toString()
                             binding?.tvDate?.setText(displayFromDate)
                         }
-                    }, selectedDate, null, null
+                    }, selectedDate, null, Date()
                 )
 
                 /*val dialogLicense = DatePickerDialog(
@@ -528,7 +523,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
 
     private fun callTripDetailApi() {
         baseActivity?.showProgress()
-        val tripDetailRequest = TripDetailRequest()
+        val tripDetailRequest = IdRequest()
         tripDetailRequest.id = tripId
         viewModel?.callTripDetailApi(tripDetailRequest)
     }

@@ -6,7 +6,7 @@ import com.production.vedantwatersupply.model.request.AddTripRequest
 import com.production.vedantwatersupply.model.request.FilterRequest
 import com.production.vedantwatersupply.model.request.GetAllTripRequest
 import com.production.vedantwatersupply.model.request.MonthFilterRequest
-import com.production.vedantwatersupply.model.request.TripDetailRequest
+import com.production.vedantwatersupply.model.request.IdRequest
 
 class TripViewModel(app: Application) : BaseViewModel(app) {
 
@@ -23,15 +23,15 @@ class TripViewModel(app: Application) : BaseViewModel(app) {
         tripRepository.callGetAllTripListingApi(getAllTripRequest)
     }
 
-    fun callTripDetailApi(tripDetailRequest: TripDetailRequest) {
+    fun callTripDetailApi(tripDetailRequest: IdRequest) {
         tripRepository.callTripDetailApi(tripDetailRequest)
     }
 
-    fun callTripDeleteApi(tripId: TripDetailRequest) {
+    fun callTripDeleteApi(tripId: IdRequest) {
         tripRepository.callTripDeleteApi(tripId)
     }
 
-    fun callTripCancelApi(tripId: TripDetailRequest) {
+    fun callTripCancelApi(tripId: IdRequest) {
         tripRepository.callTripCancelApi(tripId)
     }
 

@@ -412,10 +412,16 @@
                         layout="@layout/layout_no_data_found"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@id/end"
                         app:layout_constraintStart_toStartOf="@id/start"
                         app:layout_constraintTop_toBottomOf="@id/labelMaintanance" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/brMaintenanceData"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="maintenanceNoData,rvMaintanance"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/labelDrivers"
@@ -424,7 +430,7 @@
                         android:text="@string/drivers"
                         android:textColor="@color/color_0E0D12"
                         app:layout_constraintStart_toStartOf="@id/start"
-                        app:layout_constraintTop_toBottomOf="@id/rvMaintanance" />
+                        app:layout_constraintTop_toBottomOf="@id/brMaintenanceData" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvViewAllTripsDrivers"

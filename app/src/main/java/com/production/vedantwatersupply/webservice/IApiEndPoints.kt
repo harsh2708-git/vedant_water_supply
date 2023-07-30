@@ -6,6 +6,10 @@ import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_FILTERS
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_GET_TANKER_AND_DRIVER_FIXED
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_LOGIN
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_MONTH_LIST
+import com.production.vedantwatersupply.utils.ApiConstants.Companion.Maintenance.Companion.API_ADD_UPDATE_MAINTENANCE
+import com.production.vedantwatersupply.utils.ApiConstants.Companion.Maintenance.Companion.API_DELETE_MAINTENANCE
+import com.production.vedantwatersupply.utils.ApiConstants.Companion.Maintenance.Companion.API_GET_ALL_MAINTENANCE
+import com.production.vedantwatersupply.utils.ApiConstants.Companion.Maintenance.Companion.API_MAINTENANCE_DETAILS
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.Trip.Companion.API_ADD_UPDATE_TRIP
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.Trip.Companion.API_CANCEL_TRIP
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.Trip.Companion.API_DELETE_TRIP
@@ -56,5 +60,21 @@ interface IApiEndPoints {
 
     @POST(API_GET_TANKER_AND_DRIVER_FIXED)
     fun getTankerAndDriverFixed(): Call<WSGenericResponse<JsonElement>>
+
+    @FormUrlEncoded
+    @POST(API_ADD_UPDATE_MAINTENANCE)
+    fun addUpdateMaintenance(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
+
+    @FormUrlEncoded
+    @POST(API_GET_ALL_MAINTENANCE)
+    fun getAllMaintenance(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
+
+    @FormUrlEncoded
+    @POST(API_MAINTENANCE_DETAILS)
+    fun maintenanceDetailApi(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
+
+    @FormUrlEncoded
+    @POST(API_DELETE_MAINTENANCE)
+    fun deleteMaintenanceApi(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
 
 }

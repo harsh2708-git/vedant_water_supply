@@ -23,6 +23,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/clMain"
+                android:visibility="gone"
+                tools:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -50,7 +52,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_10sdp"
-                    android:text="VWS/MAN/2023/07/0001"
+                    tools:text="VWS/MAN/2023/07/0001"
                     android:textColor="@color/black"
                     app:layout_constraintBottom_toBottomOf="@+id/ivOptions"
                     app:layout_constraintEnd_toStartOf="@id/ivOptions"
@@ -90,13 +92,13 @@
                     app:layout_constraintTop_toBottomOf="@+id/brOptions">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/txt_perform_on"
+                        android:id="@+id/tvAddedBy"
                         style="@style/RobotoRegular12"
                         android:layout_width="0dp"
                         android:layout_marginVertical="@dimen/_13sdp"
                         android:layout_marginStart="@dimen/_25sdp"
                         android:layout_marginEnd="@dimen/_25sdp"
-                        android:text="By Teri Dactyi, 14/06/2023"
+                        tools:text="By Teri Dactyi, 14/06/2023"
                         android:textColor="@color/body_text"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -134,7 +136,7 @@
                     android:paddingVertical="@dimen/_7sdp"
                     android:paddingStart="@dimen/_16sdp"
                     android:paddingEnd="@dimen/_16sdp"
-                    android:text="MH 01 AB 1221"
+                    tools:text="MH 01 AB 1221"
                     android:textColor="@color/color_dark"
                     app:layout_constraintStart_toStartOf="@id/start"
                     app:layout_constraintTop_toBottomOf="@+id/labelTankerNo"
@@ -157,7 +159,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10sdp"
-                    android:text="Own Tanker"
+                    tools:text="Own Tanker"
                     android:textColor="@color/color_dark"
                     android:layout_marginTop="@dimen/_20sdp"
                     app:layout_constraintEnd_toEndOf="@+id/end"
@@ -193,7 +195,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="20,000.00"
+                    tools:text="20,000.00"
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="@+id/labelMaintenanceAmount"
                     app:layout_constraintStart_toStartOf="@id/labelMaintenanceAmount"
@@ -215,7 +217,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="Cheque"
+                    tools:text="Cheque"
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="@+id/labelPaymentMode"
                     app:layout_constraintStart_toStartOf="@id/labelPaymentMode"
@@ -236,7 +238,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="Harsh Prajapati Harsh PrajapatiHarsh PrajapatiHarsh Prajapati "
+                    tools:text="Harsh Prajapati Harsh PrajapatiHarsh PrajapatiHarsh Prajapati "
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="@+id/end"
                     app:layout_constraintStart_toStartOf="@id/start"

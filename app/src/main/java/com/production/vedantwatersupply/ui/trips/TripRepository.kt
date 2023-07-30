@@ -7,7 +7,7 @@ import com.production.vedantwatersupply.model.request.AddTripRequest
 import com.production.vedantwatersupply.model.request.FilterRequest
 import com.production.vedantwatersupply.model.request.GetAllTripRequest
 import com.production.vedantwatersupply.model.request.MonthFilterRequest
-import com.production.vedantwatersupply.model.request.TripDetailRequest
+import com.production.vedantwatersupply.model.request.IdRequest
 import com.production.vedantwatersupply.model.response.AddTripResponse
 import com.production.vedantwatersupply.model.response.CommonEmptyResponse
 import com.production.vedantwatersupply.model.response.FilterResponse
@@ -130,7 +130,7 @@ class TripRepository {
     }
 
     val tripDetailResponseMutableLiveData = MutableLiveData<TripData>()
-    fun callTripDetailApi(tripDetailRequest: TripDetailRequest) {
+    fun callTripDetailApi(tripDetailRequest: IdRequest) {
         ApiClient.iApiEndPoints.tripDetailApi(CommonUtils.toFieldStringMap(tripDetailRequest))
             .enqueue(object : Callback<WSGenericResponse<JsonElement>> {
                 override fun onResponse(call: Call<WSGenericResponse<JsonElement>>, response: Response<WSGenericResponse<JsonElement>>) {
@@ -166,7 +166,7 @@ class TripRepository {
     }
 
     val tripDeleteResponseMutableLiveData = MutableLiveData<CommonEmptyResponse>()
-    fun callTripDeleteApi(tripId: TripDetailRequest) {
+    fun callTripDeleteApi(tripId: IdRequest) {
         ApiClient.iApiEndPoints.deleteTripApi(CommonUtils.toFieldStringMap(tripId))
             .enqueue(object : Callback<WSGenericResponse<JsonElement>> {
                 override fun onResponse(call: Call<WSGenericResponse<JsonElement>>, response: Response<WSGenericResponse<JsonElement>>) {
@@ -202,7 +202,7 @@ class TripRepository {
     }
 
     val tripCancelResponseMutableLiveData = MutableLiveData<CommonEmptyResponse>()
-    fun callTripCancelApi(tripId: TripDetailRequest) {
+    fun callTripCancelApi(tripId: IdRequest) {
         ApiClient.iApiEndPoints.cancelTripApi(CommonUtils.toFieldStringMap(tripId))
             .enqueue(object : Callback<WSGenericResponse<JsonElement>> {
                 override fun onResponse(call: Call<WSGenericResponse<JsonElement>>, response: Response<WSGenericResponse<JsonElement>>) {

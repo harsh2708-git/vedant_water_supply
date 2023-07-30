@@ -10,6 +10,8 @@ import com.production.vedantwatersupply.core.BaseDialogFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentMaintenanceFilterDialogBinding
 import com.production.vedantwatersupply.listener.MaintenanceFilterClickListener
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_TANKER
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OWN_TANKER
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.calendar.CaldroidListener
 import com.production.vedantwatersupply.utils.filter.FilterItem
@@ -22,16 +24,19 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
     private var yearList = ArrayList<FilterItem>()
     private var tankerNoList = ArrayList<FilterItem>()
     private var paymentModeList = ArrayList<FilterItem>()
+    private var addedByList = ArrayList<FilterItem>()
 
     private var yearId = ""
     private var tankerTypeId = ""
     private var tankerNoId = ""
     private var paymentModeId = ""
+    private var addedById = ""
 
     private var selectedYear = ""
     private var selectedTankerType = ""
     private var selectedTankerNo = ""
     private var selectedPaymentMode = ""
+    private var selectedAddedBy = ""
 
     private var fromDate = ""
     private var toDate = ""
@@ -50,6 +55,10 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
             toDate: String,
             displayFromDate: String,
             displayToDate: String,
+            selectedAddedBy: String,
+            yearList: ArrayList<FilterItem>,
+            tankerList: ArrayList<FilterItem>,
+            addedBy: ArrayList<FilterItem>,
             listener: MaintenanceFilterClickListener
         ): MaintenanceFilterDialogFragment {
             val fragment = MaintenanceFilterDialogFragment()
@@ -61,6 +70,10 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
             fragment.toDate = toDate
             fragment.displayFromDate = displayFromDate
             fragment.displayToDate = displayToDate
+            fragment.yearList = yearList
+            fragment.tankerNoList = tankerList
+            fragment.addedByList = addedBy
+            fragment.addedById = selectedAddedBy
             fragment.callBack = listener
             return fragment
         }
@@ -92,9 +105,11 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
         binding?.tvFromDate?.setOnClickListener(this)
         binding?.tvToDate?.setOnClickListener(this)
         binding?.tvPaymentMode?.setOnClickListener(this)
+        binding?.tvAddedBy?.setOnClickListener(this)
     }
 
     private fun init() {
+
         if (!CommonUtils.isEmpty(displayFromDate)) {
             binding?.tvYear?.isEnabled = false
             binding?.tvYear?.alpha = 0.5f
@@ -108,15 +123,16 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
         setTankerTypeSpinner()
         setTankerNoSpinner()
         setPaymentModeSpinner()
+        setAddedBySpinner()
     }
 
     private fun setYearSpinner() {
-        if (yearList.isEmpty()) {
+       /* if (yearList.isEmpty()) {
             yearList.add(0, FilterItem("", getString(R.string.please_select_year)))
             yearList.add(FilterItem("2023", "2023"))
             yearList.add(FilterItem("2022", "2022"))
             yearList.add(FilterItem("2021", "2021"))
-        }
+        }*/
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, yearList)
         binding?.spYear?.adapter = adapter
 
@@ -150,8 +166,8 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
 
         if (tankerTypeList.isEmpty()) {
             tankerTypeList.add(0, FilterItem("", getString(R.string.please_select_tanker_type)))
-            tankerTypeList.add(FilterItem(getString(R.string.own_tanker), getString(R.string.own_tanker)))
-            tankerTypeList.add(FilterItem(getString(R.string.other_tanker), getString(R.string.other_tanker)))
+            tankerTypeList.add(FilterItem(OWN_TANKER, getString(R.string.own_tanker)))
+            tankerTypeList.add(FilterItem(OTHER_TANKER, getString(R.string.other_tanker)))
         }
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, tankerTypeList)
         binding?.spTanker?.adapter = adapter
@@ -178,11 +194,11 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
 
     private fun setTankerNoSpinner() {
 
-        if (tankerNoList.isEmpty()) {
+       /* if (tankerNoList.isEmpty()) {
             tankerNoList.add(0, FilterItem("", getString(R.string.please_select_tanker_no)))
             tankerNoList.add(FilterItem("MH 01 AB  4545", "MH 01 AB  4545"))
             tankerNoList.add(FilterItem("MH 02 AV  4545", "MH 02 AV  4545"))
-        }
+        }*/
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, tankerNoList)
         binding?.spTankerNo?.adapter = adapter
 
@@ -229,6 +245,30 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
                 if (selectedPaymentMode.isNotEmpty()) {
                     adapter.setSelectedPosition(i)
                     binding?.tvPaymentMode?.text = paymentModeList[binding?.spPaymentMode?.selectedItemPosition!!].displayValue
+                }
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+        }
+    }
+
+    private fun setAddedBySpinner() {
+        val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, addedByList)
+        binding?.spAddedBy?.adapter = adapter
+
+        if (addedById.isNotEmpty()) {
+            val addedBy: FilterItem? = addedByList.find { it.dbValue.equals(addedById, false) }
+            val spinnerPosition: Int = addedByList.indexOf(addedBy)
+            selectedAddedBy = addedBy.toString()
+            spinnerPosition.let { binding?.spAddedBy?.setSelection(it) }
+        }
+
+        binding?.spAddedBy?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
+                selectedAddedBy = addedByList[binding?.spAddedBy?.selectedItemPosition!!].dbValue
+                if (selectedAddedBy.isNotEmpty()) {
+                    adapter.setSelectedPosition(i)
+                    binding?.tvAddedBy?.text = addedByList[binding?.spAddedBy?.selectedItemPosition!!].displayValue
                 }
             }
 
@@ -284,7 +324,7 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
                 callBack?.onApply(
                     fromDate, displayFromDate, toDate, displayToDate,
                     selectedYear, selectedTankerType, selectedTankerNo,
-                    selectedPaymentMode
+                    selectedPaymentMode, selectedAddedBy
                 )
                 dismiss()
             }
@@ -306,6 +346,7 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
             R.id.tvTanker -> binding?.spTanker?.performClick()
             R.id.tvTankerNo -> binding?.spTankerNo?.performClick()
             R.id.tvPaymentMode -> binding?.spPaymentMode?.performClick()
+            R.id.tvAddedBy -> binding?.spAddedBy?.performClick()
         }
     }
 
@@ -314,6 +355,7 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
         binding?.spTanker?.setSelection(0)
         binding?.spTankerNo?.setSelection(0)
         binding?.spPaymentMode?.setSelection(0)
+        binding?.spAddedBy?.setSelection(0)
 
         binding?.tvYear?.isEnabled = true
         binding?.tvFromDate?.isEnabled = true
@@ -323,11 +365,13 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
         tankerTypeId = ""
         tankerNoId = ""
         paymentModeId = ""
+        addedById = ""
 
         selectedYear = ""
         selectedTankerType = ""
         selectedTankerNo = ""
         selectedPaymentMode = ""
+        selectedAddedBy = ""
 
         fromDate = ""
         toDate = ""

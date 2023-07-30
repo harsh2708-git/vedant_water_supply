@@ -93,10 +93,7 @@
                             android:id="@+id/tripNoData"
                             layout="@layout/layout_no_data_found"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            android:layout_height="wrap_content" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

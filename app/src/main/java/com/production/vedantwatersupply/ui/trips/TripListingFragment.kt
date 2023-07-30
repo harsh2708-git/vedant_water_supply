@@ -19,7 +19,7 @@ import com.production.vedantwatersupply.listener.TripFilterClickListener
 import com.production.vedantwatersupply.model.request.FilterRequest
 import com.production.vedantwatersupply.model.request.GetAllTripRequest
 import com.production.vedantwatersupply.model.request.MonthFilterRequest
-import com.production.vedantwatersupply.model.request.TripDetailRequest
+import com.production.vedantwatersupply.model.request.IdRequest
 import com.production.vedantwatersupply.model.response.FilterResponse
 import com.production.vedantwatersupply.model.response.GetAllTripResponse
 import com.production.vedantwatersupply.model.response.TripData
@@ -31,6 +31,7 @@ import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.production.vedantwatersupply.utils.filter.FilterItem
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
+import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 import com.transportermanger.util.filter.IFilterItem
 
@@ -164,14 +165,14 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
 
     private fun callTripDeleteApi(id: String?) {
         baseActivity?.showProgress()
-        val tripId = TripDetailRequest()
+        val tripId = IdRequest()
         tripId.id = id.toString()
         viewModel?.callTripDeleteApi(tripId)
     }
 
     private fun callTripCancelApi(id: String?) {
         baseActivity?.showProgress()
-        val tripId = TripDetailRequest()
+        val tripId = IdRequest()
         tripId.id = id.toString()
         viewModel?.callTripCancelApi(tripId)
     }
@@ -307,7 +308,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
     }
 
     private fun updateUI(it: GetAllTripResponse?) {
-        binding?.clSummary?.tvTotal?.text = it?.totalTripsCount.toString()
+        binding?.clSummary?.tvTotal?.text = it?.totalTripsCount.toString().formatPriceWithoutDecimal()
 
         tripList.clear()
         it?.tripData?.let { it1 -> tripList.addAll(it1) }
@@ -494,6 +495,14 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         binding?.rvTrips?.visibility = View.GONE
         binding?.tripNoData?.tvNoData?.visibility = View.VISIBLE
         binding?.tripNoData?.tvNoData?.text = getString(R.string.no_trips_data_found)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        tripList = ArrayList()
+        driverList = ArrayList()
+        addedByList = ArrayList()
+        yearList = ArrayList()
     }
 
 }

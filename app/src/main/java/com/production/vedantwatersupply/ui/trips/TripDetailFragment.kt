@@ -11,7 +11,7 @@ import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentTripDetailBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
-import com.production.vedantwatersupply.model.request.TripDetailRequest
+import com.production.vedantwatersupply.model.request.IdRequest
 import com.production.vedantwatersupply.model.response.TripData
 import com.production.vedantwatersupply.utils.AppConstants
 import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_TRIP_ID
@@ -60,21 +60,21 @@ class TripDetailFragment : BaseFragment<FragmentTripDetailBinding, TripViewModel
 
     private fun callTripDetailApi() {
         baseActivity?.showProgress()
-        val tripDetailRequest = TripDetailRequest()
+        val tripDetailRequest = IdRequest()
         tripDetailRequest.id = tripId
         viewModel?.callTripDetailApi(tripDetailRequest)
     }
 
     private fun callTripDeleteApi() {
         baseActivity?.showProgress()
-        val tripId = TripDetailRequest()
+        val tripId = IdRequest()
         tripId.id = this.tripId
         viewModel?.callTripDeleteApi(tripId)
     }
 
     private fun callTripCancelApi() {
         baseActivity?.showProgress()
-        val tripId = TripDetailRequest()
+        val tripId = IdRequest()
         tripId.id = this.tripId
         viewModel?.callTripCancelApi(tripId)
     }

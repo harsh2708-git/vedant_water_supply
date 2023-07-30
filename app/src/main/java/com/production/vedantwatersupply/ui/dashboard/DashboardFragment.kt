@@ -12,8 +12,10 @@ import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentDashboardBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
-import com.production.vedantwatersupply.model.request.TripDetailRequest
+import com.production.vedantwatersupply.model.request.IdRequest
+import com.production.vedantwatersupply.model.request.MaintenanceIdRequest
 import com.production.vedantwatersupply.model.response.DashboardResponse
+import com.production.vedantwatersupply.model.response.MaintenanceData
 import com.production.vedantwatersupply.model.response.TripData
 import com.production.vedantwatersupply.ui.dialog.AlertDialogFragment
 import com.production.vedantwatersupply.ui.driver.DriverAdapter
@@ -21,6 +23,7 @@ import com.production.vedantwatersupply.ui.login.LoginActivity
 import com.production.vedantwatersupply.ui.maintenance.MaintenanceAdapter
 import com.production.vedantwatersupply.ui.trips.TripsAdapter
 import com.production.vedantwatersupply.utils.AppConstants
+import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_MAINTENANCE_ID
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.SharedPreferenceUtil
 import com.production.vedantwatersupply.utils.UserUtils
@@ -31,6 +34,7 @@ import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSettin
 class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewModel>(), View.OnClickListener, RecyclerViewClickListener {
 
     private var tripAdapter: TripsAdapter? = null
+    private var maintenanceAdapter: MaintenanceAdapter? = null
     private var dashboardResponse: DashboardResponse? = null
 
     override val layoutId: Int
@@ -133,6 +137,24 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
             }
             hideProgress()
         }
+
+        viewModel?.maintenanceRepository?.maintenanceDeleteResponseMutableLiveData?.observe(this) {
+            when (it.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                    callDashboardApi()
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+            hideProgress()
+        }
     }
 
     private fun updateUI() {
@@ -148,7 +170,13 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
             setTripsAdapter()
         }
 
-        setMaintenanceAdpter()
+        if (dashboardResponse?.maintainanceData?.isEmpty() == true) {
+            hideMaintenanceData()
+        } else {
+            showMaintenanceData()
+            setMaintenanceAdpter()
+        }
+
         setDriverAdapter()
     }
 
@@ -163,13 +191,24 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         binding?.tripNoData?.tvNoData?.text = getString(R.string.no_trips_data_found)
     }
 
+    private fun showMaintenanceData(){
+        binding?.rvMaintanance?.visibility = View.VISIBLE
+        binding?.maintenanceNoData?.tvNoData?.visibility = View.GONE
+    }
+
+    private fun hideMaintenanceData(){
+        binding?.rvMaintanance?.visibility = View.GONE
+        binding?.maintenanceNoData?.tvNoData?.visibility = View.VISIBLE
+        binding?.maintenanceNoData?.tvNoData?.text = getString(R.string.no_maintenance_data_found)
+    }
+
     private fun setTripsAdapter() {
         tripAdapter = dashboardResponse?.tripData?.let { TripsAdapter(requireContext(), it, this) }
         binding?.rvTrips?.adapter = tripAdapter
     }
 
     private fun setMaintenanceAdpter() {
-        val maintenanceAdapter = MaintenanceAdapter(requireContext(), this)
+        maintenanceAdapter = dashboardResponse?.maintainanceData?.let { MaintenanceAdapter(requireContext(), it, this) }
         binding?.rvMaintanance?.adapter = maintenanceAdapter
     }
 
@@ -213,6 +252,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
 
     override fun onClick(view: View?, position: Int) {
         val tripResponse = tripAdapter?.getItemAt(position)
+        val maintenanceResponse = maintenanceAdapter?.getItemAt(position)
         when (view?.id) {
             R.id.cvTripMain -> {
                 val bundle = Bundle()
@@ -220,10 +260,14 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
                 navigateFragment(view, R.id.nav_trip_detail, bundle)
             }
 
-            R.id.cvMaintenanceMain -> navigateFragment(view, R.id.nav_maintenance_detail)
+            R.id.cvMaintenanceMain ->{
+                val bundle = Bundle()
+                bundle.putString(ARG_MAINTENANCE_ID, maintenanceResponse?.id)
+                navigateFragment(view, R.id.nav_maintenance_detail,bundle)
+            }
             R.id.cvDriverMain -> navigateFragment(view, R.id.nav_driver_detail)
             R.id.ivTripOptions -> showTripOptionMenu(view, tripResponse)
-            R.id.ivMaintenanceOptions -> showMaintenanceOptionMenu(view)
+            R.id.ivMaintenanceOptions -> showMaintenanceOptionMenu(view,maintenanceResponse)
             R.id.ivDriverOptions -> showDriverOptionMenu(view)
         }
     }
@@ -258,7 +302,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         }
     }
 
-    private fun showMaintenanceOptionMenu(view: View) {
+    private fun showMaintenanceOptionMenu(view: View, response: MaintenanceData?) {
         val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val vieww = inflater.inflate(R.layout.layout_options, null)
         val popupWindow = PopupWindow(vieww, requireContext().resources.getDimensionPixelSize(R.dimen._250sdp), LinearLayout.LayoutParams.WRAP_CONTENT, true)
@@ -270,10 +314,15 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         binding.tvDelete.text = getString(R.string.delete_maintenance)
 
         binding.llEdit.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(ARG_MAINTENANCE_ID, response?.id)
+            bundle.putBoolean(AppConstants.Bundle.ARG_IS_FOR_MAINTENANCE_UPDATE, true)
+            navigateFragment(view, R.id.nav_add_maintenance, bundle)
             popupWindow.dismiss()
         }
 
         binding.llDelete.setOnClickListener {
+            callMaintenanceDeleteApi(response?.id)
             popupWindow.dismiss()
         }
     }
@@ -300,15 +349,22 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
 
     private fun callTripDeleteApi(id: String?) {
         baseActivity?.showProgress()
-        val tripId = TripDetailRequest()
+        val tripId = IdRequest()
         tripId.id = id.toString()
         viewModel?.callTripDeleteApi(tripId)
     }
 
     private fun callTripCancelApi(id: String?) {
         baseActivity?.showProgress()
-        val tripId = TripDetailRequest()
+        val tripId = IdRequest()
         tripId.id = id.toString()
         viewModel?.callTripCancelApi(tripId)
+    }
+
+    private fun callMaintenanceDeleteApi(id: String?){
+        baseActivity?.showProgress()
+        val tripId = MaintenanceIdRequest()
+        tripId.maintainanceId = id.toString()
+        viewModel?.callMaintenanceDeleteApi(tripId)
     }
 }

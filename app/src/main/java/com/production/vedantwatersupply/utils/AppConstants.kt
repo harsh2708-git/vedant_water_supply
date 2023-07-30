@@ -15,6 +15,8 @@ object AppConstants {
         companion object {
             const val ARG_TRIP_ID = "tripID"
             const val ARG_IS_FOR_TRIP_UPDATE = "isForTripUpdate"
+            const val ARG_MAINTENANCE_ID = "maintenanceId"
+            const val ARG_IS_FOR_MAINTENANCE_UPDATE = "isForMaintenanceUpdate"
         }
     }
 
