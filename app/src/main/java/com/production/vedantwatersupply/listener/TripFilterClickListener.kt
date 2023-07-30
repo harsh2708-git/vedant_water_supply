@@ -8,7 +8,7 @@ interface TripFilterClickListener {
         selectedYear: String, selectedTankerType: String,
         selectedTankerNo: String, selectedPaymentMode: String,
         selectedFuelFilledBy: String, selectedDriverType: String,
-        selectedDriver: String, selectedWaterType: String,
+        selectedDriver: String, /*selectedWaterType: String,*/
         selectedAddedBy: String, selectedStatus: String, selectedFillingSite: String
     )
 

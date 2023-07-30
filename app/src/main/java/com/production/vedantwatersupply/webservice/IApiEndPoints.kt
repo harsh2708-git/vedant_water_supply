@@ -30,8 +30,9 @@ interface IApiEndPoints {
     @POST(API_ADD_UPDATE_TRIP)
     fun addUpdateTrip(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
 
-    @GET(API_MONTH_LIST)
-    fun monthList(): Call<WSListResponse<FilterItem>>
+    @FormUrlEncoded
+    @POST(API_MONTH_LIST)
+    fun monthList(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSListResponse<FilterItem>>
 
     @FormUrlEncoded
     @POST(API_GET_ALL_TRIP)

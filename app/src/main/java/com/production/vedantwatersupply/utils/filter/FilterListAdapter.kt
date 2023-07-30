@@ -84,6 +84,9 @@ class FilterListAdapter(var filterItems: List<FilterItem>, var callback: IFilter
         return filterItems.size
     }
 
+    fun setSelected(pos: Int) {
+        filterItems[pos].isSelected = true
+    }
     fun getItem(pos: Int) = filterItems[pos]
     fun getSelectedItem() = filterItems.find { it.isSelected }
 }

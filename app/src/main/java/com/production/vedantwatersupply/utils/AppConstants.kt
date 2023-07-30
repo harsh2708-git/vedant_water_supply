@@ -22,7 +22,7 @@ object AppConstants {
         companion object {
             const val OWN_TANKER = "ownTanker"
             const val OTHER_TANKER = "otherTanker"
-            const val PERMANENT_DRIVER = "ownDriver"
+            const val PERMANENT_DRIVER = "permanentDriver"
             const val OTHER_DRIVER = "otherDriver"
 
             const val OEN_TANKER_DISPLAY = "Own Tanker"

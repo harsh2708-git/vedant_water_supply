@@ -20,6 +20,7 @@ import org.json.JSONObject
 import java.text.DateFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -112,7 +113,7 @@ object CommonUtils {
 //    }
 
     fun getFormattedDateFromV2(calendar: Date?): String? {
-        val format = SimpleDateFormat(CommonUtils.SERVER_DATE_FORMAT_2, Locale.ENGLISH)
+        val format = SimpleDateFormat(CommonUtils.SERVER_DATE_FORMAT_D, Locale.ENGLISH)
         return format.format(calendar)
     }
 
@@ -294,7 +295,7 @@ object CommonUtils {
         var serverDateStr: String? = ""
         try {
             val displayDate = SimpleDateFormat(DISPLAY_DATE_FORMAT, Locale.ENGLISH).parse(displayDateStr)
-            serverDateStr = SimpleDateFormat(CommonUtils.SERVER_DATE_FORMAT, Locale.ENGLISH).format(displayDate)
+            serverDateStr = SimpleDateFormat(SERVER_DATE_FORMAT_D, Locale.ENGLISH).format(displayDate)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
@@ -350,4 +351,7 @@ object CommonUtils {
         return SpannableString(TextUtils.concat(firstString, secondString, thirdString))
     }
 
+    fun getCurrentYear(): Int {
+        return Calendar.getInstance().get(Calendar.YEAR);
+    }
 }

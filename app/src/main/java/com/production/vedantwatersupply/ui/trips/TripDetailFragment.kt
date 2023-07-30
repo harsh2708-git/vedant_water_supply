@@ -2,10 +2,8 @@ package com.production.vedantwatersupply.ui.trips
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
@@ -15,6 +13,7 @@ import com.production.vedantwatersupply.databinding.FragmentTripDetailBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.model.request.TripDetailRequest
 import com.production.vedantwatersupply.model.response.TripData
+import com.production.vedantwatersupply.utils.AppConstants
 import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_TRIP_ID
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OEN_TANKER_DISPLAY
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_DRIVER_DISPLAY
@@ -69,14 +68,14 @@ class TripDetailFragment : BaseFragment<FragmentTripDetailBinding, TripViewModel
     private fun callTripDeleteApi() {
         baseActivity?.showProgress()
         val tripId = TripDetailRequest()
-        tripId.id = tripId.toString()
+        tripId.id = this.tripId
         viewModel?.callTripDeleteApi(tripId)
     }
 
     private fun callTripCancelApi() {
         baseActivity?.showProgress()
         val tripId = TripDetailRequest()
-        tripId.id = tripId.toString()
+        tripId.id = this.tripId
         viewModel?.callTripCancelApi(tripId)
     }
 
@@ -151,7 +150,7 @@ class TripDetailFragment : BaseFragment<FragmentTripDetailBinding, TripViewModel
         )
         binding?.tvTruckNo?.text = it.tanker?.tankerNumber
         binding?.tvTankerType?.text = if (it.tanker?.isOwned == true) OEN_TANKER_DISPLAY else OTHER_TANKER_DISPLAY
-        binding?.tvWaterType?.text = it.waterType?.ifEmpty { getString(R.string.na) }
+//        binding?.tvWaterType?.text = it.waterType?.ifEmpty { getString(R.string.na) }
         binding?.tvFuelAmount?.text = it.fuelAmount.toString().formatPriceWithDecimal()
         binding?.tvPaymentMode?.text = it.paymentMode
         binding?.tvFuelFilledBy?.text = it.fuelFilledBy
@@ -163,6 +162,8 @@ class TripDetailFragment : BaseFragment<FragmentTripDetailBinding, TripViewModel
         binding?.tvCustomerName?.text = it.customerName
         binding?.tvCustomerMoNo?.text = it.customerMobile?.ifEmpty { getString(R.string.na) }
         binding?.tvDescription?.text = it.description?.ifEmpty { getString(R.string.na) }
+
+        binding?.ivOptions?.visibility = if (it.status?.equals(AppConstants.CANCELLED) == true) View.GONE else View.VISIBLE
 
     }
 
@@ -186,7 +187,12 @@ class TripDetailFragment : BaseFragment<FragmentTripDetailBinding, TripViewModel
         binding.tvDelete.text = getString(R.string.delete_trip)
 
         binding.llEdit.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(ARG_TRIP_ID, tripId)
+            bundle.putBoolean(AppConstants.Bundle.ARG_IS_FOR_TRIP_UPDATE, true)
+            navigateFragment(view, R.id.nav_add_trip, bundle)
             popupWindow.dismiss()
+
         }
 
         binding.llDelete.setOnClickListener {

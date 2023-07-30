@@ -413,7 +413,7 @@
                             app:layout_constraintStart_toStartOf="@id/start1"
                             app:layout_constraintTop_toBottomOf="@id/tvFillingSite" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
+                        <!--<androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelWaterType"
                             style="@style/RobotoRegular12"
                             android:layout_width="wrap_content"
@@ -446,7 +446,7 @@
                             android:spinnerMode="dropdown"
                             app:layout_constraintEnd_toEndOf="@id/end1"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/tvWaterType" />
+                            app:layout_constraintTop_toBottomOf="@id/tvWaterType" />-->
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelAddedBy"
@@ -458,7 +458,7 @@
                             android:text="@string/added_by"
                             android:textColor="@color/color_dark"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/tvWaterType" />
+                            app:layout_constraintTop_toBottomOf="@id/tvFillingSite" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tvAddedBy"

@@ -6,6 +6,7 @@ import com.production.vedantwatersupply.BuildConfig
 import com.production.vedantwatersupply.model.request.AddTripRequest
 import com.production.vedantwatersupply.model.request.FilterRequest
 import com.production.vedantwatersupply.model.request.GetAllTripRequest
+import com.production.vedantwatersupply.model.request.MonthFilterRequest
 import com.production.vedantwatersupply.model.request.TripDetailRequest
 import com.production.vedantwatersupply.model.response.AddTripResponse
 import com.production.vedantwatersupply.model.response.CommonEmptyResponse
@@ -64,8 +65,8 @@ class TripRepository {
     }
 
     val monthFilterLiveData = MutableLiveData<ObserverModel<ArrayList<FilterItem>>>()
-    fun callMonthFilterApi() {
-        ApiClient.iApiEndPoints.monthList()
+    fun callMonthFilterApi(monthFilterRequest: MonthFilterRequest) {
+        ApiClient.iApiEndPoints.monthList(CommonUtils.toFieldStringMap(monthFilterRequest))
             .enqueue(object : Callback<WSListResponse<FilterItem>> {
                 override fun onResponse(call: Call<WSListResponse<FilterItem>>, response: Response<WSListResponse<FilterItem>>) {
                     if (response.body() != null) {

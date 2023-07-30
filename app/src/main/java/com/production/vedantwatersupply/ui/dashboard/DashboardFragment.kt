@@ -243,7 +243,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
             val bundle = Bundle()
             bundle.putString(AppConstants.Bundle.ARG_TRIP_ID, response?.id)
             bundle.putBoolean(AppConstants.Bundle.ARG_IS_FOR_TRIP_UPDATE, true)
-            navigateFragment(binding.llEdit, R.id.nav_add_trip, bundle)
+            navigateFragment(view, R.id.nav_add_trip, bundle)
             popupWindow.dismiss()
         }
 

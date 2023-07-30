@@ -22,9 +22,9 @@ class ApiClient {
     private fun getRetrofitClientBuilder(): IApiEndPoints {
         val builder = RetrofitClientBuilder()
         builder.baseUrl(BASE_URL)
-        builder.connectionTimeout(30)
-        builder.readTimeout(30)
-        builder.writeTimeout(30)
+        builder.connectionTimeout(60)
+        builder.readTimeout(60)
+        builder.writeTimeout(60)
         builder.addInterceptor(RequestInterceptor(object : RequestInterceptor.OnRequestInterceptor {
             override fun provideBodyMap(): HashMap<String, String> {
                 val map = HashMap<String, String>()

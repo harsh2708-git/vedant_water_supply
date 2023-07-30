@@ -10,8 +10,10 @@ import com.production.vedantwatersupply.core.BaseDialogFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentFilterDialogBinding
 import com.production.vedantwatersupply.listener.TripFilterClickListener
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_DRIVER
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_TANKER
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OWN_TANKER
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.PERMANENT_DRIVER
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.calendar.CaldroidListener
 import com.production.vedantwatersupply.utils.filter.FilterItem
@@ -25,7 +27,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private var tankerNoList = ArrayList<FilterItem>()
     private var paymentModeList = ArrayList<FilterItem>()
     private var driverList = ArrayList<FilterItem>()
-    private var waterTypeList = ArrayList<FilterItem>()
+//    private var waterTypeList = ArrayList<FilterItem>()
     private var addedByList = ArrayList<FilterItem>()
 
     private var yearId = ""
@@ -35,7 +37,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private var driverTypeId = ""
     private var driverId = ""
     private var fillingSiteId = ""
-    private var waterTypeId = ""
+//    private var waterTypeId = ""
     private var addedById = ""
     private var statusId = ""
     private var fuelFilledById = ""
@@ -47,7 +49,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private var selectedDriverType = ""
     private var selectedDriver = ""
     private var selectedFillingSite = ""
-    private var selectedWaterType = ""
+//    private var selectedWaterType = ""
     private var selectedAddedBy = ""
     private var selectedStatus = ""
     private var selectedFuelFilledBy = ""
@@ -68,7 +70,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             selectedDriverType: String,
             selectedDriver: String,
             selectedFillingSite: String,
-            selectedWaterType: String,
+            /*selectedWaterType: String,*/
             selectedAddedBy: String,
             selectedStatus: String,
             selectedFuelFilledBy: String,
@@ -78,7 +80,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             displayToDate: String,
             tankerList: ArrayList<FilterItem>,
             driverList: ArrayList<FilterItem>,
-            waterType: ArrayList<FilterItem>,
+            /*waterType: ArrayList<FilterItem>,*/
             addedBy: ArrayList<FilterItem>,
             yearList: ArrayList<FilterItem>,
             listener: TripFilterClickListener
@@ -91,7 +93,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             fragment.driverTypeId = selectedDriverType
             fragment.driverId = selectedDriver
             fragment.fillingSiteId = selectedFillingSite
-            fragment.waterTypeId = selectedWaterType
+            /*fragment.waterTypeId = selectedWaterType*/
             fragment.addedById = selectedAddedBy
             fragment.statusId = selectedStatus
             fragment.fuelFilledById = selectedFuelFilledBy
@@ -101,7 +103,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             fragment.displayToDate = displayToDate
             fragment.tankerNoList = tankerList
             fragment.driverList = driverList
-            fragment.waterTypeList = waterType
+            /*fragment.waterTypeList = waterType*/
             fragment.addedByList = addedBy
             fragment.yearList = yearList
             fragment.callBack = listener
@@ -136,7 +138,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         binding?.tvDriverType?.setOnClickListener(this)
         binding?.tvDriver?.setOnClickListener(this)
         binding?.tvFillingSite?.setOnClickListener(this)
-        binding?.tvWaterType?.setOnClickListener(this)
+        /*binding?.tvWaterType?.setOnClickListener(this)*/
         binding?.tvAddedBy?.setOnClickListener(this)
         binding?.tvStatus?.setOnClickListener(this)
         binding?.tvFromDate?.setOnClickListener(this)
@@ -162,7 +164,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         setDriverTypeSpinner()
         setDriverSpinner()
         setFillingSiteSpinner()
-        setWaterTypeSpinner()
+        /*setWaterTypeSpinner()*/
         setAddedBySpinner()
         setStatusSpinner()
         setFuelFilledBy()
@@ -299,8 +301,8 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         val driverTypeList = ArrayList<FilterItem>()
         if (driverTypeList.isEmpty()) {
             driverTypeList.add(0, FilterItem("", getString(R.string.please_select_driver_type)))
-            driverTypeList.add(FilterItem(getString(R.string.permanent_driver), getString(R.string.permanent_driver)))
-            driverTypeList.add(FilterItem(getString(R.string.other_driver), getString(R.string.other_driver)))
+            driverTypeList.add(FilterItem(PERMANENT_DRIVER, getString(R.string.permanent_driver)))
+            driverTypeList.add(FilterItem(OTHER_DRIVER, getString(R.string.other_driver)))
         }
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, driverTypeList)
         binding?.spDriverType?.adapter = adapter
@@ -388,14 +390,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         }
     }
 
-    private fun setWaterTypeSpinner() {
-
-        /*if (waterTypeList.isEmpty()) {
-
-            waterTypeList.add(FilterItem("Drinking Water", "Drinking Water"))
-            waterTypeList.add(FilterItem("Normal Water", "Normal Water"))
-        }*/
-
+   /* private fun setWaterTypeSpinner() {
 
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, waterTypeList)
         binding?.spWaterType?.adapter = adapter
@@ -418,7 +413,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
-    }
+    }*/
 
     private fun setAddedBySpinner() {
 
@@ -564,7 +559,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
                     fromDate, displayFromDate, toDate, displayToDate,
                     selectedYear, selectedTankerType, selectedTankerNo,
                     selectedPaymentMode, selectedFuelFilledBy, selectedDriverType,
-                    selectedDriver, selectedWaterType, selectedAddedBy,
+                    selectedDriver, /*selectedWaterType,*/ selectedAddedBy,
                     selectedStatus, selectedFillingSite
                 )
                 dismiss()
@@ -590,7 +585,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             R.id.tvDriverType -> binding?.spDriverType?.performClick()
             R.id.tvDriver -> binding?.spDriver?.performClick()
             R.id.tvFillingSite -> binding?.spFillingSite?.performClick()
-            R.id.tvWaterType -> binding?.spWaterType?.performClick()
+//            R.id.tvWaterType -> binding?.spWaterType?.performClick()
             R.id.tvAddedBy -> binding?.spAddedBy?.performClick()
             R.id.tvStatus -> binding?.spStatus?.performClick()
             R.id.tvFuelFilledBy -> binding?.spFuelFilledBy?.performClick()
@@ -605,7 +600,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         binding?.spDriverType?.setSelection(0)
         binding?.spDriver?.setSelection(0)
         binding?.spFillingSite?.setSelection(0)
-        binding?.spWaterType?.setSelection(0)
+//        binding?.spWaterType?.setSelection(0)
         binding?.spAddedBy?.setSelection(0)
         binding?.spStatus?.setSelection(0)
         binding?.spFuelFilledBy?.setSelection(0)
@@ -621,7 +616,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         driverTypeId = ""
         driverId = ""
         fillingSiteId = ""
-        waterTypeId = ""
+//        waterTypeId = ""
         addedById = ""
         statusId = ""
         fuelFilledById = ""
@@ -633,7 +628,7 @@ class FilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         selectedDriverType = ""
         selectedDriver = ""
         selectedFillingSite = ""
-        selectedWaterType = ""
+//        selectedWaterType = ""
         selectedAddedBy = ""
         selectedStatus = ""
         selectedFuelFilledBy = ""

@@ -23,6 +23,7 @@ import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OWN_TANKER
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.PERMANENT_DRIVER
 import com.production.vedantwatersupply.utils.CommonUtils
+import com.production.vedantwatersupply.utils.calendar.CaldroidListener
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 import com.production.vedantwatersupply.utils.filter.FilterItem
 import com.production.vedantwatersupply.utils.formatPriceWithDecimal
@@ -178,7 +179,15 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
 
         addUpdateTripRequest.tankerId = if (isOwnTanker) selectedTankerNo else ""
         addUpdateTripRequest.tankerNumber = if (isOtherTanker) binding?.etTankerNo?.getTrimmedText().toString() else ""
-        addUpdateTripRequest.tripDate = scheduledDate?.time?.let { CommonUtils.formatAPIDate(it) }.toString()
+//        addUpdateTripRequest.tripDate = scheduledDate?.time?.let { CommonUtils.formatAPIDate(it) }.toString()
+        addUpdateTripRequest.tripDate = fromDate
+
+//        if (isForTripUpdate){
+//            addUpdateTripRequest.tripDate = scheduleDate
+//        }else {
+//            addUpdateTripRequest.tripDate = scheduledDate?.time?.let { CommonUtils.formatAPIDate(it) }.toString()
+//        }
+
         addUpdateTripRequest.fuelAmount = binding?.etDieselAmount?.numericValue.toString()
 //        addUpdateTripRequest.fuelAmount = binding?.etDieselAmount?.numericValue!!
         addUpdateTripRequest.paymentMode = selectedPaymentMode
@@ -190,7 +199,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         addUpdateTripRequest.destinationSite = binding?.etDestinationName?.text.toString()
         addUpdateTripRequest.customerName = binding?.etCustomerName?.text.toString()
         addUpdateTripRequest.customerMobile = binding?.etCustomerMoNo?.text.toString()
-        addUpdateTripRequest.waterType = binding?.etTankerType?.text.toString()
+//        addUpdateTripRequest.waterType = binding?.etTankerType?.text.toString()
         addUpdateTripRequest.description = binding?.etDescription?.text.toString()
         Log.e("Add Update Request", "callAddUpdateTripApi: " + Gson().toJson(addUpdateTripRequest))
         viewModel?.callAddUpdateTripApi(addUpdateTripRequest)
@@ -425,7 +434,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
     }
 
     override fun onClick(v: View?) {
-//        var selectedDate: Date? = null
+        var selectedDate: Date? = null
         when (v?.id) {
 
             R.id.ivBack,
@@ -446,7 +455,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
             R.id.ivUp -> binding?.nsView?.smoothScrollTo(0, 0)
 
             R.id.tvDate -> {
-                /*selectedDate = CommonUtils.getDateFromDisplay(fromDate)
+                selectedDate = CommonUtils.getDateFromDisplay(fromDate)
 
                 baseActivity?.setNormalCalender(
                     object : CaldroidListener() {
@@ -458,9 +467,9 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
                             binding?.tvDate?.setText(displayFromDate)
                         }
                     }, selectedDate, null, null
-                )*/
+                )
 
-                val dialogLicense = DatePickerDialog(
+                /*val dialogLicense = DatePickerDialog(
                     requireContext(), 0,
                     { view, year, month, dayOfMonth ->
                         scheduledDate?.set(Calendar.YEAR, year)
@@ -473,7 +482,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
                     scheduledDate!![Calendar.DAY_OF_MONTH]
                 )
                 dialogLicense.datePicker.maxDate = Calendar.getInstance().timeInMillis
-                dialogLicense.show()
+                dialogLicense.show()*/
             }
         }
     }
@@ -534,7 +543,8 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
             binding?.etTankerNo?.setText(tripData.tanker?.tankerNumber)
         }
 
-        binding?.tvDate?.text = CommonUtils.getDisplayDateFromServer(tripData.tripDateReadable.toString())
+        binding?.tvDate?.text = tripData.tripDateReadable.toString()
+        fromDate = CommonUtils.getServerDateFromDisplay(tripData.tripDateReadable).toString()
         binding?.etDieselAmount?.setText(tripData.fuelAmount.toString())
 
         paymentModeId = tripData.paymentMode.toString()
@@ -550,12 +560,15 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
             binding?.etDriverMobileNo?.setText(tripData.driver?.driverMobile)
         }
 
+        fuelFilledById = tripData.fuelFilledBy.toString()
+        setFuelFilledBy()
+
         fillingSiteId = tripData.fillingSite.toString()
         setFillingSiteSpinner()
         binding?.etDestinationName?.setText(tripData.destinationSite)
         binding?.etCustomerName?.setText(tripData.customerName)
         binding?.etCustomerMoNo?.setText(tripData.customerMobile)
-        binding?.etTankerType?.setText(tripData.waterType)
+//        binding?.etTankerType?.setText(tripData.waterType)
         binding?.etDescription?.setText(tripData.description)
     }
 
