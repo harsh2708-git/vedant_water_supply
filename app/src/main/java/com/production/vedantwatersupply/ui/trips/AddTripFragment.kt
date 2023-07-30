@@ -13,6 +13,7 @@ import com.production.vedantwatersupply.model.request.AddTripRequest
 import com.production.vedantwatersupply.model.request.IdRequest
 import com.production.vedantwatersupply.model.response.FilterResponse
 import com.production.vedantwatersupply.model.response.TripData
+import com.production.vedantwatersupply.ui.MainActivity
 import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_IS_FOR_TRIP_UPDATE
 import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_TRIP_ID
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_DRIVER
@@ -206,7 +207,11 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
             when (it?.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
-                    baseActivity?.onBackPressed()
+//                    baseActivity?.onBackPressed()
+
+                    if (isForTripUpdate) {
+                        (baseActivity as MainActivity).getNavController().popBackStack(R.id.nav_trip_listing, false)
+                    } else baseActivity?.onBackPressed()
                 }
 
                 WebServiceSetting.FAILURE -> {
