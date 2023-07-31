@@ -1,21 +1,32 @@
 package com.production.vedantwatersupply.ui.driver
 
 import android.content.Context
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentDriverListingBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.DriverFilterClickListener
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
+import com.production.vedantwatersupply.model.request.GetDriverExpensesRequest
+import com.production.vedantwatersupply.model.request.MonthFilterRequest
+import com.production.vedantwatersupply.model.response.DriverData
+import com.production.vedantwatersupply.model.response.GetAllDriverExpensesResponse
 import com.production.vedantwatersupply.ui.dialog.DriverFilterDialogFragment
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.production.vedantwatersupply.utils.filter.FilterItem
+import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
+import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 import com.transportermanger.util.filter.IFilterItem
 
 class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverViewModel>(), View.OnClickListener, RecyclerViewClickListener {
@@ -39,16 +50,28 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private var displayFromDate = ""
     private var displayToDate = ""
 
+    private var isNextPage = false
+    private var isLoading = false
+    private var pageIndex = 1
+    private var visibleThreshold = 2
+
+    private var driverAdapter: DriverAdapter? = null
+    private var driverList = ArrayList<DriverData>()
     override val layoutId: Int
         get() = R.layout.fragment_driver_listing
 
     override fun getViewModel(): Class<DriverViewModel> = DriverViewModel::class.java
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        callMonthFilterApi(CommonUtils.getCurrentYear().toString())
+    }
+
     override fun init() {
         setScreenTitle()
         setSummary()
-        initFilterView()
-        setDriverAdapter()
+//        initFilterView()
+//        setDriverAdapter()
     }
 
     override fun initListener() {
@@ -57,11 +80,118 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         binding?.btnFilter?.setOnClickListener(this)
         binding?.ivUp?.setOnClickListener(this)
         binding?.appBar?.addOnOffsetChangedListener { _, verticalOffset ->
-            binding?.ivUp?.visibility = if (verticalOffset < 0) View.VISIBLE else  View.GONE
+            binding?.ivUp?.visibility = if (verticalOffset < 0) View.VISIBLE else View.GONE
+        }
+
+        binding?.rvDrivers?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val scrollOffset = if (dy < 0) -1 * dy else dy
+                if (binding?.rvDrivers?.layoutManager != null) {
+                    val lastVisibleItem = (binding?.rvDrivers?.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                    val totalItemCount: Int = binding?.rvDrivers?.layoutManager?.itemCount!!
+                    if (scrollOffset > 0 && isNextPage && !isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
+                        isLoading = true
+                        pageIndex++
+                        binding!!.llLoading.visibility = View.VISIBLE
+
+                    }
+                }
+            }
+        })
+
+        binding?.swipeLayout?.setOnRefreshListener {
+            pageIndex = 1
+            callGetAllDriverExpences()
+        }
+
+    }
+
+    private fun callMonthFilterApi(selectedYear: String) {
+        showProgress()
+        val monthFilterRequest = MonthFilterRequest()
+        monthFilterRequest.year = selectedYear
+        viewModel?.callMonthFilterApi(monthFilterRequest)
+    }
+
+    private fun callGetAllDriverExpences(){
+        showProgress()
+        val getDriverExpensesRequest = GetDriverExpensesRequest()
+        getDriverExpensesRequest.page = pageIndex.toString()
+        getDriverExpensesRequest.limit = "10"
+        getDriverExpensesRequest.fromDate = fromDate
+        getDriverExpensesRequest.toDate = toDate
+        getDriverExpensesRequest.year = selectedYear
+        getDriverExpensesRequest.month = monthId
+        getDriverExpensesRequest.driverType = selectedDriverType
+        getDriverExpensesRequest.driverId = selectedDriver
+        getDriverExpensesRequest.paymentmode = selectedPaymentMode
+        getDriverExpensesRequest.addedBy = ""
+        Log.d("Driver Listing Params", "callGetAllDriverExpences: " + Gson().toJson(getDriverExpensesRequest))
+        viewModel?.callGetAllDriverExpences(getDriverExpensesRequest)
+    }
+
+    override fun addObserver() {
+        viewModel?.tripRepository?.monthFilterLiveData?.observe(this) {
+            when (it.settings?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    monthList.clear()
+                    monthList.add(0, FilterItem("", getString(R.string.all), true))
+                    it?.data?.let { it1 -> monthList.addAll(it1) }
+                    initFilterView()
+
+                    if (selectedYear.isEmpty()) {
+                        monthId = monthFilterAdapter?.getSelectedItem()?.dbValue.toString()
+                        resetAdapter()
+                    }
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.settings?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+            hideProgress()
+        }
+
+        viewModel?.driverRepository?.getAllDriverExpensesResponseMutableLiveData?.observe(this){
+            when (it.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    isNextPage = it.webServiceSetting?.currentPage.equals("1")
+                    isLoading = false
+                    binding?.llLoading?.visibility = View.GONE
+                    binding?.swipeLayout?.isRefreshing = false
+                    updateUI(it)
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+            hideProgress()
         }
     }
 
-    override fun addObserver() {}
+    private fun updateUI(it: GetAllDriverExpensesResponse?) {
+        binding?.clSummary?.tvTotal?.text = it?.totalDriverExpenceCount?.toString()?.formatPriceWithoutDecimal()
+        driverList.clear()
+        it?.driverExpenceData?.let { it1 -> driverList.addAll(it1) }
+
+        if (driverList.isEmpty()) {
+            hideData()
+        } else {
+            showData()
+            setDriverAdapter()
+        }
+    }
 
     private fun setScreenTitle() {
         binding?.clScreenTitle?.tvTitle?.text = getString(R.string.drivers)
@@ -72,6 +202,13 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         binding?.clSummary?.labelTotal?.text = getString(R.string.total_drivers_expense)
         binding?.clSummary?.tvCurrentMonth?.text = CommonUtils.currentMonth()
         binding?.clSummary?.tvDate?.text = CommonUtils.currentDate()
+    }
+
+    private fun resetAdapter() {
+        binding?.swipeLayout?.isRefreshing = false
+        pageIndex = 1
+        callGetAllDriverExpences()
+        setDriverAdapter()
     }
 
     private fun initFilterView() {
@@ -102,7 +239,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     }
 
     private fun setDriverAdapter() {
-        val driverAdapter = DriverAdapter(requireContext(), this)
+        driverAdapter = DriverAdapter(requireContext(),driverList, this)
         binding?.rvDrivers?.adapter = driverAdapter
     }
 
@@ -121,7 +258,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
 
     private fun openFilterDialog() {
         val filterDialog = DriverFilterDialogFragment.getInstance(
-            selectedYear,selectedDriverType,selectedDriver,selectedPaymentMode,fromDate,toDate,displayFromDate,displayToDate,object : DriverFilterClickListener{
+            selectedYear, selectedDriverType, selectedDriver, selectedPaymentMode, fromDate, toDate, displayFromDate, displayToDate, object : DriverFilterClickListener {
                 override fun onApply(fromDate: String, displayFromDate: String?, toDate: String, displayToDate: String?, selectedYear: String, selectedDriverType: String, selectedDriver: String, selectedPaymentMode: String) {
                     this@DriverListingFragment.fromDate = fromDate
                     this@DriverListingFragment.displayFromDate = displayFromDate.toString()
@@ -134,20 +271,20 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                 }
 
                 override fun onClear() {
-                  yearId = ""
-                  driverTypeId = ""
-                  driverId = ""
-                  paymentModeId = ""
+                    yearId = ""
+                    driverTypeId = ""
+                    driverId = ""
+                    paymentModeId = ""
 
-                  selectedYear = ""
-                  selectedDriverType = ""
-                  selectedDriver = ""
-                  selectedPaymentMode = ""
+                    selectedYear = ""
+                    selectedDriverType = ""
+                    selectedDriver = ""
+                    selectedPaymentMode = ""
 
-                  fromDate = ""
-                  toDate = ""
-                  displayFromDate = ""
-                  displayToDate = ""
+                    fromDate = ""
+                    toDate = ""
+                    displayFromDate = ""
+                    displayToDate = ""
                 }
             }
         )
@@ -179,6 +316,17 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         binding.llDelete.setOnClickListener {
             popupWindow.dismiss()
         }
+    }
+
+    private fun showData() {
+        binding?.rvDrivers?.visibility = View.VISIBLE
+        binding?.driverNoData?.tvNoData?.visibility = View.GONE
+    }
+
+    private fun hideData() {
+        binding?.rvDrivers?.visibility = View.GONE
+        binding?.driverNoData?.tvNoData?.visibility = View.VISIBLE
+        binding?.driverNoData?.tvNoData?.text = getString(R.string.no_maintenance_data_found)
     }
 
 }

@@ -6,6 +6,7 @@ import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_FILTERS
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_GET_TANKER_AND_DRIVER_FIXED
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_LOGIN
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_MONTH_LIST
+import com.production.vedantwatersupply.utils.ApiConstants.Companion.DriverExpenses.Companion.API_GET_ALL_DRIVER
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.Maintenance.Companion.API_ADD_UPDATE_MAINTENANCE
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.Maintenance.Companion.API_DELETE_MAINTENANCE
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.Maintenance.Companion.API_GET_ALL_MAINTENANCE
@@ -76,5 +77,9 @@ interface IApiEndPoints {
     @FormUrlEncoded
     @POST(API_DELETE_MAINTENANCE)
     fun deleteMaintenanceApi(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
+
+    @FormUrlEncoded
+    @POST(API_GET_ALL_DRIVER)
+    fun getAllDriverExpenses(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
 
 }

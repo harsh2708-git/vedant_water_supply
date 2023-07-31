@@ -17,6 +17,8 @@ object AppConstants {
             const val ARG_IS_FOR_TRIP_UPDATE = "isForTripUpdate"
             const val ARG_MAINTENANCE_ID = "maintenanceId"
             const val ARG_IS_FOR_MAINTENANCE_UPDATE = "isForMaintenanceUpdate"
+            const val ARG_DRIVER_ID = "driverId"
+            const val ARG_IS_FOR_DRIVER_UPDATE = "isForDriverUpdate"
         }
     }
 

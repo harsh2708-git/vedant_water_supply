@@ -29,5 +29,11 @@ interface ApiConstants {
                 const val API_DELETE_MAINTENANCE = "maintainance/deleteMaintainance"
             }
         }
+
+        interface DriverExpenses {
+            companion object {
+                const val API_GET_ALL_DRIVER = "driverExpence/getAllDriverExpences"
+            }
+        }
     }
 }

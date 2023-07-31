@@ -15,6 +15,7 @@ import com.production.vedantwatersupply.listener.RecyclerViewClickListener
 import com.production.vedantwatersupply.model.request.IdRequest
 import com.production.vedantwatersupply.model.request.MaintenanceIdRequest
 import com.production.vedantwatersupply.model.response.DashboardResponse
+import com.production.vedantwatersupply.model.response.DriverData
 import com.production.vedantwatersupply.model.response.MaintenanceData
 import com.production.vedantwatersupply.model.response.TripData
 import com.production.vedantwatersupply.ui.dialog.AlertDialogFragment
@@ -23,6 +24,7 @@ import com.production.vedantwatersupply.ui.login.LoginActivity
 import com.production.vedantwatersupply.ui.maintenance.MaintenanceAdapter
 import com.production.vedantwatersupply.ui.trips.TripsAdapter
 import com.production.vedantwatersupply.utils.AppConstants
+import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_DRIVER_ID
 import com.production.vedantwatersupply.utils.AppConstants.Bundle.Companion.ARG_MAINTENANCE_ID
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.SharedPreferenceUtil
@@ -36,6 +38,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
     private var tripAdapter: TripsAdapter? = null
     private var maintenanceAdapter: MaintenanceAdapter? = null
     private var dashboardResponse: DashboardResponse? = null
+    private var driverAdapter: DriverAdapter? = null
 
     override val layoutId: Int
         get() = R.layout.fragment_dashboard
@@ -177,7 +180,12 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
             setMaintenanceAdpter()
         }
 
-        setDriverAdapter()
+        if (dashboardResponse?.driverExpenceData?.isEmpty() == true) {
+            hideDriverData()
+        } else {
+            showDriverData()
+            setDriverAdapter()
+        }
     }
 
     private fun showData(){
@@ -202,6 +210,17 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         binding?.maintenanceNoData?.tvNoData?.text = getString(R.string.no_maintenance_data_found)
     }
 
+    private fun showDriverData() {
+        binding?.rvDrivers?.visibility = View.VISIBLE
+        binding?.driverNoData?.tvNoData?.visibility = View.GONE
+    }
+
+    private fun hideDriverData() {
+        binding?.rvDrivers?.visibility = View.GONE
+        binding?.driverNoData?.tvNoData?.visibility = View.VISIBLE
+        binding?.driverNoData?.tvNoData?.text = getString(R.string.no_maintenance_data_found)
+    }
+
     private fun setTripsAdapter() {
         tripAdapter = dashboardResponse?.tripData?.let { TripsAdapter(requireContext(), it, this) }
         binding?.rvTrips?.adapter = tripAdapter
@@ -213,7 +232,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
     }
 
     private fun setDriverAdapter() {
-        val driverAdapter = DriverAdapter(requireContext(), this)
+        driverAdapter = dashboardResponse?.driverExpenceData?.let { DriverAdapter(requireContext(), it, this) }
         binding?.rvDrivers?.adapter = driverAdapter
     }
 
@@ -253,6 +272,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
     override fun onClick(view: View?, position: Int) {
         val tripResponse = tripAdapter?.getItemAt(position)
         val maintenanceResponse = maintenanceAdapter?.getItemAt(position)
+        val driverResponse = driverAdapter?.getItemAt(position)
         when (view?.id) {
             R.id.cvTripMain -> {
                 val bundle = Bundle()
@@ -265,10 +285,14 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
                 bundle.putString(ARG_MAINTENANCE_ID, maintenanceResponse?.id)
                 navigateFragment(view, R.id.nav_maintenance_detail,bundle)
             }
-            R.id.cvDriverMain -> navigateFragment(view, R.id.nav_driver_detail)
+            R.id.cvDriverMain -> {
+                val bundle = Bundle()
+                bundle.putString(ARG_DRIVER_ID, driverResponse?.id)
+                navigateFragment(view, R.id.nav_driver_detail,bundle)
+            }
             R.id.ivTripOptions -> showTripOptionMenu(view, tripResponse)
             R.id.ivMaintenanceOptions -> showMaintenanceOptionMenu(view,maintenanceResponse)
-            R.id.ivDriverOptions -> showDriverOptionMenu(view)
+            R.id.ivDriverOptions -> showDriverOptionMenu(view,driverResponse)
         }
     }
 
@@ -327,7 +351,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         }
     }
 
-    private fun showDriverOptionMenu(view: View) {
+    private fun showDriverOptionMenu(view: View, driverResponse: DriverData?) {
         val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val vieww = inflater.inflate(R.layout.layout_options, null)
         val popupWindow = PopupWindow(vieww, requireContext().resources.getDimensionPixelSize(R.dimen._250sdp), LinearLayout.LayoutParams.WRAP_CONTENT, true)
