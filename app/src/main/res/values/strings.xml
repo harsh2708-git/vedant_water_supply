@@ -157,4 +157,8 @@
     <string name="no_driver_data_found">No Driver Data Found</string>
     <string name="update_maintenance">Update Maintenance</string>
     <string name="here_you_can_update_maintenance_details">Here you can update your maintenance details.</string>
+    <string name="please_enter_payment_amount">Please enter payment amount</string>
+    <string name="please_enter_extra_payment_given">Please enter extra payment given</string>
+    <string name="update_driver_expense">Update Driver Expense</string>
+    <string name="here_you_can_update_driver_expense_details">Here you can update your driver expense details.</string>
 </resources>

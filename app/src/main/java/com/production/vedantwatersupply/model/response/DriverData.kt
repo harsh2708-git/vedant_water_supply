@@ -2,8 +2,9 @@ package com.production.vedantwatersupply.model.response
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.production.vedantwatersupply.webservice.baseresponse.BaseWebserviceResponse
 
-class DriverData {
+class DriverData : BaseWebserviceResponse(){
 
     @SerializedName("_id")
     @Expose
@@ -56,5 +57,9 @@ class DriverData {
     @SerializedName("date_readable")
     @Expose
     var dateReadable: String? = null
+
+    @SerializedName("isExtrapayment")
+    @Expose
+    var isExtrapayment: Int? = null
 
 }

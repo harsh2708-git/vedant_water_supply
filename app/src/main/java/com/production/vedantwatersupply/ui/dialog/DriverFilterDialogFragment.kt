@@ -22,16 +22,19 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private var yearList = ArrayList<FilterItem>()
     private var driverList = ArrayList<FilterItem>()
     private var paymentModeList = ArrayList<FilterItem>()
+    private var addedByList = ArrayList<FilterItem>()
 
     private var yearId = ""
     private var driverTypeId = ""
     private var driverId = ""
     private var paymentModeId = ""
+    private var addedById = ""
 
     private var selectedYear = ""
     private var selectedDriverType = ""
     private var selectedDriver = ""
     private var selectedPaymentMode = ""
+    private var selectedAddedBy = ""
 
     private var fromDate = ""
     private var toDate = ""
@@ -46,10 +49,14 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             selectedDriverType: String,
             selectedDriver: String,
             selectedPaymentMode: String,
+            selectedAddedBy: String,
             fromDate: String,
             toDate: String,
             displayFromDate: String,
             displayToDate: String,
+            yearList: ArrayList<FilterItem>,
+            driverList: ArrayList<FilterItem>,
+            addedBy: ArrayList<FilterItem>,
             listener: DriverFilterClickListener
         ): DriverFilterDialogFragment {
             val fragment = DriverFilterDialogFragment()
@@ -57,10 +64,14 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             fragment.driverTypeId = selectedDriverType
             fragment.driverId = selectedDriver
             fragment.paymentModeId = selectedPaymentMode
+            fragment.addedById = selectedAddedBy
             fragment.fromDate = fromDate
             fragment.toDate = toDate
             fragment.displayFromDate = displayFromDate
             fragment.displayToDate = displayToDate
+            fragment.yearList= yearList
+            fragment.driverList = driverList
+            fragment.addedByList = addedBy
             fragment.callBack = listener
             return fragment
         }
@@ -92,6 +103,7 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         binding?.tvFromDate?.setOnClickListener(this)
         binding?.tvToDate?.setOnClickListener(this)
         binding?.tvPaymentMode?.setOnClickListener(this)
+        binding?.tvAddedBy?.setOnClickListener(this)
     }
 
     private fun init() {
@@ -107,15 +119,16 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         setPaymentModeSpinner()
         setDriverTypeSpinner()
         setDriverSpinner()
+        setAddedBySpinner()
     }
 
     private fun setYearSpinner() {
-        if (yearList.isEmpty()) {
+       /* if (yearList.isEmpty()) {
             yearList.add(0, FilterItem("", getString(R.string.please_select_year)))
             yearList.add(FilterItem("2023", "2023"))
             yearList.add(FilterItem("2022", "2022"))
             yearList.add(FilterItem("2021", "2021"))
-        }
+        }*/
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, yearList)
         binding?.spYear?.adapter = adapter
 
@@ -176,11 +189,11 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
 
     private fun setDriverSpinner() {
 
-        if (driverList.isEmpty()) {
+        /*if (driverList.isEmpty()) {
             driverList.add(0, FilterItem("", getString(R.string.please_select_driver)))
             driverList.add(FilterItem("Harsh Prajapati", "Harsh Prajapati"))
             driverList.add(FilterItem("Ravi Paramar", "Harsh Paramar"))
-        }
+        }*/
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, driverList)
         binding?.spDriver?.adapter = adapter
 
@@ -227,6 +240,30 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
                 if (selectedPaymentMode.isNotEmpty()) {
                     adapter.setSelectedPosition(i)
                     binding?.tvPaymentMode?.text = paymentModeList[binding?.spPaymentMode?.selectedItemPosition!!].displayValue
+                }
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+        }
+    }
+
+    private fun setAddedBySpinner() {
+        val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, addedByList)
+        binding?.spAddedBy?.adapter = adapter
+
+        if (addedById.isNotEmpty()) {
+            val addedBy: FilterItem? = addedByList.find { it.dbValue.equals(addedById, false) }
+            val spinnerPosition: Int = addedByList.indexOf(addedBy)
+            selectedAddedBy = addedBy.toString()
+            spinnerPosition.let { binding?.spAddedBy?.setSelection(it) }
+        }
+
+        binding?.spAddedBy?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
+                selectedAddedBy = addedByList[binding?.spAddedBy?.selectedItemPosition!!].dbValue
+                if (selectedAddedBy.isNotEmpty()) {
+                    adapter.setSelectedPosition(i)
+                    binding?.tvAddedBy?.text = addedByList[binding?.spAddedBy?.selectedItemPosition!!].displayValue
                 }
             }
 
@@ -282,7 +319,7 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
                 callBack?.onApply(
                     fromDate, displayFromDate, toDate, displayToDate,
                     selectedYear, selectedDriverType, selectedDriver,
-                    selectedPaymentMode
+                    selectedPaymentMode,selectedAddedBy
                 )
                 dismiss()
             }
@@ -304,6 +341,7 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             R.id.tvDriverType -> binding?.spDriverType?.performClick()
             R.id.tvDriver -> binding?.spDriver?.performClick()
             R.id.tvPaymentMode -> binding?.spPaymentMode?.performClick()
+            R.id.tvAddedBy -> binding?.spAddedBy?.performClick()
         }
     }
 
@@ -317,11 +355,13 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         driverTypeId = ""
         driverId = ""
         paymentModeId = ""
+        addedById = ""
 
         selectedYear = ""
         selectedDriverType = ""
         selectedDriver = ""
         selectedPaymentMode = ""
+        selectedAddedBy = ""
 
         fromDate = ""
         toDate = ""

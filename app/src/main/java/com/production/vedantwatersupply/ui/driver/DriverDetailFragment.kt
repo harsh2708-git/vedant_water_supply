@@ -8,21 +8,40 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import androidx.core.content.ContextCompat
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentDriverDetailBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
+import com.production.vedantwatersupply.model.request.DriverIdRequest
+import com.production.vedantwatersupply.model.request.MaintenanceIdRequest
+import com.production.vedantwatersupply.model.response.DriverData
+import com.production.vedantwatersupply.ui.MainActivity
+import com.production.vedantwatersupply.utils.AppConstants
+import com.production.vedantwatersupply.utils.CommonUtils
+import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
+import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 
-class DriverDetailFragment : BaseFragment<FragmentDriverDetailBinding,DriverViewModel>(), View.OnClickListener {
+class DriverDetailFragment : BaseFragment<FragmentDriverDetailBinding, DriverViewModel>(), View.OnClickListener {
 
+    private var driverId = ""
     override val layoutId: Int
         get() = R.layout.fragment_driver_detail
 
     override fun getViewModel(): Class<DriverViewModel> = DriverViewModel::class.java
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (arguments != null) {
+            driverId = arguments?.getString(AppConstants.Bundle.ARG_DRIVER_ID).toString()
+        }
+    }
+
     override fun init() {
         binding?.clScreenTitle?.tvTitle?.text = getString(R.string.driver_expense_detail)
         binding?.clScreenTitle?.tvDescription?.text = getString(R.string.here_you_can_check_driver_expense_detail)
+
+        callDriverDetailApi()
     }
 
     override fun initListener() {
@@ -36,8 +55,49 @@ class DriverDetailFragment : BaseFragment<FragmentDriverDetailBinding,DriverView
         }
     }
 
-    override fun addObserver() {
+    private fun callDriverDetailApi() {
+        showProgress()
+        val driverIdRequest = DriverIdRequest()
+        driverIdRequest.driverExpenceId = driverId
+        viewModel?.callDriverDetailApi(driverIdRequest)
+    }
 
+    override fun addObserver() {
+        viewModel?.driverRepository?.driverExpensesDetailResponseMutableLiveData?.observe(this) {
+            baseActivity?.hideProgress()
+            when (it?.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    updateUI(it)
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+
+            }
+        }
+
+        viewModel?.driverRepository?.deleteDriverExpenseResponseMutableLiveData?.observe(this) {
+            when (it.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                    (baseActivity as MainActivity).getNavController().popBackStack(R.id.nav_driver_listing, false)
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+            hideProgress()
+        }
     }
 
     override fun onClick(v: View?) {
@@ -60,13 +120,46 @@ class DriverDetailFragment : BaseFragment<FragmentDriverDetailBinding,DriverView
         binding.tvDelete.text = getString(R.string.delete_driver_expense)
 
         binding.llEdit.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(AppConstants.Bundle.ARG_DRIVER_ID, driverId)
+            bundle.putBoolean(AppConstants.Bundle.ARG_IS_FOR_DRIVER_UPDATE, true)
+            navigateFragment(view, R.id.nav_add_driver, bundle)
             popupWindow.dismiss()
         }
 
         binding.llDelete.setOnClickListener {
+            callDriverDeleteApi(driverId)
             popupWindow.dismiss()
         }
 
+    }
+
+    private fun updateUI(it: DriverData) {
+        binding?.clMain?.visibility = View.VISIBLE
+
+        binding?.tvDriverCode?.text = it.reference
+        binding?.tvAddedBy?.text = CommonUtils.getSpannableThreeText(
+            "By ",
+            it.addedBy?.firstName.plus(" " + it.addedBy?.lastName),
+            " " + it.dateReadable.toString(),
+            ContextCompat.getColor(requireContext(), R.color.color_dark),
+            ContextCompat.getColor(requireContext(), R.color.color_dark),
+            ContextCompat.getColor(requireContext(), R.color.body_text)
+        )
+        binding?.tvDriverName?.text = it.driver?.driverName
+        binding?.tvDriverType?.text = if (it.driver?.isParmanent == true) AppConstants.Trip.PERMANENT_DRIVER_DISPLAY else AppConstants.Trip.OTHER_DRIVER_DISPLAY
+        binding?.tvPaidAmount?.text = it.amount.toString().formatPriceWithoutDecimal()
+        binding?.tvExtraPaidAmount?.text = it.extraPaymentAmount.toString().formatPriceWithoutDecimal().ifEmpty { getString(R.string.na) }
+        binding?.tvPaymentMode?.text = it.paymentMode
+        binding?.tvExtraPayment?.text = if (it.isExtrapayment  == 1) "Yes" else "No"
+        binding?.tvDescription?.text = it.description.toString().ifEmpty { getString(R.string.na) }
+    }
+
+    private fun callDriverDeleteApi(id: String?) {
+        baseActivity?.showProgress()
+        val driverId = DriverIdRequest()
+        driverId.driverExpenceId = id.toString()
+        viewModel?.callDriverDeleteApi(driverId)
     }
 
 }

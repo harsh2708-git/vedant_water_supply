@@ -94,10 +94,22 @@
                     android:layout_height="wrap_content"
                     app:constraint_referenced_ids="tvDriverName,spDriverName" />
 
-                <com.production.vedantwatersupply.custome.CustomEditText
+                <!--<com.production.vedantwatersupply.custome.CustomEditText
                     android:id="@+id/etDriverName"
                     style="@style/StyleInputForTextView"
                     android:layout_width="0dp"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@id/spDriverName" />-->
+
+                <com.production.vedantwatersupply.custome.CustomAutoCompleteTextView
+                    android:id="@+id/etDriverName"
+                    style="@style/StyleInputForTextView"
+                    android:layout_width="0dp"
+                    android:fontFamily="@font/roboto_regular"
                     android:imeOptions="actionNext"
                     android:inputType="textPersonName"
                     android:visibility="gone"
@@ -187,7 +199,7 @@
                     app:layout_constraintStart_toStartOf="@id/start"
                     app:layout_constraintTop_toBottomOf="@id/labelExtraPayment" />
 
-                <com.production.vedantwatersupply.custome.CustomEditText
+                <com.production.vedantwatersupply.custome.NumericEditText
                     android:id="@+id/etExtraPayment"
                     style="@style/StyleInputForTextView"
                     android:layout_width="0dp"

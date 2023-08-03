@@ -6,6 +6,10 @@ import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_FILTERS
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_GET_TANKER_AND_DRIVER_FIXED
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_LOGIN
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.API_MONTH_LIST
+import com.production.vedantwatersupply.utils.ApiConstants.Companion.DriverExpenses.Companion.API_ADD_UPDATE_DRIVER_EXPENSE
+import com.production.vedantwatersupply.utils.ApiConstants.Companion.DriverExpenses.Companion.API_DELETE_DRIVER_EXPENSE
+import com.production.vedantwatersupply.utils.ApiConstants.Companion.DriverExpenses.Companion.API_DRIVER_EXPENSE_DETAIL
+import com.production.vedantwatersupply.utils.ApiConstants.Companion.DriverExpenses.Companion.API_DRIVER_SEARCH
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.DriverExpenses.Companion.API_GET_ALL_DRIVER
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.Maintenance.Companion.API_ADD_UPDATE_MAINTENANCE
 import com.production.vedantwatersupply.utils.ApiConstants.Companion.Maintenance.Companion.API_DELETE_MAINTENANCE
@@ -81,5 +85,21 @@ interface IApiEndPoints {
     @FormUrlEncoded
     @POST(API_GET_ALL_DRIVER)
     fun getAllDriverExpenses(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
+
+    @FormUrlEncoded
+    @POST(API_DRIVER_EXPENSE_DETAIL)
+    fun driverExpenseDetail(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
+
+    @FormUrlEncoded
+    @POST(API_DRIVER_SEARCH)
+    fun searchDriver(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSListResponse<FilterItem>>
+
+    @FormUrlEncoded
+    @POST(API_ADD_UPDATE_DRIVER_EXPENSE)
+    fun addUpdateDriver(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
+
+    @FormUrlEncoded
+    @POST(API_DELETE_DRIVER_EXPENSE)
+    fun deleteDriverApi(@FieldMap hashMap: LinkedHashMap<String, Any>): Call<WSGenericResponse<JsonElement>>
 
 }

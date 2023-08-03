@@ -12,6 +12,7 @@ import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentDashboardBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
+import com.production.vedantwatersupply.model.request.DriverIdRequest
 import com.production.vedantwatersupply.model.request.IdRequest
 import com.production.vedantwatersupply.model.request.MaintenanceIdRequest
 import com.production.vedantwatersupply.model.response.DashboardResponse
@@ -142,6 +143,24 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         }
 
         viewModel?.maintenanceRepository?.maintenanceDeleteResponseMutableLiveData?.observe(this) {
+            when (it.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                    callDashboardApi()
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+            hideProgress()
+        }
+
+        viewModel?.driverRepository?.deleteDriverExpenseResponseMutableLiveData?.observe(this) {
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
@@ -363,10 +382,15 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         binding.tvDelete.text = getString(R.string.delete_driver_expense)
 
         binding.llEdit.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(ARG_DRIVER_ID, driverResponse?.id)
+            bundle.putBoolean(AppConstants.Bundle.ARG_IS_FOR_DRIVER_UPDATE, true)
+            navigateFragment(view, R.id.nav_add_driver, bundle)
             popupWindow.dismiss()
         }
 
         binding.llDelete.setOnClickListener {
+            callDriverDeleteApi(driverResponse?.id)
             popupWindow.dismiss()
         }
     }
@@ -390,5 +414,12 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         val tripId = MaintenanceIdRequest()
         tripId.maintainanceId = id.toString()
         viewModel?.callMaintenanceDeleteApi(tripId)
+    }
+
+    private fun callDriverDeleteApi(id: String?){
+        baseActivity?.showProgress()
+        val driverId = DriverIdRequest()
+        driverId.driverExpenceId = id.toString()
+        viewModel?.callDriverDeleteApi(driverId)
     }
 }

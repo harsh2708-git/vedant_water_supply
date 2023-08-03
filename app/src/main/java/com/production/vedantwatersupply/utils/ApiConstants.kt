@@ -33,6 +33,10 @@ interface ApiConstants {
         interface DriverExpenses {
             companion object {
                 const val API_GET_ALL_DRIVER = "driverExpence/getAllDriverExpences"
+                const val API_DRIVER_EXPENSE_DETAIL = "driverExpence/driverExpenceDetails"
+                const val API_ADD_UPDATE_DRIVER_EXPENSE = "driverExpence/addUpdateDriverExpence"
+                const val API_DELETE_DRIVER_EXPENSE = "driverExpence/deleteDriverExpence"
+                const val API_DRIVER_SEARCH = "driver/search"
             }
         }
     }

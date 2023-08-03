@@ -16,11 +16,15 @@ import com.production.vedantwatersupply.databinding.FragmentDriverListingBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.DriverFilterClickListener
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
+import com.production.vedantwatersupply.model.request.DriverIdRequest
+import com.production.vedantwatersupply.model.request.FilterRequest
 import com.production.vedantwatersupply.model.request.GetDriverExpensesRequest
 import com.production.vedantwatersupply.model.request.MonthFilterRequest
 import com.production.vedantwatersupply.model.response.DriverData
+import com.production.vedantwatersupply.model.response.FilterResponse
 import com.production.vedantwatersupply.model.response.GetAllDriverExpensesResponse
 import com.production.vedantwatersupply.ui.dialog.DriverFilterDialogFragment
+import com.production.vedantwatersupply.utils.AppConstants
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
@@ -39,11 +43,13 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private var driverTypeId = ""
     private var driverId = ""
     private var paymentModeId = ""
+    private var addedById = ""
 
     private var selectedYear = ""
     private var selectedDriverType = ""
     private var selectedDriver = ""
     private var selectedPaymentMode = ""
+    private var selectedAddedBy = ""
 
     private var fromDate = ""
     private var toDate = ""
@@ -57,6 +63,12 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
 
     private var driverAdapter: DriverAdapter? = null
     private var driverList = ArrayList<DriverData>()
+
+    private var filterResponse = FilterResponse()
+    private var yearList = ArrayList<FilterItem>()
+    private var driveFilterList = ArrayList<FilterItem>()
+    private var addedByList = ArrayList<FilterItem>()
+
     override val layoutId: Int
         get() = R.layout.fragment_driver_listing
 
@@ -115,7 +127,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         viewModel?.callMonthFilterApi(monthFilterRequest)
     }
 
-    private fun callGetAllDriverExpences(){
+    private fun callGetAllDriverExpences() {
         showProgress()
         val getDriverExpensesRequest = GetDriverExpensesRequest()
         getDriverExpensesRequest.page = pageIndex.toString()
@@ -127,7 +139,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         getDriverExpensesRequest.driverType = selectedDriverType
         getDriverExpensesRequest.driverId = selectedDriver
         getDriverExpensesRequest.paymentmode = selectedPaymentMode
-        getDriverExpensesRequest.addedBy = ""
+        getDriverExpensesRequest.addedBy = selectedAddedBy
         Log.d("Driver Listing Params", "callGetAllDriverExpences: " + Gson().toJson(getDriverExpensesRequest))
         viewModel?.callGetAllDriverExpences(getDriverExpensesRequest)
     }
@@ -145,6 +157,8 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                         monthId = monthFilterAdapter?.getSelectedItem()?.dbValue.toString()
                         resetAdapter()
                     }
+
+                    hideProgress()
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -155,10 +169,10 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                     CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
                 }
             }
-            hideProgress()
+
         }
 
-        viewModel?.driverRepository?.getAllDriverExpensesResponseMutableLiveData?.observe(this){
+        viewModel?.driverRepository?.getAllDriverExpensesResponseMutableLiveData?.observe(this) {
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
                     isNextPage = it.webServiceSetting?.currentPage.equals("1")
@@ -166,6 +180,24 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                     binding?.llLoading?.visibility = View.GONE
                     binding?.swipeLayout?.isRefreshing = false
                     updateUI(it)
+                    hideProgress()
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+        }
+
+        viewModel?.driverRepository?.deleteDriverExpenseResponseMutableLiveData?.observe(this) {
+            when (it.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                    callGetAllDriverExpences()
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -178,6 +210,38 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
             }
             hideProgress()
         }
+
+        viewModel?.tripRepository?.filterResponseMutableLiveData?.observe(this) {
+            baseActivity?.hideProgress()
+            when (it?.webServiceSetting?.success) {
+                WebServiceSetting.SUCCESS -> {
+                    filterResponse = it
+
+                    yearList.clear()
+                    yearList.add(0, FilterItem("", getString(R.string.please_select_year)))
+                    filterResponse.years?.let { tanker -> yearList.addAll(tanker) }
+
+                    driveFilterList.clear()
+                    driveFilterList.add(0, FilterItem("", getString(R.string.please_select_driver)))
+                    filterResponse.driver?.let { tanker -> driveFilterList.addAll(tanker) }
+
+                    addedByList.clear()
+                    addedByList.add(0, FilterItem("", getString(R.string.please_select_added_by)))
+                    filterResponse.addedBy?.let { addedBy -> addedByList.addAll(addedBy) }
+
+                    openFilterDialog()
+                }
+
+                WebServiceSetting.FAILURE -> {
+                    CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
+                }
+
+                WebServiceSetting.NO_INTERNET -> {
+                    CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
+                }
+            }
+        }
+
     }
 
     private fun updateUI(it: GetAllDriverExpensesResponse?) {
@@ -206,28 +270,18 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
 
     private fun resetAdapter() {
         binding?.swipeLayout?.isRefreshing = false
+        binding?.rvDrivers?.visibility = View.VISIBLE
         pageIndex = 1
-        callGetAllDriverExpences()
+        showProgress()
         setDriverAdapter()
+        callGetAllDriverExpences()
     }
 
     private fun initFilterView() {
-        if (monthList.isEmpty()) {
-            monthList.add(0, FilterItem("all", "All", true))
-            monthList.add(FilterItem("july", "July"))
-            monthList.add(FilterItem("june", "June"))
-            monthList.add(FilterItem("may", "May"))
-            monthList.add(FilterItem("april", "April"))
-            monthList.add(FilterItem("march", "March"))
-            monthList.add(FilterItem("february", "February"))
-            monthList.add(FilterItem("january", "January"))
-        }
-
         monthFilterAdapter = FilterListAdapter(monthList, object : IFilterItem {
             override fun onFilterItemSelected(view: View?, pos: Int) {
                 monthId = monthList[pos].dbValue
-//                resetAdapter()
-
+                resetAdapter()
             }
         })
         val resources = resources
@@ -239,7 +293,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     }
 
     private fun setDriverAdapter() {
-        driverAdapter = DriverAdapter(requireContext(),driverList, this)
+        driverAdapter = DriverAdapter(requireContext(), driverList, this)
         binding?.rvDrivers?.adapter = driverAdapter
     }
 
@@ -247,7 +301,11 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         when (v?.id) {
             R.id.ivBack -> baseActivity?.onBackPressed()
             R.id.btnAdd -> navigateFragment(v, R.id.nav_add_driver)
-            R.id.btnFilter -> openFilterDialog()
+            R.id.btnFilter -> {
+                if (yearList.isEmpty() || driveFilterList.isEmpty() || addedByList.isEmpty()) callFilterApi()
+                else openFilterDialog()
+            }
+
             R.id.ivUp -> {
                 binding?.appBar?.scrollTo(0, 0)
                 binding?.rvDrivers?.smoothScrollToPosition(0)
@@ -258,8 +316,10 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
 
     private fun openFilterDialog() {
         val filterDialog = DriverFilterDialogFragment.getInstance(
-            selectedYear, selectedDriverType, selectedDriver, selectedPaymentMode, fromDate, toDate, displayFromDate, displayToDate, object : DriverFilterClickListener {
-                override fun onApply(fromDate: String, displayFromDate: String?, toDate: String, displayToDate: String?, selectedYear: String, selectedDriverType: String, selectedDriver: String, selectedPaymentMode: String) {
+            selectedYear, selectedDriverType, selectedDriver, selectedPaymentMode, selectedAddedBy,
+            fromDate, toDate, displayFromDate, displayToDate,
+            yearList, driveFilterList, addedByList, object : DriverFilterClickListener {
+                override fun onApply(fromDate: String, displayFromDate: String?, toDate: String, displayToDate: String?, selectedYear: String, selectedDriverType: String, selectedDriver: String, selectedPaymentMode: String, selectedAddedBy: String) {
                     this@DriverListingFragment.fromDate = fromDate
                     this@DriverListingFragment.displayFromDate = displayFromDate.toString()
                     this@DriverListingFragment.toDate = toDate
@@ -268,6 +328,18 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                     this@DriverListingFragment.selectedDriver = selectedDriver
                     this@DriverListingFragment.selectedDriverType = selectedDriverType
                     this@DriverListingFragment.selectedPaymentMode = selectedPaymentMode
+                    this@DriverListingFragment.selectedAddedBy = selectedAddedBy
+
+                    if (fromDate.isNotEmpty() && toDate.isNotEmpty()) {
+                        binding?.rvMonthFilter?.visibility = View.GONE
+                        monthId = ""
+                    }
+
+                    if (selectedYear.isNotEmpty()) {
+                        callMonthFilterApi(selectedYear)
+                        monthFilterAdapter?.setSelected(0)
+                    }
+                    resetAdapter()
                 }
 
                 override fun onClear() {
@@ -275,16 +347,24 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                     driverTypeId = ""
                     driverId = ""
                     paymentModeId = ""
+                    addedById = ""
 
                     selectedYear = ""
                     selectedDriverType = ""
                     selectedDriver = ""
                     selectedPaymentMode = ""
+                    selectedAddedBy = ""
 
                     fromDate = ""
                     toDate = ""
                     displayFromDate = ""
                     displayToDate = ""
+
+                    binding?.rvMonthFilter?.visibility = View.VISIBLE
+
+                    callMonthFilterApi(CommonUtils.getCurrentYear().toString())
+                    monthId = ""
+                    monthFilterAdapter?.setSelected(0)
                 }
             }
         )
@@ -292,13 +372,20 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     }
 
     override fun onClick(view: View?, position: Int) {
+        val response = driverAdapter?.getItemAt(position)
         when (view?.id) {
-            R.id.cvDriverMain -> navigateFragment(view, R.id.nav_driver_detail)
-            R.id.ivDriverOptions -> showOptionMenu(view)
+
+            R.id.cvDriverMain -> {
+                val bundle = Bundle()
+                bundle.putString(AppConstants.Bundle.ARG_DRIVER_ID, response?.id)
+                navigateFragment(view, R.id.nav_driver_detail, bundle)
+            }
+
+            R.id.ivDriverOptions -> showOptionMenu(view, response)
         }
     }
 
-    private fun showOptionMenu(view: View) {
+    private fun showOptionMenu(view: View, response: DriverData?) {
         val inflater = requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val vieww = inflater.inflate(R.layout.layout_options, null)
         val popupWindow = PopupWindow(vieww, requireContext().resources.getDimensionPixelSize(R.dimen._250sdp), LinearLayout.LayoutParams.WRAP_CONTENT, true)
@@ -310,10 +397,15 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         binding.tvDelete.text = getString(R.string.delete_driver_expense)
 
         binding.llEdit.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(AppConstants.Bundle.ARG_DRIVER_ID, response?.id)
+            bundle.putBoolean(AppConstants.Bundle.ARG_IS_FOR_DRIVER_UPDATE, true)
+            navigateFragment(view, R.id.nav_add_driver, bundle)
             popupWindow.dismiss()
         }
 
         binding.llDelete.setOnClickListener {
+            callDriverDeleteApi(response?.id)
             popupWindow.dismiss()
         }
     }
@@ -327,6 +419,20 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         binding?.rvDrivers?.visibility = View.GONE
         binding?.driverNoData?.tvNoData?.visibility = View.VISIBLE
         binding?.driverNoData?.tvNoData?.text = getString(R.string.no_maintenance_data_found)
+    }
+
+    private fun callDriverDeleteApi(id: String?) {
+        baseActivity?.showProgress()
+        val driverId = DriverIdRequest()
+        driverId.driverExpenceId = id.toString()
+        viewModel?.callDriverDeleteApi(driverId)
+    }
+
+    private fun callFilterApi() {
+        baseActivity?.showProgress()
+        val filterRequest = FilterRequest()
+        filterRequest.filterFor = AppConstants.Filter.MAINTAINANCE
+        viewModel?.callFilterApi(filterRequest)
     }
 
 }
