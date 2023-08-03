@@ -233,6 +233,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                 }
 
                 WebServiceSetting.FAILURE -> {
+                    hideProgress()
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
                 }
 
@@ -431,8 +432,15 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private fun callFilterApi() {
         baseActivity?.showProgress()
         val filterRequest = FilterRequest()
-        filterRequest.filterFor = AppConstants.Filter.MAINTAINANCE
+        filterRequest.filterFor = AppConstants.Filter.DRIVERMAINTAINANCE
         viewModel?.callFilterApi(filterRequest)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        yearList = ArrayList()
+        driveFilterList = ArrayList()
+        addedByList = ArrayList()
     }
 
 }

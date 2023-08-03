@@ -10,6 +10,8 @@ import com.production.vedantwatersupply.core.BaseDialogFragment
 import com.production.vedantwatersupply.custome.VWSSpinnerAdapter
 import com.production.vedantwatersupply.databinding.FragmentDriverFilterDialogBinding
 import com.production.vedantwatersupply.listener.DriverFilterClickListener
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_DRIVER
+import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.PERMANENT_DRIVER
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.calendar.CaldroidListener
 import com.production.vedantwatersupply.utils.filter.FilterItem
@@ -161,8 +163,8 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         val driverTypeList = ArrayList<FilterItem>()
         if (driverTypeList.isEmpty()) {
             driverTypeList.add(0, FilterItem("", getString(R.string.please_select_driver_type)))
-            driverTypeList.add(FilterItem(getString(R.string.permanent_driver), getString(R.string.permanent_driver)))
-            driverTypeList.add(FilterItem(getString(R.string.other_driver), getString(R.string.other_driver)))
+            driverTypeList.add(FilterItem(PERMANENT_DRIVER, getString(R.string.permanent_driver)))
+            driverTypeList.add(FilterItem(OTHER_DRIVER, getString(R.string.other_driver)))
         }
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, driverTypeList)
         binding?.spDriverType?.adapter = adapter
