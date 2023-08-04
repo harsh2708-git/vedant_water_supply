@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
+import com.production.vedantwatersupply.custome.pagintion.Paginate
 import com.production.vedantwatersupply.databinding.FragmentDriverListingBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.DriverFilterClickListener
@@ -33,17 +34,11 @@ import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 import com.transportermanger.util.filter.IFilterItem
 
-class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverViewModel>(), View.OnClickListener, RecyclerViewClickListener {
+class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverViewModel>(), View.OnClickListener, RecyclerViewClickListener, Paginate.Callbacks {
 
     private var monthFilterAdapter: FilterListAdapter? = null
     private var monthList = ArrayList<FilterItem>()
     private var monthId = ""
-
-    private var yearId = ""
-    private var driverTypeId = ""
-    private var driverId = ""
-    private var paymentModeId = ""
-    private var addedById = ""
 
     private var selectedYear = ""
     private var selectedDriverType = ""
@@ -56,9 +51,11 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private var displayFromDate = ""
     private var displayToDate = ""
 
+    //    private var isLoading = false
     private var isNextPage = false
     private var isLoading = false
-    private var pageIndex = 1
+    private var nextPage = "0"
+    private var currentPage = 1
     private var visibleThreshold = 2
 
     private var driverAdapter: DriverAdapter? = null
@@ -82,8 +79,6 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     override fun init() {
         setScreenTitle()
         setSummary()
-//        initFilterView()
-//        setDriverAdapter()
     }
 
     override fun initListener() {
@@ -103,18 +98,18 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                 if (binding?.rvDrivers?.layoutManager != null) {
                     val lastVisibleItem = (binding?.rvDrivers?.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                     val totalItemCount: Int = binding?.rvDrivers?.layoutManager?.itemCount!!
-                    if (scrollOffset > 0 && isNextPage && !isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
+                    if (scrollOffset > 0/* && isNextPage && !isLoading*/ && totalItemCount <= lastVisibleItem + visibleThreshold) {
                         isLoading = true
-                        pageIndex++
+                        currentPage++
                         binding!!.llLoading.visibility = View.VISIBLE
-
+                        callGetAllDriverExpences()
                     }
                 }
             }
         })
 
         binding?.swipeLayout?.setOnRefreshListener {
-            pageIndex = 1
+            currentPage = 1
             callGetAllDriverExpences()
         }
 
@@ -130,7 +125,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private fun callGetAllDriverExpences() {
         showProgress()
         val getDriverExpensesRequest = GetDriverExpensesRequest()
-        getDriverExpensesRequest.page = pageIndex.toString()
+        getDriverExpensesRequest.page = currentPage.toString()
         getDriverExpensesRequest.limit = "10"
         getDriverExpensesRequest.fromDate = fromDate
         getDriverExpensesRequest.toDate = toDate
@@ -175,8 +170,9 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         viewModel?.driverRepository?.getAllDriverExpensesResponseMutableLiveData?.observe(this) {
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
-                    isNextPage = it.webServiceSetting?.currentPage.equals("1")
                     isLoading = false
+//                    currentPage++
+                    isNextPage = it?.webServiceSetting?.currentPage == 1
                     binding?.llLoading?.visibility = View.GONE
                     binding?.swipeLayout?.isRefreshing = false
                     updateUI(it)
@@ -184,6 +180,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                 }
 
                 WebServiceSetting.FAILURE -> {
+                    hideProgress()
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
                 }
 
@@ -253,8 +250,16 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         if (driverList.isEmpty()) {
             hideData()
         } else {
-            showData()
-            setDriverAdapter()
+            if (currentPage == 1) {
+                showData()
+                binding?.rvDrivers?.visibility = View.VISIBLE
+                setDriverAdapter()
+            } else {
+                driverAdapter?.addRecords(driverList)
+            }
+
+//
+//
         }
     }
 
@@ -272,7 +277,9 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private fun resetAdapter() {
         binding?.swipeLayout?.isRefreshing = false
         binding?.rvDrivers?.visibility = View.VISIBLE
-        pageIndex = 1
+        currentPage = 1
+        nextPage = "0"
+        driverList.clear()
         showProgress()
         setDriverAdapter()
         callGetAllDriverExpences()
@@ -296,7 +303,11 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private fun setDriverAdapter() {
         driverAdapter = DriverAdapter(requireContext(), driverList, this)
         binding?.rvDrivers?.adapter = driverAdapter
+//        binding?.rvDrivers?.isNeedPagination = true
+//        binding?.rvDrivers?.setListPagination(this)
+//        binding?.rvDrivers?.visibility = View.GONE
     }
+
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -344,12 +355,6 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                 }
 
                 override fun onClear() {
-                    yearId = ""
-                    driverTypeId = ""
-                    driverId = ""
-                    paymentModeId = ""
-                    addedById = ""
-
                     selectedYear = ""
                     selectedDriverType = ""
                     selectedDriver = ""
@@ -419,7 +424,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private fun hideData() {
         binding?.rvDrivers?.visibility = View.GONE
         binding?.driverNoData?.tvNoData?.visibility = View.VISIBLE
-        binding?.driverNoData?.tvNoData?.text = getString(R.string.no_maintenance_data_found)
+        binding?.driverNoData?.tvNoData?.text = getString(R.string.no_driver_data_found)
     }
 
     private fun callDriverDeleteApi(id: String?) {
@@ -441,6 +446,19 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         yearList = ArrayList()
         driveFilterList = ArrayList()
         addedByList = ArrayList()
+    }
+
+    override fun onLoadMore() {
+//        isLoading = true
+//        callGetAllDriverExpences()
+    }
+
+    override fun isLoading(): Boolean {
+        return isLoading
+    }
+
+    override fun hasLoadedAllItems(): Boolean {
+        return nextPage.equals("0", ignoreCase = true)
     }
 
 }

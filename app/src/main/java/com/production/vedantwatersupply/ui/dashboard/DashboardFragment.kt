@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import com.production.vedantwatersupply.R
+import com.production.vedantwatersupply.app.MyApplication
 import com.production.vedantwatersupply.core.BaseFragment
 import com.production.vedantwatersupply.databinding.FragmentDashboardBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
@@ -49,6 +50,8 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
     override fun init() {
 
         binding?.clHeader?.ivBack?.visibility = View.GONE
+
+        binding?.tvUserName?.text = UserUtils.getUserData(requireContext())?.firstName.plus(" "+ UserUtils.getUserData(requireContext())?.lastName)
 //        setTripsAdapter()
 //        setMaintenanceAdpter()
 //        setDriverAdapter()
@@ -237,7 +240,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
     private fun hideDriverData() {
         binding?.rvDrivers?.visibility = View.GONE
         binding?.driverNoData?.tvNoData?.visibility = View.VISIBLE
-        binding?.driverNoData?.tvNoData?.text = getString(R.string.no_maintenance_data_found)
+        binding?.driverNoData?.tvNoData?.text = getString(R.string.no_driver_data_found)
     }
 
     private fun setTripsAdapter() {
@@ -251,7 +254,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
     }
 
     private fun setDriverAdapter() {
-        driverAdapter = dashboardResponse?.driverExpenceData?.let { DriverAdapter(requireContext(), it, this) }
+        driverAdapter = DriverAdapter(requireContext(), dashboardResponse?.driverExpenceData as ArrayList<DriverData>, this)
         binding?.rvDrivers?.adapter = driverAdapter
     }
 

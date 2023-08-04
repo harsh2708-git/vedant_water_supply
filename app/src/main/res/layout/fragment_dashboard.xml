@@ -79,7 +79,7 @@
                                 android:layout_marginStart="@dimen/_5sdp"
                                 android:layout_marginEnd="@dimen/_10sdp"
                                 android:maxLines="2"
-                                android:text="Harsh Prajapati"
+                                tools:text="Harsh Prajapati"
                                 android:textColor="@color/white"
                                 app:layout_constraintEnd_toStartOf="@id/fabLogout"
                                 app:layout_constraintStart_toEndOf="@+id/labelHello"

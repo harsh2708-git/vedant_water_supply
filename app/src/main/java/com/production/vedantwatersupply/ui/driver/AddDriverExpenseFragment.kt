@@ -74,12 +74,12 @@ class AddDriverExpenseFragment : BaseFragment<FragmentAddDriverExpenseBinding, D
         if (isForDriverUpdate) {
             binding?.clScreenSummary?.tvTitle?.text = getString(R.string.update_driver_expense)
             binding?.clScreenSummary?.tvDescription?.text = getString(R.string.here_you_can_update_driver_expense_details)
-            binding?.btnAdd?.text = getString(R.string.add)
+            binding?.btnAdd?.text = getString(R.string.update)
             callDriverDetailApi()
         } else {
             binding?.clScreenSummary?.tvTitle?.text = getString(R.string.add_driver_expense)
             binding?.clScreenSummary?.tvDescription?.text = getString(R.string.here_you_can_add_driver_expense_details)
-            binding?.btnAdd?.text = getString(R.string.update)
+            binding?.btnAdd?.text = getString(R.string.add)
         }
 
         callGetTankerAndDriverFixed()
@@ -119,11 +119,11 @@ class AddDriverExpenseFragment : BaseFragment<FragmentAddDriverExpenseBinding, D
             if (checkedId == binding?.clDriverTypeRadio?.rb1?.id) {
                 binding?.etExtraPayment?.visibility = View.VISIBLE
                 isExtraPayment = true
-                extraPayment = 1
+
             } else {
                 binding?.etExtraPayment?.visibility = View.GONE
                 isExtraPayment = false
-                extraPayment = 0
+                binding?.etExtraPayment?.setText("")
             }
         }
         binding?.clHeader?.ivBack?.setOnClickListener(this)
@@ -225,7 +225,7 @@ class AddDriverExpenseFragment : BaseFragment<FragmentAddDriverExpenseBinding, D
                 WebServiceSetting.SUCCESS -> {
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
                     if (isForDriverUpdate) {
-                        (baseActivity as MainActivity).getNavController().popBackStack(R.id.nav_maintenance_listing, false)
+                        (baseActivity as MainActivity).getNavController().popBackStack(R.id.nav_driver_listing, false)
                     } else baseActivity?.onBackPressed()
                 }
 
@@ -377,11 +377,11 @@ class AddDriverExpenseFragment : BaseFragment<FragmentAddDriverExpenseBinding, D
     private fun callAddUpdateDriverExpenseApi() {
         addUpdateDriverExpenseRequest.driverExpenceId = if (isForDriverUpdate) driverUpdateId else ""
 //        addUpdateDriverExpenseRequest.driverId = if (driverId.isEmpty()) driverId else driverNameId
-        addUpdateDriverExpenseRequest.driverId = driverId ?: driverNameId
+
+        addUpdateDriverExpenseRequest.driverId = selectedDriver.ifEmpty { driverNameId }
         addUpdateDriverExpenseRequest.driverName = binding?.etDriverName?.text.toString()
         addUpdateDriverExpenseRequest.date = apiPaymentDate
         addUpdateDriverExpenseRequest.amount = binding?.etPaymentAmount?.numericValue.toString()
-        addUpdateDriverExpenseRequest.extraPayment = extraPayment
         addUpdateDriverExpenseRequest.extraPaymentAmount = binding?.etExtraPayment?.numericValue.toString()
         addUpdateDriverExpenseRequest.paymentMode = selectedPaymentMode
         addUpdateDriverExpenseRequest.description = binding?.etDescription?.text.toString()

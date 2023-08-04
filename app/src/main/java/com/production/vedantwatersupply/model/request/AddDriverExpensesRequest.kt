@@ -11,6 +11,5 @@ class AddDriverExpensesRequest {
     var extraPaymentAmount = ""
     var paymentMode = ""
     var description = ""
-    var extraPayment = 1
 
 }

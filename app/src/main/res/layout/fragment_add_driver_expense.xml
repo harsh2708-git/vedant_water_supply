@@ -204,7 +204,7 @@
                     style="@style/StyleInputForTextView"
                     android:layout_width="0dp"
                     android:imeOptions="actionNext"
-                    android:inputType="textPersonName"
+                    android:inputType="number"
                     app:layout_constraintEnd_toEndOf="@id/end"
                     app:layout_constraintStart_toStartOf="@id/start"
                     app:layout_constraintTop_toBottomOf="@id/clExtraPaymentRadio" />

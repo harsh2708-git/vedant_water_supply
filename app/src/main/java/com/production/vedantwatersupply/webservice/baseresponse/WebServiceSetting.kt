@@ -11,7 +11,7 @@ class WebServiceSetting {
     var message: String? = null
 
     @SerializedName("currentPage")
-    var currentPage: String? = null
+    var currentPage: Int? = null
 
     companion object {
         val SUCCESS = "1"

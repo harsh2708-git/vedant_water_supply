@@ -12,7 +12,7 @@ import com.production.vedantwatersupply.listener.RecyclerViewClickListener
 import com.production.vedantwatersupply.model.response.DriverData
 import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 
-class DriverAdapter(private var context: Context, private var driverList: List<DriverData>, val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<DriverAdapter.ViewHolder>() {
+class DriverAdapter(private var context: Context, private var driverList: ArrayList<DriverData>, val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<DriverAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemDriverBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         init {
@@ -47,4 +47,10 @@ class DriverAdapter(private var context: Context, private var driverList: List<D
     }
 
     fun getItemAt(pos: Int) = driverList[pos]
+
+    fun addRecords(data: List<DriverData>) {
+        val lastPos: Int = driverList.size
+        driverList.addAll(lastPos, data)
+        notifyItemRangeInserted(lastPos, data.size)
+    }
 }

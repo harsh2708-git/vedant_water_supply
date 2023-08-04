@@ -195,7 +195,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         viewModel?.maintenanceRepository?.getAllMaintenanceResponseMutableLiveData?.observe(this) {
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
-                    isNextPage = it.webServiceSetting?.currentPage.equals("1")
+                    isNextPage = it.webServiceSetting?.currentPage == 1
                     isLoading = false
                     binding?.llLoading?.visibility = View.GONE
                     binding?.swipeLayout?.isRefreshing = false

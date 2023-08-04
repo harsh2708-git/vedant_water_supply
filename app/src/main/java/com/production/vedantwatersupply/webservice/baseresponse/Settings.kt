@@ -10,7 +10,7 @@ class Settings {
     var message = ""
 
     @SerializedName("currentPage")
-    var currPage = "0"
+    var currPage = 0
 
 //    @SerializedName("prev_page")
 //    var prevPage = "0"
