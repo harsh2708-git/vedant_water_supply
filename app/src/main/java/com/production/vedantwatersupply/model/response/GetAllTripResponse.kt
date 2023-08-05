@@ -10,6 +10,10 @@ class GetAllTripResponse: BaseWebserviceResponse() {
     @Expose
     var totalTripsCount: Int? = null
 
+    @SerializedName("totalTripsAmount")
+    @Expose
+    var totalTripsAmount: Int? = null
+
     @SerializedName("tripData")
     @Expose
     var tripData: List<TripData>? = null

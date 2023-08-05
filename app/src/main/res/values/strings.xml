@@ -161,4 +161,7 @@
     <string name="please_enter_extra_payment_given">Please enter extra payment given</string>
     <string name="update_driver_expense">Update Driver Expense</string>
     <string name="here_you_can_update_driver_expense_details">Here you can update your driver expense details.</string>
+    <string name="welcome_to_vedant_water_supply">Welcome to Vedant Water Supply!</string>
+    <string name="total_driver_payment">Total Driver Payment</string>
+    <string name="total_extra_payment">Total Extra Payment</string>
 </resources>

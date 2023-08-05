@@ -32,6 +32,7 @@ import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.production.vedantwatersupply.utils.filter.FilterItem
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
 import com.production.vedantwatersupply.utils.filter.IFilterItem
+import com.production.vedantwatersupply.utils.formatPriceWithDecimal
 import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 
@@ -89,8 +90,8 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
 
     override fun init() {
         setScreenTitle()
-        binding?.clSummary?.tvCurrentMonth?.text = CommonUtils.currentMonth()
-        binding?.clSummary?.tvDate?.text = CommonUtils.currentDate()
+//        binding?.clSummary?.tvCurrentMonth?.text = CommonUtils.currentMonth()
+//        binding?.clSummary?.tvDate?.text = CommonUtils.currentDate()
 
         setTripsAdapter()
     }
@@ -319,7 +320,10 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
     }
 
     private fun updateUI(it: GetAllTripResponse?) {
+        binding?.clMain?.visibility = View.VISIBLE
         binding?.clSummary?.tvTotal?.text = it?.totalTripsCount.toString().formatPriceWithoutDecimal()
+        binding?.clSummary?.labelAmount?.text = getString(R.string.total_fuel_amount)
+        binding?.clSummary?.tvAmount?.text = it?.totalTripsCount.toString().formatPriceWithDecimal()
 
 //        tripList.clear()
 //        it?.tripData?.let { it1 -> tripList.addAll(it1) }
@@ -354,7 +358,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
                     val find = monthList.find { it.dbValue == monthId }
                     val position = monthList.indexOf(find)
                     monthFilterAdapter?.setSelected(position)
-                }else if (monthId.isEmpty()){
+                } else if (monthId.isEmpty()) {
                     val find = monthList.find { it.dbValue == monthId }
                     val position = monthList.indexOf(find)
                     monthFilterAdapter?.setSelected(position)

@@ -247,7 +247,11 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     }
 
     private fun updateUI(it: GetAllDriverExpensesResponse?) {
+        binding?.clMain?.visibility = View.VISIBLE
         binding?.clSummary?.tvTotal?.text = it?.totalDriverExpenceCount?.toString()?.formatPriceWithoutDecimal()
+        binding?.clSummary?.labelAmount?.text = getString(R.string.total_driver_payment)
+        binding?.clSummary?.tvAmount?.text = it?.totalDriverExpenceAmount.toString().formatPriceWithoutDecimal()
+        binding?.clSummary?.tvExtraPayment?.text = it?.totalDriverExpenceExtraPaymentAmount.toString().formatPriceWithoutDecimal()
         if (it?.driverExpenceData?.isEmpty() == true) {
             hideData()
         } else {
@@ -268,8 +272,8 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
 
     private fun setSummary() {
         binding?.clSummary?.labelTotal?.text = getString(R.string.total_drivers_expense)
-        binding?.clSummary?.tvCurrentMonth?.text = CommonUtils.currentMonth()
-        binding?.clSummary?.tvDate?.text = CommonUtils.currentDate()
+//        binding?.clSummary?.tvCurrentMonth?.text = CommonUtils.currentMonth()
+//        binding?.clSummary?.tvDate?.text = CommonUtils.currentDate()
     }
 
     private fun resetAdapter() {

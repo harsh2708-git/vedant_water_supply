@@ -11,6 +11,10 @@ class GetAllMaintenanceResponse : BaseWebserviceResponse() {
     @Expose
     var totalMaintainanceCount: Int? = null
 
+    @SerializedName("totalMaintainanceAmount")
+    @Expose
+    var totalMaintainanceAmount: Int? = null
+
     @SerializedName("maintainanceData")
     @Expose
     var maintainanceData: List<MaintenanceData>? = null

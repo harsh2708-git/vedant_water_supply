@@ -34,6 +34,7 @@ import com.production.vedantwatersupply.utils.filter.FilterItem
 import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 import com.production.vedantwatersupply.utils.filter.IFilterItem
+import com.production.vedantwatersupply.utils.formatPriceWithDecimal
 
 class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBinding, MaintenanceViewModel>(), View.OnClickListener, RecyclerViewClickListener {
 
@@ -127,8 +128,8 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
 
     private fun setSummary() {
         binding?.clSummary?.labelTotal?.text = getString(R.string.total_maintenance)
-        binding?.clSummary?.tvCurrentMonth?.text = CommonUtils.currentMonth()
-        binding?.clSummary?.tvDate?.text = CommonUtils.currentDate()
+//        binding?.clSummary?.tvCurrentMonth?.text = CommonUtils.currentMonth()
+//        binding?.clSummary?.tvDate?.text = CommonUtils.currentDate()
     }
 
     private fun callMonthFilterApi(selectedYear: String) {
@@ -275,7 +276,10 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
     }
 
     private fun updateUI(it: GetAllMaintenanceResponse?) {
+        binding?.clMain?.visibility = View.VISIBLE
         binding?.clSummary?.tvTotal?.text = it?.totalMaintainanceCount?.toString()?.formatPriceWithoutDecimal()
+        binding?.clSummary?.labelAmount?.text = getString(R.string.total_maintenance_amount)
+        binding?.clSummary?.tvAmount?.text = it?.totalMaintainanceAmount.toString().formatPriceWithoutDecimal()
        /* maintenanceList.clear()
         it?.maintainanceData?.let { it1 -> maintenanceList.addAll(it1) }
 

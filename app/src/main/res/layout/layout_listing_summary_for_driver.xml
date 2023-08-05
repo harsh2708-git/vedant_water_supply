@@ -63,6 +63,30 @@
             app:layout_constraintStart_toEndOf="@id/labelAmount"
             app:layout_constraintTop_toTopOf="@id/labelAmount" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/labelExtraPayment"
+            style="@style/RobotoRegular14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="@string/total_extra_payment"
+            android:textColor="@color/color_FFFFFFD9"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvAmount" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvExtraPayment"
+            style="@style/RobotoMedium14"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:gravity="end"
+            tools:text="20,000"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/labelExtraPayment"
+            app:layout_constraintTop_toTopOf="@id/labelExtraPayment" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

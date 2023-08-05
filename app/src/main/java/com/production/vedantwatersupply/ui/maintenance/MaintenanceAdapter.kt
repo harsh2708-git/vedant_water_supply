@@ -43,7 +43,7 @@ class MaintenanceAdapter(context: Context, private var maintenanceList: ArrayLis
         holder.binding.apply {
             tvTripCode.text = response.reference
             tvTruck.text = response.tanker?.tankerNumber
-            tvMaintenanceAmount.text = response.amount.toString().formatPriceWithDecimal()
+            tvMaintenanceAmount.text = response.amount.toString().formatPriceWithoutDecimal()
             tvScheduledDate.text = response.dateReadable.toString()
         }
     }

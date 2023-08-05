@@ -11,6 +11,14 @@ class GetAllDriverExpensesResponse: BaseWebserviceResponse() {
     @Expose
     var totalDriverExpenceCount: Int? = null
 
+    @SerializedName("totalDriverExpenceAmount")
+    @Expose
+    var totalDriverExpenceAmount: Int? = null
+
+    @SerializedName("totalDriverExpenceExtraPaymentAmount")
+    @Expose
+    var totalDriverExpenceExtraPaymentAmount: Int? = null
+
     @SerializedName("driverExpenceData")
     @Expose
     var driverExpenceData: List<DriverData>? = null
