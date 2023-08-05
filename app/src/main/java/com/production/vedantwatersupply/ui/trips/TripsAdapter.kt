@@ -68,4 +68,10 @@ class TripsAdapter(context: Context, private var tripDataList: ArrayList<TripDat
         tripDataList.addAll(data)
         notifyDataSetChanged()
     }
+
+    fun updateRecords(data: List<TripData>){
+        val lastPos: Int = tripDataList.size
+        tripDataList.addAll(lastPos, data)
+        notifyItemRangeInserted(lastPos, data.size)
+    }
 }

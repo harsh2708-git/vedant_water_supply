@@ -11,6 +11,7 @@ import com.production.vedantwatersupply.databinding.ItemMaintenanceBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
 import com.production.vedantwatersupply.model.response.DriverData
 import com.production.vedantwatersupply.model.response.MaintenanceData
+import com.production.vedantwatersupply.model.response.TripData
 import com.production.vedantwatersupply.utils.formatPriceWithDecimal
 import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 
@@ -56,5 +57,11 @@ class MaintenanceAdapter(context: Context, private var maintenanceList: ArrayLis
         maintenanceList.clear()
         maintenanceList.addAll(data)
         notifyDataSetChanged()
+    }
+
+    fun updateRecords(data: List<MaintenanceData>){
+        val lastPos: Int = maintenanceList.size
+        maintenanceList.addAll(lastPos, data)
+        notifyItemRangeInserted(lastPos, data.size)
     }
 }

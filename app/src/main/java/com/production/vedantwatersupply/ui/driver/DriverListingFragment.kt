@@ -246,7 +246,11 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         } else {
             showData()
             binding?.rvDrivers?.visibility = View.VISIBLE
-            it?.driverExpenceData?.let { it1 -> driverAdapter?.addRecords(it1) }
+            if (currentPage == 1){
+                it?.driverExpenceData?.let { it1 -> driverAdapter?.addRecords(it1) }
+            }else {
+                it?.driverExpenceData?.let { it1 -> driverAdapter?.updateRecords(it1) }
+            }
         }
     }
 

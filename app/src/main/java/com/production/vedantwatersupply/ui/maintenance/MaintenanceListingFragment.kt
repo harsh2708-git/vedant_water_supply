@@ -283,7 +283,11 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         } else {
             showData()
             binding?.rvMaintanance?.visibility = View.VISIBLE
-            it?.maintainanceData?.let { it1 -> maintenanceAdapter?.addRecords(it1) }
+            if (pageIndex ==1){
+                it?.maintainanceData?.let { it1 -> maintenanceAdapter?.addRecords(it1) }
+            }else {
+                it?.maintainanceData?.let { it1 -> maintenanceAdapter?.updateRecords(it1) }
+            }
         }
     }
 

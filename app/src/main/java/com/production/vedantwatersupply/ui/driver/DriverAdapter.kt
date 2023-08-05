@@ -52,9 +52,14 @@ class DriverAdapter(private var context: Context, private var driverList: ArrayL
     fun getItemAt(pos: Int) = driverList[pos]
 
     fun addRecords(data: List<DriverData>) {
-        val lastPos: Int = driverList.size
         driverList.clear()
         driverList.addAll(data)
         notifyDataSetChanged()
+    }
+
+    fun updateRecords(data: List<DriverData>){
+        val lastPos: Int = driverList.size
+        driverList.addAll(lastPos, data)
+        notifyItemRangeInserted(lastPos, data.size)
     }
 }

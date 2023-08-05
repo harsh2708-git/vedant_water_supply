@@ -328,7 +328,11 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         } else {
             showData()
             binding?.rvTrips?.visibility = View.VISIBLE
-            it?.tripData?.let { it1 -> tripAdapter?.addRecords(it1) }
+            if (pageIndex == 1){
+                it?.tripData?.let { it1 -> tripAdapter?.addRecords(it1) }
+            }else {
+                it?.tripData?.let { it1 -> tripAdapter?.updateRecords(it1) }
+            }
         }
 
     }
