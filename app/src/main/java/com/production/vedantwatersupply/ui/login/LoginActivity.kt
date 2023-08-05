@@ -57,9 +57,9 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(), View
                         SharedPreferenceUtil.setPreference(this, SP_EMAIL, "")
                         SharedPreferenceUtil.setPreference(this, SP_PASSWORD, "")
                     }
+                    CommonUtils.showToast(this,getString(R.string.welcome_to_vedant_water_supply))
 //                    CommonUtils.showToast(this, it?.webServiceSetting?.message)
                     navigateToMainActivity(this)
-                    CommonUtils.showToast(this,getString(R.string.welcome_to_vedant_water_supply))
                 }
 
                 WebServiceSetting.FAILURE -> {
