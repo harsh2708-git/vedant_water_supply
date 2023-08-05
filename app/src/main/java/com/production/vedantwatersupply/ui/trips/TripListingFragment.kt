@@ -62,7 +62,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
     private var isNextPage = false
     private var isLoading = false
     private var nextPage = "0"
-    private var pageIndex    = 1
+    private var pageIndex = 1
     private var visibleThreshold = 2
 
     private var tripAdapter: TripsAdapter? = null
@@ -196,8 +196,16 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
                     it?.data?.let { it1 -> monthList.addAll(it1) }
                     initFilterView()
 
-                    if (selectedYear.isEmpty()) {
-                        monthId = monthFilterAdapter?.getSelectedItem()?.dbValue.toString()
+                    if (selectedYear.isNotEmpty()) {
+//                        monthId = monthFilterAdapter?.getSelectedItem()?.dbValue.toString()
+                        if (monthId.isNotEmpty()) {
+                            val find = monthList.find { it.dbValue == monthId }
+                            val pos = monthList.indexOf(find)
+                            monthFilterAdapter?.setSelected(pos)
+                        }
+                        resetAdapter()
+                    } else {
+                        monthId = ""
                         resetAdapter()
                     }
                 }
@@ -316,21 +324,21 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
 //        tripList.clear()
 //        it?.tripData?.let { it1 -> tripList.addAll(it1) }
 
-       /* if (tripList.isEmpty()) {
-            hideData()
-        } else {
-            showData()
-            setTripsAdapter()
-        }*/
+        /* if (tripList.isEmpty()) {
+             hideData()
+         } else {
+             showData()
+             setTripsAdapter()
+         }*/
 
         if (it?.tripData?.isEmpty() == true) {
             hideData()
         } else {
             showData()
             binding?.rvTrips?.visibility = View.VISIBLE
-            if (pageIndex == 1){
+            if (pageIndex == 1) {
                 it?.tripData?.let { it1 -> tripAdapter?.addRecords(it1) }
-            }else {
+            } else {
                 it?.tripData?.let { it1 -> tripAdapter?.updateRecords(it1) }
             }
         }
@@ -341,6 +349,17 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         monthFilterAdapter = FilterListAdapter(monthList, object : IFilterItem {
             override fun onFilterItemSelected(view: View?, pos: Int) {
                 monthId = monthList[pos].dbValue
+
+                if (monthId.isNotEmpty()) {
+                    val find = monthList.find { it.dbValue == monthId }
+                    val position = monthList.indexOf(find)
+                    monthFilterAdapter?.setSelected(position)
+                }else if (monthId.isEmpty()){
+                    val find = monthList.find { it.dbValue == monthId }
+                    val position = monthList.indexOf(find)
+                    monthFilterAdapter?.setSelected(position)
+                }
+
                 resetAdapter()
             }
         })

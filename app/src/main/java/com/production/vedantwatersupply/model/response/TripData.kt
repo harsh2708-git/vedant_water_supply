@@ -77,7 +77,7 @@ class TripData: BaseWebserviceResponse() {
     @Expose
     var updatedAt: String? = null
 
-    @SerializedName("tripDate_readable")
+    @SerializedName("tripDate_readable", alternate = ["date_readable"])
     @Expose
     var tripDateReadable: String? = null
 

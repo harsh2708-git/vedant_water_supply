@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.core.BaseFragment
-import com.production.vedantwatersupply.custome.pagintion.Paginate
 import com.production.vedantwatersupply.databinding.FragmentDriverListingBinding
 import com.production.vedantwatersupply.databinding.LayoutOptionsBinding
 import com.production.vedantwatersupply.listener.DriverFilterClickListener
@@ -143,15 +142,23 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
             when (it.settings?.success) {
                 WebServiceSetting.SUCCESS -> {
                     monthList.clear()
-                    monthList.add(0, FilterItem("", getString(R.string.all), true))
+                    monthList.add(0, FilterItem("", getString(R.string.all), monthId == ""))
                     it?.data?.let { it1 -> monthList.addAll(it1) }
+
                     initFilterView()
 
-                    if (selectedYear.isEmpty()) {
-                        monthId = monthFilterAdapter?.getSelectedItem()?.dbValue.toString()
+                    if (selectedYear.isNotEmpty()) {
+//                        monthId = monthFilterAdapter?.getSelectedItem()?.dbValue.toString()
+                        if (monthId.isNotEmpty()) {
+                            val find = monthList.find { it.dbValue == monthId }
+                            val pos = monthList.indexOf(find)
+                            monthFilterAdapter?.setSelected(pos)
+                        }
+                        resetAdapter()
+                    } else {
+                        monthId = ""
                         resetAdapter()
                     }
-//                    hideProgress()
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -246,9 +253,9 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         } else {
             showData()
             binding?.rvDrivers?.visibility = View.VISIBLE
-            if (currentPage == 1){
+            if (currentPage == 1) {
                 it?.driverExpenceData?.let { it1 -> driverAdapter?.addRecords(it1) }
-            }else {
+            } else {
                 it?.driverExpenceData?.let { it1 -> driverAdapter?.updateRecords(it1) }
             }
         }
@@ -271,7 +278,6 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         currentPage = 1
         nextPage = "0"
         showProgress()
-//        setDriverAdapter()
         callGetAllDriverExpences()
     }
 
@@ -279,7 +285,20 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         monthFilterAdapter = FilterListAdapter(monthList, object : IFilterItem {
             override fun onFilterItemSelected(view: View?, pos: Int) {
                 monthId = monthList[pos].dbValue
+
+                if (monthId.isNotEmpty()) {
+                    val find = monthList.find { it.dbValue == monthId }
+                    val position = monthList.indexOf(find)
+                    monthFilterAdapter?.setSelected(position)
+                }else if (monthId.isEmpty()){
+                    val find = monthList.find { it.dbValue == monthId }
+                    val position = monthList.indexOf(find)
+                    monthFilterAdapter?.setSelected(position)
+                }
+//                monthFilterAdapter?.setUnSelected()
+
                 resetAdapter()
+
             }
         })
         val resources = resources
@@ -336,9 +355,10 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
 
                     if (selectedYear.isNotEmpty()) {
                         callMonthFilterApi(selectedYear)
-                        monthFilterAdapter?.setSelected(0)
+//                        monthFilterAdapter?.setUnSelected()
+                    } else {
+                        resetAdapter()
                     }
-                    resetAdapter()
                 }
 
                 override fun onClear() {

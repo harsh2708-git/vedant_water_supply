@@ -178,8 +178,16 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
                     it?.data?.let { it1 -> monthList.addAll(it1) }
                     initFilterView()
 
-                    if (selectedYear.isEmpty()) {
-                        monthId = monthFilterAdapter?.getSelectedItem()?.dbValue.toString()
+                    if (selectedYear.isNotEmpty()) {
+//                        monthId = monthFilterAdapter?.getSelectedItem()?.dbValue.toString()
+                        if (monthId.isNotEmpty()) {
+                            val find = monthList.find { it.dbValue == monthId }
+                            val pos = monthList.indexOf(find)
+                            monthFilterAdapter?.setSelected(pos)
+                        }
+                        resetAdapter()
+                    } else {
+                        monthId = ""
                         resetAdapter()
                     }
                 }
@@ -295,6 +303,17 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         monthFilterAdapter = FilterListAdapter(monthList, object : IFilterItem {
             override fun onFilterItemSelected(view: View?, pos: Int) {
                 monthId = monthList[pos].dbValue
+
+                if (monthId.isNotEmpty()) {
+                    val find = monthList.find { it.dbValue == monthId }
+                    val position = monthList.indexOf(find)
+                    monthFilterAdapter?.setSelected(position)
+                }else if (monthId.isEmpty()){
+                    val find = monthList.find { it.dbValue == monthId }
+                    val position = monthList.indexOf(find)
+                    monthFilterAdapter?.setSelected(position)
+                }
+
                 resetAdapter()
             }
         })
@@ -356,10 +375,9 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
 
                     if (selectedYear.isNotEmpty()) {
                         callMonthFilterApi(selectedYear)
-                        monthFilterAdapter?.setSelected(0)
-                    }
+                    }else {
                         resetAdapter()
-
+                    }
                 }
 
                 override fun onClear() {

@@ -45,6 +45,8 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
 
     private var callBack: DriverFilterClickListener? = null
 
+    private var isForYear = false
+
     companion object {
         fun getInstance(
             selectedYear: String,
