@@ -105,7 +105,7 @@ class TripRepository {
                                 Generics.with(it).getAsObject(GetAllTripResponse::class.java)
                             } ?: GetAllTripResponse()
                             getAllTripResponse.webServiceSetting = response.body()?.settings?.message?.let {
-                                WebServiceSetting.createMock(WebServiceSetting.SUCCESS, it)
+                                WebServiceSetting.createMock(WebServiceSetting.SUCCESS, it,response.body()?.settings?.currentPage?:0,response.body()?.settings?.nextPage?:0)
                             }
                         } else
                             getAllTripResponse.webServiceSetting = response.body()?.settings?.message?.let {

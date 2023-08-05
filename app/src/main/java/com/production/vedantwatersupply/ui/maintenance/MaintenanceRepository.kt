@@ -73,7 +73,7 @@ class MaintenanceRepository {
                                 Generics.with(it).getAsObject(GetAllMaintenanceResponse::class.java)
                             } ?: GetAllMaintenanceResponse()
                             getAllMaintenanceResponse.webServiceSetting = response.body()?.settings?.message?.let {
-                                WebServiceSetting.createMock(WebServiceSetting.SUCCESS, it)
+                                WebServiceSetting.createMock(WebServiceSetting.SUCCESS, it,response.body()?.settings?.currentPage?:0,response.body()?.settings?.nextPage?:0)
                             }
                         } else
                             getAllMaintenanceResponse.webServiceSetting = response.body()?.settings?.message?.let {

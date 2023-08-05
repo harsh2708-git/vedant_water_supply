@@ -32,9 +32,9 @@ import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.production.vedantwatersupply.utils.filter.FilterItem
 import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
-import com.transportermanger.util.filter.IFilterItem
+import com.production.vedantwatersupply.utils.filter.IFilterItem
 
-class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverViewModel>(), View.OnClickListener, RecyclerViewClickListener, Paginate.Callbacks {
+class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverViewModel>(), View.OnClickListener, RecyclerViewClickListener {
 
     private var monthFilterAdapter: FilterListAdapter? = null
     private var monthList = ArrayList<FilterItem>()
@@ -51,7 +51,6 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private var displayFromDate = ""
     private var displayToDate = ""
 
-    //    private var isLoading = false
     private var isNextPage = false
     private var isLoading = false
     private var nextPage = "0"
@@ -59,7 +58,6 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private var visibleThreshold = 2
 
     private var driverAdapter: DriverAdapter? = null
-    private var driverList = ArrayList<DriverData>()
 
     private var filterResponse = FilterResponse()
     private var yearList = ArrayList<FilterItem>()
@@ -79,6 +77,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     override fun init() {
         setScreenTitle()
         setSummary()
+        setDriverAdapter()
     }
 
     override fun initListener() {
@@ -98,7 +97,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                 if (binding?.rvDrivers?.layoutManager != null) {
                     val lastVisibleItem = (binding?.rvDrivers?.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                     val totalItemCount: Int = binding?.rvDrivers?.layoutManager?.itemCount!!
-                    if (scrollOffset > 0/* && isNextPage && !isLoading*/ && totalItemCount <= lastVisibleItem + visibleThreshold) {
+                    if (scrollOffset > 0 && isNextPage && !isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
                         isLoading = true
                         currentPage++
                         binding!!.llLoading.visibility = View.VISIBLE
@@ -116,7 +115,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     }
 
     private fun callMonthFilterApi(selectedYear: String) {
-        showProgress()
+//        showProgress()
         val monthFilterRequest = MonthFilterRequest()
         monthFilterRequest.year = selectedYear
         viewModel?.callMonthFilterApi(monthFilterRequest)
@@ -152,8 +151,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                         monthId = monthFilterAdapter?.getSelectedItem()?.dbValue.toString()
                         resetAdapter()
                     }
-
-                    hideProgress()
+//                    hideProgress()
                 }
 
                 WebServiceSetting.FAILURE -> {
@@ -171,8 +169,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
                     isLoading = false
-//                    currentPage++
-                    isNextPage = it?.webServiceSetting?.currentPage == 1
+                    isNextPage = it?.webServiceSetting?.nextPage != 0
                     binding?.llLoading?.visibility = View.GONE
                     binding?.swipeLayout?.isRefreshing = false
                     updateUI(it)
@@ -244,22 +241,12 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
 
     private fun updateUI(it: GetAllDriverExpensesResponse?) {
         binding?.clSummary?.tvTotal?.text = it?.totalDriverExpenceCount?.toString()?.formatPriceWithoutDecimal()
-        driverList.clear()
-        it?.driverExpenceData?.let { it1 -> driverList.addAll(it1) }
-
-        if (driverList.isEmpty()) {
+        if (it?.driverExpenceData?.isEmpty() == true) {
             hideData()
         } else {
-            if (currentPage == 1) {
-                showData()
-                binding?.rvDrivers?.visibility = View.VISIBLE
-                setDriverAdapter()
-            } else {
-                driverAdapter?.addRecords(driverList)
-            }
-
-//
-//
+            showData()
+            binding?.rvDrivers?.visibility = View.VISIBLE
+            it?.driverExpenceData?.let { it1 -> driverAdapter?.addRecords(it1) }
         }
     }
 
@@ -279,9 +266,8 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         binding?.rvDrivers?.visibility = View.VISIBLE
         currentPage = 1
         nextPage = "0"
-        driverList.clear()
         showProgress()
-        setDriverAdapter()
+//        setDriverAdapter()
         callGetAllDriverExpences()
     }
 
@@ -301,11 +287,8 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     }
 
     private fun setDriverAdapter() {
-        driverAdapter = DriverAdapter(requireContext(), driverList, this)
+        driverAdapter = DriverAdapter(requireContext(), arrayListOf(), this)
         binding?.rvDrivers?.adapter = driverAdapter
-//        binding?.rvDrivers?.isNeedPagination = true
-//        binding?.rvDrivers?.setListPagination(this)
-//        binding?.rvDrivers?.visibility = View.GONE
     }
 
 
@@ -446,19 +429,6 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         yearList = ArrayList()
         driveFilterList = ArrayList()
         addedByList = ArrayList()
-    }
-
-    override fun onLoadMore() {
-//        isLoading = true
-//        callGetAllDriverExpences()
-    }
-
-    override fun isLoading(): Boolean {
-        return isLoading
-    }
-
-    override fun hasLoadedAllItems(): Boolean {
-        return nextPage.equals("0", ignoreCase = true)
     }
 
 }

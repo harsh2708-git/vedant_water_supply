@@ -10,13 +10,13 @@ class Settings {
     var message = ""
 
     @SerializedName("currentPage")
-    var currPage = 0
+    var currentPage = 0
 
-//    @SerializedName("prev_page")
-//    var prevPage = "0"
+    @SerializedName("prev_page")
+    var prevPage = "0"
 
-//    @SerializedName("next_page")
-//    var nextPage = "0"
+    @SerializedName("nextPage")
+    var nextPage :Int = 0
 
 
     val isSuccess: Boolean

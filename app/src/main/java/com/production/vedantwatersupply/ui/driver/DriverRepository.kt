@@ -43,7 +43,7 @@ class DriverRepository {
                                 Generics.with(it).getAsObject(GetAllDriverExpensesResponse::class.java)
                             } ?: GetAllDriverExpensesResponse()
                             getAllDriverExpensesResponse.webServiceSetting = response.body()?.settings?.message?.let {
-                                WebServiceSetting.createMock(WebServiceSetting.SUCCESS, it)
+                                WebServiceSetting.createMock(WebServiceSetting.SUCCESS, it,response.body()?.settings?.currentPage?:0,response.body()?.settings?.nextPage?:0)
                             }
                         } else
                             getAllDriverExpensesResponse.webServiceSetting = response.body()?.settings?.message?.let {

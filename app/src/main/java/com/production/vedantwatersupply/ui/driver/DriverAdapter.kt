@@ -1,6 +1,7 @@
 package com.production.vedantwatersupply.ui.driver
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,10 +34,12 @@ class DriverAdapter(private var context: Context, private var driverList: ArrayL
         return ViewHolder(binding)
     }
 
-    override fun getItemCount() = driverList.size
+    override fun getItemCount() = driverList.size.also {
+        Log.e("TAG","-------------------------------$it")
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val response = driverList[position]
+        val response = driverList[holder.adapterPosition]
 
         holder.binding.apply {
             tvTripCode.text = response.reference
@@ -50,7 +53,8 @@ class DriverAdapter(private var context: Context, private var driverList: ArrayL
 
     fun addRecords(data: List<DriverData>) {
         val lastPos: Int = driverList.size
-        driverList.addAll(lastPos, data)
-        notifyItemRangeInserted(lastPos, data.size)
+        driverList.clear()
+        driverList.addAll(data)
+        notifyDataSetChanged()
     }
 }

@@ -9,13 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
 import com.production.vedantwatersupply.databinding.ItemTripBinding
+import com.production.vedantwatersupply.model.response.DriverData
 import com.production.vedantwatersupply.model.response.TripData
 import com.production.vedantwatersupply.utils.AppConstants.CANCELLED
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.formatPriceWithDecimal
 import java.util.Date
 
-class TripsAdapter(context: Context, private var tripDataList: List<TripData>, val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<TripsAdapter.ViewHolder>() {
+class TripsAdapter(context: Context, private var tripDataList: ArrayList<TripData>, val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<TripsAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemTripBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         init {
@@ -59,5 +60,12 @@ class TripsAdapter(context: Context, private var tripDataList: List<TripData>, v
 
     fun getItemAt(position: Int): TripData {
         return tripDataList[position]
+    }
+
+    fun addRecords(data: List<TripData>) {
+        val lastPos: Int = tripDataList.size
+        tripDataList.clear()
+        tripDataList.addAll(data)
+        notifyDataSetChanged()
     }
 }

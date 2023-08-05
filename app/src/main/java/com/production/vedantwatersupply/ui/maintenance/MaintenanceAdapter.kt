@@ -9,11 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.databinding.ItemMaintenanceBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
+import com.production.vedantwatersupply.model.response.DriverData
 import com.production.vedantwatersupply.model.response.MaintenanceData
 import com.production.vedantwatersupply.utils.formatPriceWithDecimal
 import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 
-class MaintenanceAdapter(context: Context, private var maintenanceList: List<MaintenanceData>, val clickListener: RecyclerViewClickListener): RecyclerView.Adapter<MaintenanceAdapter.ViewHolder>() {
+class MaintenanceAdapter(context: Context, private var maintenanceList: ArrayList<MaintenanceData>, val clickListener: RecyclerViewClickListener): RecyclerView.Adapter<MaintenanceAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding : ItemMaintenanceBinding): RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         init {
@@ -48,5 +49,12 @@ class MaintenanceAdapter(context: Context, private var maintenanceList: List<Mai
 
     fun getItemAt(pos: Int): MaintenanceData {
         return maintenanceList[pos]
+    }
+
+    fun addRecords(data: List<MaintenanceData>) {
+        val lastPos: Int = maintenanceList.size
+        maintenanceList.clear()
+        maintenanceList.addAll(data)
+        notifyDataSetChanged()
     }
 }

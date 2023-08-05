@@ -244,12 +244,12 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
     }
 
     private fun setTripsAdapter() {
-        tripAdapter = dashboardResponse?.tripData?.let { TripsAdapter(requireContext(), it, this) }
+        tripAdapter = dashboardResponse?.tripData?.let { TripsAdapter(requireContext(), it as ArrayList<TripData>, this) }
         binding?.rvTrips?.adapter = tripAdapter
     }
 
     private fun setMaintenanceAdpter() {
-        maintenanceAdapter = dashboardResponse?.maintainanceData?.let { MaintenanceAdapter(requireContext(), it, this) }
+        maintenanceAdapter = dashboardResponse?.maintainanceData?.let { MaintenanceAdapter(requireContext(), it as ArrayList<MaintenanceData>, this) }
         binding?.rvMaintanance?.adapter = maintenanceAdapter
     }
 

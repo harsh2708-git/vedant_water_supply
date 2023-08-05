@@ -31,9 +31,9 @@ import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.production.vedantwatersupply.utils.filter.FilterItem
 import com.production.vedantwatersupply.utils.filter.FilterListAdapter
+import com.production.vedantwatersupply.utils.filter.IFilterItem
 import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
-import com.transportermanger.util.filter.IFilterItem
 
 class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewModel>(), View.OnClickListener, RecyclerViewClickListener {
 
@@ -61,7 +61,8 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
 
     private var isNextPage = false
     private var isLoading = false
-    private var pageIndex = 1
+    private var nextPage = "0"
+    private var pageIndex    = 1
     private var visibleThreshold = 2
 
     private var tripAdapter: TripsAdapter? = null
@@ -90,6 +91,8 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         setScreenTitle()
         binding?.clSummary?.tvCurrentMonth?.text = CommonUtils.currentMonth()
         binding?.clSummary?.tvDate?.text = CommonUtils.currentDate()
+
+        setTripsAdapter()
     }
 
     private fun setScreenTitle() {
@@ -121,7 +124,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
                         isLoading = true
                         pageIndex++
                         binding!!.llLoading.visibility = View.VISIBLE
-
+                        callGetAllTripApi()
                     }
                 }
             }
@@ -134,7 +137,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
     }
 
     private fun callMonthFilterApi(selectedYear: String) {
-        showProgress()
+//        showProgress()
         val monthFilterRequest = MonthFilterRequest()
         monthFilterRequest.year = selectedYear
         viewModel?.callMonthFilterApi(monthFilterRequest)
@@ -207,14 +210,14 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
                     CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
                 }
             }
-            hideProgress()
+//            hideProgress()
         }
 
         viewModel?.tripRepository?.getAllTripResponseMutableLiveData?.observe(this) {
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
-                    isNextPage = it.webServiceSetting?.currentPage == 1
                     isLoading = false
+                    isNextPage = it?.webServiceSetting?.nextPage != 0
                     binding?.llLoading?.visibility = View.GONE
                     binding?.swipeLayout?.isRefreshing = false
                     updateUI(it)
@@ -310,14 +313,22 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
     private fun updateUI(it: GetAllTripResponse?) {
         binding?.clSummary?.tvTotal?.text = it?.totalTripsCount.toString().formatPriceWithoutDecimal()
 
-        tripList.clear()
-        it?.tripData?.let { it1 -> tripList.addAll(it1) }
+//        tripList.clear()
+//        it?.tripData?.let { it1 -> tripList.addAll(it1) }
 
-        if (tripList.isEmpty()) {
+       /* if (tripList.isEmpty()) {
             hideData()
         } else {
             showData()
             setTripsAdapter()
+        }*/
+
+        if (it?.tripData?.isEmpty() == true) {
+            hideData()
+        } else {
+            showData()
+            binding?.rvTrips?.visibility = View.VISIBLE
+            it?.tripData?.let { it1 -> tripAdapter?.addRecords(it1) }
         }
 
     }
@@ -338,7 +349,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
     }
 
     private fun setTripsAdapter() {
-        tripAdapter = TripsAdapter(requireContext(), tripList, this)
+        tripAdapter = TripsAdapter(requireContext(), ArrayList(), this)
         binding?.rvTrips?.adapter = tripAdapter
     }
 
@@ -483,7 +494,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         binding?.swipeLayout?.isRefreshing = false
         pageIndex = 1
         callGetAllTripApi()
-        setTripsAdapter()
+//        setTripsAdapter()
     }
 
     private fun showData() {

@@ -33,7 +33,7 @@ import com.production.vedantwatersupply.utils.filter.SpaceItemDecoration
 import com.production.vedantwatersupply.utils.filter.FilterItem
 import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
-import com.transportermanger.util.filter.IFilterItem
+import com.production.vedantwatersupply.utils.filter.IFilterItem
 
 class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBinding, MaintenanceViewModel>(), View.OnClickListener, RecyclerViewClickListener {
 
@@ -54,6 +54,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
 
     private var isNextPage = false
     private var isLoading = false
+    private var nextPage = "0"
     private var pageIndex = 1
     private var visibleThreshold = 2
 
@@ -78,6 +79,8 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
     override fun init() {
         setScreenTitle()
         setSummary()
+
+        setMaintenanceAdapter()
     }
 
     override fun initListener() {
@@ -104,7 +107,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
                         isLoading = true
                         pageIndex++
                         binding!!.llLoading.visibility = View.VISIBLE
-
+                        callGetAllMaintenanceApi()
                     }
                 }
             }
@@ -129,7 +132,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
     }
 
     private fun callMonthFilterApi(selectedYear: String) {
-        showProgress()
+//        showProgress()
         val monthFilterRequest = MonthFilterRequest()
         monthFilterRequest.year = selectedYear
         viewModel?.callMonthFilterApi(monthFilterRequest)
@@ -189,14 +192,14 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
                     CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
                 }
             }
-            hideProgress()
+//            hideProgress()
         }
 
         viewModel?.maintenanceRepository?.getAllMaintenanceResponseMutableLiveData?.observe(this) {
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
-                    isNextPage = it.webServiceSetting?.currentPage == 1
                     isLoading = false
+                    isNextPage = it?.webServiceSetting?.nextPage != 0
                     binding?.llLoading?.visibility = View.GONE
                     binding?.swipeLayout?.isRefreshing = false
                     updateUI(it)
@@ -265,7 +268,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
 
     private fun updateUI(it: GetAllMaintenanceResponse?) {
         binding?.clSummary?.tvTotal?.text = it?.totalMaintainanceCount?.toString()?.formatPriceWithoutDecimal()
-        maintenanceList.clear()
+       /* maintenanceList.clear()
         it?.maintainanceData?.let { it1 -> maintenanceList.addAll(it1) }
 
         if (maintenanceList.isEmpty()) {
@@ -273,6 +276,14 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         } else {
             showData()
             setMaintenanceAdapter()
+        }*/
+
+        if (it?.maintainanceData?.isEmpty() == true) {
+            hideData()
+        } else {
+            showData()
+            binding?.rvMaintanance?.visibility = View.VISIBLE
+            it?.maintainanceData?.let { it1 -> maintenanceAdapter?.addRecords(it1) }
         }
     }
 
@@ -292,7 +303,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
     }
 
     private fun setMaintenanceAdapter() {
-        maintenanceAdapter = MaintenanceAdapter(requireContext(), maintenanceList, this)
+        maintenanceAdapter = MaintenanceAdapter(requireContext(), ArrayList(), this)
         binding?.rvMaintanance?.adapter = maintenanceAdapter
     }
 
@@ -411,7 +422,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         binding?.swipeLayout?.isRefreshing = false
         pageIndex = 1
         callGetAllMaintenanceApi()
-        setMaintenanceAdapter()
+//        setMaintenanceAdapter()
     }
 
     private fun showData() {

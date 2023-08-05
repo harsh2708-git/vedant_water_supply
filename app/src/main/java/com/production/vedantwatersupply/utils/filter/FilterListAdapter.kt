@@ -9,7 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.databinding.ListItemFilterBinding
-import com.transportermanger.util.filter.IFilterItem
 
 class FilterListAdapter(var filterItems: List<FilterItem>, var callback: IFilterItem) :
     RecyclerView.Adapter<FilterListAdapter.LabelHolder>() {
@@ -36,7 +35,7 @@ class FilterListAdapter(var filterItems: List<FilterItem>, var callback: IFilter
     inner class LabelHolder(val binding: ListItemFilterBinding) :
         RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         init {
-            binding.txtValue.setOnClickListener(this)
+            binding.root.setOnClickListener(this)
         }
 
         override fun onClick(p0: View?) {
@@ -89,4 +88,9 @@ class FilterListAdapter(var filterItems: List<FilterItem>, var callback: IFilter
     }
     fun getItem(pos: Int) = filterItems[pos]
     fun getSelectedItem() = filterItems.find { it.isSelected }
+
+    fun setItems(filterItems: List<FilterItem>){
+        this.filterItems = filterItems
+        notifyDataSetChanged()
+    }
 }
