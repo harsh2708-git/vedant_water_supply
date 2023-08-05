@@ -1,5 +1,8 @@
 package com.production.vedantwatersupply.utils
 
+import android.icu.text.DecimalFormatSymbols
+import android.text.InputFilter
+import com.production.vedantwatersupply.custome.NumericEditText
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.Locale
@@ -53,4 +56,8 @@ fun String.formatPriceWithDecimal(): String {
     } else {
         "0"
     }
+}
+
+fun NumericEditText.setFilter(){
+    this.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(2))
 }

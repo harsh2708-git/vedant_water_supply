@@ -27,6 +27,7 @@ import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.calendar.CaldroidListener
 import com.production.vedantwatersupply.utils.filter.FilterItem
 import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
+import com.production.vedantwatersupply.utils.setFilter
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 import java.util.Date
 
@@ -86,6 +87,7 @@ class AddMaintenanceFragment : BaseFragment<FragmentAddMaintenanceBinding, Maint
         callGetTankerAndDriverFixed()
 
         setPaymentModeSpinner()
+
     }
 
     override fun initListener() {

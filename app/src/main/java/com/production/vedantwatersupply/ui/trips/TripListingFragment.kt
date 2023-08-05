@@ -323,7 +323,7 @@ class TripListingFragment : BaseFragment<FragmentTripListingBinding, TripViewMod
         binding?.clMain?.visibility = View.VISIBLE
         binding?.clSummary?.tvTotal?.text = it?.totalTripsCount.toString().formatPriceWithoutDecimal()
         binding?.clSummary?.labelAmount?.text = getString(R.string.total_fuel_amount)
-        binding?.clSummary?.tvAmount?.text = it?.totalTripsCount.toString().formatPriceWithDecimal()
+        binding?.clSummary?.tvAmount?.text = it?.totalTripsAmount.toString().formatPriceWithDecimal()
 
 //        tripList.clear()
 //        it?.tripData?.let { it1 -> tripList.addAll(it1) }

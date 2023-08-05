@@ -24,6 +24,7 @@ import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.calendar.CaldroidListener
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 import com.production.vedantwatersupply.utils.filter.FilterItem
+import com.production.vedantwatersupply.utils.setFilter
 import java.util.Calendar
 import java.util.Date
 
@@ -106,6 +107,8 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         setPaymentModeSpinner()
         setFillingSiteSpinner()
         setFuelFilledBy()
+
+        binding?.etDieselAmount?.setFilter()
     }
 
     override fun initListener() {
