@@ -164,4 +164,8 @@
     <string name="welcome_to_vedant_water_supply">Welcome to Vedant Water Supply!</string>
     <string name="total_driver_payment">Total Driver Payment</string>
     <string name="total_extra_payment">Total Extra Payment</string>
+    <string name="maintenance_done_by">Maintenance Done By</string>
+    <string name="driver_payment_done_by">Driver Payment Done By</string>
+    <string name="please_select_maintenance_done_by">Please select maintenance done by</string>
+    <string name="please_select_driver_payment_done_by">Please select driver payment done by</string>
 </resources>

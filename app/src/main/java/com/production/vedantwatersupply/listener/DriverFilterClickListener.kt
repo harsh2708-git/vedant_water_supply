@@ -6,7 +6,7 @@ interface DriverFilterClickListener {
         fromDate: String, displayFromDate: String?,
         toDate: String, displayToDate: String?,
         selectedYear: String, selectedDriverType: String,
-        selectedDriver: String, selectedPaymentMode: String, selectedAddedBy: String
+        selectedDriver: String, selectedPaymentMode: String, selectedAddedBy: String, selectedDriverPaymentDoneBy: String
     )
 
     fun onClear()

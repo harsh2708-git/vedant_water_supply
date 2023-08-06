@@ -272,6 +272,43 @@
                             app:layout_constraintStart_toStartOf="@id/start1"
                             app:layout_constraintTop_toBottomOf="@id/tvPaymentMode" />
 
+                        <com.production.vedantwatersupply.custome.CustomTextView
+                            android:id="@+id/labelMaintenanceDoneBy"
+                            style="@style/RobotoRegular12"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_20sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/maintenance_done_by"
+                            android:textColor="@color/black"
+                            app:astrisk="false"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/tvPaymentMode" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tvMaintenanceDoneBy"
+                            style="@style/StyleInputForTextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:drawableEnd="@drawable/spinner_background_only_dropdown_arrow"
+                            android:paddingEnd="@dimen/_0ssp"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/labelMaintenanceDoneBy"
+                            tools:ignore="RtlSymmetry" />
+
+                        <Spinner
+                            android:id="@+id/spMaintenanceDoneBy"
+                            style="@style/SpinnerStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:spinnerMode="dropdown"
+                            app:layout_constraintEnd_toEndOf="@id/end1"
+                            app:layout_constraintStart_toStartOf="@id/start1"
+                            app:layout_constraintTop_toBottomOf="@id/tvMaintenanceDoneBy" />
+
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/labelAddedBy"
                             style="@style/RobotoRegular12"
@@ -282,7 +319,7 @@
                             android:text="@string/added_by"
                             android:textColor="@color/color_dark"
                             app:layout_constraintStart_toStartOf="@id/start1"
-                            app:layout_constraintTop_toBottomOf="@id/tvPaymentMode" />
+                            app:layout_constraintTop_toBottomOf="@id/tvMaintenanceDoneBy" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/tvAddedBy"

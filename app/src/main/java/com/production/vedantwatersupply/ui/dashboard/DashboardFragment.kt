@@ -112,6 +112,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
         viewModel?.tripRepository?.tripDeleteResponseMutableLiveData?.observe(this) {
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
+                    hideProgress()
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
                     callDashboardApi()
                 }
@@ -124,12 +125,12 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
                     CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
                 }
             }
-            hideProgress()
         }
 
         viewModel?.tripRepository?.tripCancelResponseMutableLiveData?.observe(this) {
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
+                    hideProgress()
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
                     callDashboardApi()
                 }
@@ -142,12 +143,12 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
                     CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
                 }
             }
-            hideProgress()
         }
 
         viewModel?.maintenanceRepository?.maintenanceDeleteResponseMutableLiveData?.observe(this) {
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
+                    hideProgress()
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
                     callDashboardApi()
                 }
@@ -160,12 +161,12 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
                     CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
                 }
             }
-            hideProgress()
         }
 
         viewModel?.driverRepository?.deleteDriverExpenseResponseMutableLiveData?.observe(this) {
             when (it.webServiceSetting?.success) {
                 WebServiceSetting.SUCCESS -> {
+                    hideProgress()
                     CommonUtils.showToast(requireContext(), it.webServiceSetting?.message)
                     callDashboardApi()
                 }
@@ -178,7 +179,6 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding, DashboardViewMo
                     CommonUtils.showToast(requireContext(), getString(R.string.no_internet_title))
                 }
             }
-            hideProgress()
         }
     }
 

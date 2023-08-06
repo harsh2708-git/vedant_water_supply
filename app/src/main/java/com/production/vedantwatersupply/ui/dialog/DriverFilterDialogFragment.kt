@@ -46,6 +46,8 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
     private var callBack: DriverFilterClickListener? = null
 
     private var isForYear = false
+    private var driverPaymentDoneById = ""
+    private var selectedDriverPaymentDoneBy = ""
 
     companion object {
         fun getInstance(
@@ -58,6 +60,7 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             toDate: String,
             displayFromDate: String,
             displayToDate: String,
+            selectedDriverPaymentDoneBy: String,
             yearList: ArrayList<FilterItem>,
             driverList: ArrayList<FilterItem>,
             addedBy: ArrayList<FilterItem>,
@@ -73,6 +76,7 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             fragment.toDate = toDate
             fragment.displayFromDate = displayFromDate
             fragment.displayToDate = displayToDate
+            fragment.driverPaymentDoneById = selectedDriverPaymentDoneBy
             fragment.yearList= yearList
             fragment.driverList = driverList
             fragment.addedByList = addedBy
@@ -108,6 +112,7 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         binding?.tvToDate?.setOnClickListener(this)
         binding?.tvPaymentMode?.setOnClickListener(this)
         binding?.tvAddedBy?.setOnClickListener(this)
+        binding?.tvDriverPaymentDoneBy?.setOnClickListener(this)
     }
 
     private fun init() {
@@ -124,6 +129,7 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         setDriverTypeSpinner()
         setDriverSpinner()
         setAddedBySpinner()
+        setDriverPaymentDoneBy()
     }
 
     private fun setYearSpinner() {
@@ -323,7 +329,7 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
                 callBack?.onApply(
                     fromDate, displayFromDate, toDate, displayToDate,
                     selectedYear, selectedDriverType, selectedDriver,
-                    selectedPaymentMode,selectedAddedBy
+                    selectedPaymentMode,selectedAddedBy,selectedDriverPaymentDoneBy
                 )
                 dismiss()
             }
@@ -346,6 +352,7 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
             R.id.tvDriver -> binding?.spDriver?.performClick()
             R.id.tvPaymentMode -> binding?.spPaymentMode?.performClick()
             R.id.tvAddedBy -> binding?.spAddedBy?.performClick()
+            R.id.tvDriverPaymentDoneBy -> binding?.spDriverPaymentDoneBy?.performClick()
         }
     }
 
@@ -360,17 +367,51 @@ class DriverFilterDialogFragment : BaseDialogFragment(), View.OnClickListener {
         driverId = ""
         paymentModeId = ""
         addedById = ""
+        driverPaymentDoneById = ""
 
         selectedYear = ""
         selectedDriverType = ""
         selectedDriver = ""
         selectedPaymentMode = ""
         selectedAddedBy = ""
+        selectedDriverPaymentDoneBy = ""
 
         fromDate = ""
         toDate = ""
         displayFromDate = ""
         displayToDate = ""
+    }
+
+    private fun setDriverPaymentDoneBy() {
+
+        val driverPaymentDoneByList = ArrayList<FilterItem>()
+        if (driverPaymentDoneByList.isEmpty()) {
+            driverPaymentDoneByList.add(0, FilterItem("", getString(R.string.please_select_fuel_filled_by)))
+            driverPaymentDoneByList.add(FilterItem(getString(R.string.by_ajit), getString(R.string.by_ajit)))
+            driverPaymentDoneByList.add(FilterItem(getString(R.string.by_nitish), getString(R.string.by_nitish)))
+            driverPaymentDoneByList.add(FilterItem(getString(R.string.by_bussiness_card), getString(R.string.by_bussiness_card)))
+        }
+        val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, driverPaymentDoneByList)
+        binding?.spDriverPaymentDoneBy?.adapter = adapter
+
+        if (driverPaymentDoneById.isNotEmpty()) {
+            val doneBy: FilterItem? = driverPaymentDoneByList.find { it.dbValue.equals(driverPaymentDoneById, false) }
+            val spinnerPosition: Int = driverPaymentDoneByList.indexOf(doneBy)
+            selectedDriverPaymentDoneBy = doneBy.toString()
+            spinnerPosition.let { binding?.spDriverPaymentDoneBy?.setSelection(it) }
+        }
+
+        binding?.spDriverPaymentDoneBy?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
+                selectedDriverPaymentDoneBy = driverPaymentDoneByList[binding?.spDriverPaymentDoneBy?.selectedItemPosition!!].dbValue
+                if (selectedDriverPaymentDoneBy.isNotEmpty()) {
+                    adapter.setSelectedPosition(i)
+                    binding?.tvDriverPaymentDoneBy?.text = driverPaymentDoneByList[binding?.spDriverPaymentDoneBy?.selectedItemPosition!!].displayValue
+                }
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+        }
     }
 
 }

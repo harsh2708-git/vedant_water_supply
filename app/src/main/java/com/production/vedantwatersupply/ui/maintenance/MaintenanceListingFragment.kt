@@ -34,7 +34,6 @@ import com.production.vedantwatersupply.utils.filter.FilterItem
 import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 import com.production.vedantwatersupply.utils.filter.IFilterItem
-import com.production.vedantwatersupply.utils.formatPriceWithDecimal
 
 class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBinding, MaintenanceViewModel>(), View.OnClickListener, RecyclerViewClickListener {
 
@@ -47,6 +46,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
     private var selectedTankerNo = ""
     private var selectedPaymentMode = ""
     private var selectedAddedBy = ""
+    private var selectedMaintenanceDoneBy = ""
 
     private var fromDate = ""
     private var toDate = ""
@@ -280,24 +280,24 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         binding?.clSummary?.tvTotal?.text = it?.totalMaintainanceCount?.toString()?.formatPriceWithoutDecimal()
         binding?.clSummary?.labelAmount?.text = getString(R.string.total_maintenance_amount)
         binding?.clSummary?.tvAmount?.text = it?.totalMaintainanceAmount.toString().formatPriceWithoutDecimal()
-       /* maintenanceList.clear()
-        it?.maintainanceData?.let { it1 -> maintenanceList.addAll(it1) }
+        /* maintenanceList.clear()
+         it?.maintainanceData?.let { it1 -> maintenanceList.addAll(it1) }
 
-        if (maintenanceList.isEmpty()) {
-            hideData()
-        } else {
-            showData()
-            setMaintenanceAdapter()
-        }*/
+         if (maintenanceList.isEmpty()) {
+             hideData()
+         } else {
+             showData()
+             setMaintenanceAdapter()
+         }*/
 
         if (it?.maintainanceData?.isEmpty() == true) {
             hideData()
         } else {
             showData()
             binding?.rvMaintanance?.visibility = View.VISIBLE
-            if (pageIndex ==1){
+            if (pageIndex == 1) {
                 it?.maintainanceData?.let { it1 -> maintenanceAdapter?.addRecords(it1) }
-            }else {
+            } else {
                 it?.maintainanceData?.let { it1 -> maintenanceAdapter?.updateRecords(it1) }
             }
         }
@@ -312,7 +312,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
                     val find = monthList.find { it.dbValue == monthId }
                     val position = monthList.indexOf(find)
                     monthFilterAdapter?.setSelected(position)
-                }else if (monthId.isEmpty()){
+                } else if (monthId.isEmpty()) {
                     val find = monthList.find { it.dbValue == monthId }
                     val position = monthList.indexOf(find)
                     monthFilterAdapter?.setSelected(position)
@@ -354,13 +354,14 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
     private fun openFilterDialog() {
         val filterDialog = MaintenanceFilterDialogFragment.getInstance(
             selectedYear, selectedTankerType, selectedTankerNo,
-            selectedPaymentMode, fromDate, toDate, displayFromDate, displayToDate,selectedAddedBy,
-            yearList,tankerList,addedByList,
+            selectedPaymentMode, fromDate, toDate, displayFromDate, displayToDate, selectedAddedBy, selectedMaintenanceDoneBy,
+            yearList, tankerList, addedByList,
             object : MaintenanceFilterClickListener {
                 override fun onApply(
                     fromDate: String, displayFromDate: String?,
                     toDate: String, displayToDate: String?, selectedYear: String,
-                    selectedTankerType: String, selectedTankerNo: String, selectedPaymentMode: String, selectedAddedBy: String
+                    selectedTankerType: String, selectedTankerNo: String, selectedPaymentMode: String,
+                    selectedAddedBy: String, selectedMaintenanceDoneBy: String
                 ) {
                     this@MaintenanceListingFragment.fromDate = fromDate
                     this@MaintenanceListingFragment.displayFromDate = displayFromDate.toString()
@@ -371,6 +372,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
                     this@MaintenanceListingFragment.selectedTankerNo = selectedTankerNo
                     this@MaintenanceListingFragment.selectedPaymentMode = selectedPaymentMode
                     this@MaintenanceListingFragment.selectedAddedBy = selectedAddedBy
+                    this@MaintenanceListingFragment.selectedMaintenanceDoneBy = selectedMaintenanceDoneBy
 
                     if (fromDate.isNotEmpty() && toDate.isNotEmpty()) {
                         binding?.rvMonthFilter?.visibility = View.GONE
@@ -379,7 +381,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
 
                     if (selectedYear.isNotEmpty()) {
                         callMonthFilterApi(selectedYear)
-                    }else {
+                    } else {
                         resetAdapter()
                     }
                 }

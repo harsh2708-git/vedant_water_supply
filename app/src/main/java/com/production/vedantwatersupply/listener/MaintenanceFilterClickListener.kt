@@ -6,7 +6,7 @@ interface MaintenanceFilterClickListener {
         fromDate: String, displayFromDate: String?,
         toDate: String, displayToDate: String?,
         selectedYear: String, selectedTankerType: String,
-        selectedTankerNo: String, selectedPaymentMode: String, selectedAddedBy: String
+        selectedTankerNo: String, selectedPaymentMode: String, selectedAddedBy: String, selectedMaintenanceDoneBy: String
     )
 
     fun onClear()

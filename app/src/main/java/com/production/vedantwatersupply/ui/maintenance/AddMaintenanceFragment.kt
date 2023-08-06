@@ -53,6 +53,9 @@ class AddMaintenanceFragment : BaseFragment<FragmentAddMaintenanceBinding, Maint
     private var maintenanceId = ""
     private var isForMaintenanceUpdate = false
 
+    private var maintenanceDoneById = ""
+    private var selectedMaintenanceDoneBy = ""
+
     override val layoutId: Int
         get() = R.layout.fragment_add_maintenance
 
@@ -87,7 +90,7 @@ class AddMaintenanceFragment : BaseFragment<FragmentAddMaintenanceBinding, Maint
         callGetTankerAndDriverFixed()
 
         setPaymentModeSpinner()
-
+        setMaintenanceDoneBy()
     }
 
     override fun initListener() {
@@ -123,6 +126,7 @@ class AddMaintenanceFragment : BaseFragment<FragmentAddMaintenanceBinding, Maint
         binding?.tvTankerNo?.setOnClickListener(this)
         binding?.tvDate?.setOnClickListener(this)
         binding?.tvPaymentMode?.setOnClickListener(this)
+        binding?.tvMaintenanceDoneBy?.setOnClickListener(this)
     }
 
     private fun callGetTankerAndDriverFixed() {
@@ -261,6 +265,7 @@ class AddMaintenanceFragment : BaseFragment<FragmentAddMaintenanceBinding, Maint
                 dialogLicense.show()*/
             }
 
+            R.id.tvMaintenanceDoneBy -> binding?.spMaintenanceDoneBy?.performClick()
         }
     }
 
@@ -358,6 +363,42 @@ class AddMaintenanceFragment : BaseFragment<FragmentAddMaintenanceBinding, Maint
         setPaymentModeSpinner()
 
         binding?.etDescription?.setText(it.description)
+
+        maintenanceDoneById = ""
+        setMaintenanceDoneBy()
+
+    }
+
+    private fun setMaintenanceDoneBy() {
+
+        val maintenanceDoneByList = ArrayList<FilterItem>()
+        if (maintenanceDoneByList.isEmpty()) {
+            maintenanceDoneByList.add(0, FilterItem("", getString(R.string.please_select_maintenance_done_by)))
+            maintenanceDoneByList.add(FilterItem(getString(R.string.by_ajit), getString(R.string.by_ajit)))
+            maintenanceDoneByList.add(FilterItem(getString(R.string.by_nitish), getString(R.string.by_nitish)))
+            maintenanceDoneByList.add(FilterItem(getString(R.string.by_bussiness_card), getString(R.string.by_bussiness_card)))
+        }
+        val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, maintenanceDoneByList)
+        binding?.spMaintenanceDoneBy?.adapter = adapter
+
+        if (maintenanceDoneById.isNotEmpty()) {
+            val doneBy: FilterItem? = maintenanceDoneByList.find { it.dbValue.equals(maintenanceDoneById, false) }
+            val spinnerPosition: Int = maintenanceDoneByList.indexOf(doneBy)
+            selectedMaintenanceDoneBy = doneBy.toString()
+            spinnerPosition.let { binding?.spMaintenanceDoneBy?.setSelection(it) }
+        }
+
+        binding?.spMaintenanceDoneBy?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
+                selectedMaintenanceDoneBy = maintenanceDoneByList[binding?.spMaintenanceDoneBy?.selectedItemPosition!!].dbValue
+                if (selectedMaintenanceDoneBy.isNotEmpty()) {
+                    adapter.setSelectedPosition(i)
+                    binding?.tvMaintenanceDoneBy?.text = maintenanceDoneByList[binding?.spMaintenanceDoneBy?.selectedItemPosition!!].displayValue
+                }
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+        }
     }
 
 }

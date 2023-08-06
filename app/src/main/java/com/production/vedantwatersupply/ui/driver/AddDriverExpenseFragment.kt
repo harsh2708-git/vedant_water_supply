@@ -56,6 +56,9 @@ class AddDriverExpenseFragment : BaseFragment<FragmentAddDriverExpenseBinding, D
 
     private var extraPayment = 1
 
+    private var driverPaymentDoneById = ""
+    private var selectedDriverPaymentDoneBy = ""
+
     override val layoutId: Int
         get() = R.layout.fragment_add_driver_expense
 
@@ -90,6 +93,7 @@ class AddDriverExpenseFragment : BaseFragment<FragmentAddDriverExpenseBinding, D
         binding?.clExtraPaymentRadio?.rb2?.text = getString(R.string.no)
 
         setPaymentModeSpinner()
+        setDriverPaymentDoneBy()
     }
 
 
@@ -162,6 +166,7 @@ class AddDriverExpenseFragment : BaseFragment<FragmentAddDriverExpenseBinding, D
 
         binding?.tvDate?.setOnClickListener(this)
         binding?.tvPaymentMode?.setOnClickListener(this)
+        binding?.tvDriverPaymentDoneBy?.setOnClickListener(this)
     }
 
     private fun callGetTankerAndDriverFixed() {
@@ -347,6 +352,7 @@ class AddDriverExpenseFragment : BaseFragment<FragmentAddDriverExpenseBinding, D
             }
 
             R.id.tvPaymentMode -> binding?.spPaymentMode?.performClick()
+            R.id.tvDriverPaymentDoneBy -> binding?.spDriverPaymentDoneBy?.performClick()
         }
     }
 
@@ -430,5 +436,40 @@ class AddDriverExpenseFragment : BaseFragment<FragmentAddDriverExpenseBinding, D
         setPaymentModeSpinner()
 
         binding?.etDescription?.setText(it.description)
+
+        driverPaymentDoneById = ""
+        setDriverPaymentDoneBy()
+    }
+
+    private fun setDriverPaymentDoneBy() {
+
+        val driverPaymentDoneByList = ArrayList<FilterItem>()
+        if (driverPaymentDoneByList.isEmpty()) {
+            driverPaymentDoneByList.add(0, FilterItem("", getString(R.string.please_select_driver_payment_done_by)))
+            driverPaymentDoneByList.add(FilterItem(getString(R.string.by_ajit), getString(R.string.by_ajit)))
+            driverPaymentDoneByList.add(FilterItem(getString(R.string.by_nitish), getString(R.string.by_nitish)))
+            driverPaymentDoneByList.add(FilterItem(getString(R.string.by_bussiness_card), getString(R.string.by_bussiness_card)))
+        }
+        val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, driverPaymentDoneByList)
+        binding?.spDriverPaymentDoneBy?.adapter = adapter
+
+        if (driverPaymentDoneById.isNotEmpty()) {
+            val doneBy: FilterItem? = driverPaymentDoneByList.find { it.dbValue.equals(driverPaymentDoneById, false) }
+            val spinnerPosition: Int = driverPaymentDoneByList.indexOf(doneBy)
+            selectedDriverPaymentDoneBy = doneBy.toString()
+            spinnerPosition.let { binding?.spDriverPaymentDoneBy?.setSelection(it) }
+        }
+
+        binding?.spDriverPaymentDoneBy?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
+                selectedDriverPaymentDoneBy = driverPaymentDoneByList[binding?.spDriverPaymentDoneBy?.selectedItemPosition!!].dbValue
+                if (selectedDriverPaymentDoneBy.isNotEmpty()) {
+                    adapter.setSelectedPosition(i)
+                    binding?.tvDriverPaymentDoneBy?.text = driverPaymentDoneByList[binding?.spDriverPaymentDoneBy?.selectedItemPosition!!].displayValue
+                }
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+        }
     }
 }

@@ -224,13 +224,36 @@
                     app:layout_constraintTop_toBottomOf="@id/labelPaymentMode" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelMaintenancePaymentDoneBy"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/maintenance_done_by"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPaymentMode"
+                    app:layout_constraintStart_toStartOf="@+id/start"
+                    android:layout_marginTop="@dimen/_10sdp"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvMaintenancePaymentDoneBy"
+                    style="@style/RobotoRegular14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    tools:text="Ajit"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintEnd_toEndOf="@+id/labelMaintenancePaymentDoneBy"
+                    app:layout_constraintStart_toStartOf="@id/labelMaintenancePaymentDoneBy"
+                    app:layout_constraintTop_toBottomOf="@id/labelMaintenancePaymentDoneBy" />
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelDescription"
                     style="@style/RobotoMedium14"
                     android:layout_marginTop="@dimen/_30sdp"
                     android:text="@string/description"
                     android:textColor="@color/color_dark"
                     app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@id/tvPaymentMode" />
+                    app:layout_constraintTop_toBottomOf="@id/tvMaintenancePaymentDoneBy" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvDescription"

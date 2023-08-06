@@ -45,6 +45,9 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
 
     private var callBack: MaintenanceFilterClickListener? = null
 
+    private var maintenanceDoneById = ""
+    private var selectedMaintenanceDoneBy = ""
+
     companion object {
         fun getInstance(
             selectedYear: String,
@@ -56,6 +59,7 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
             displayFromDate: String,
             displayToDate: String,
             selectedAddedBy: String,
+            selectedMaintenanceDoneBy: String,
             yearList: ArrayList<FilterItem>,
             tankerList: ArrayList<FilterItem>,
             addedBy: ArrayList<FilterItem>,
@@ -74,6 +78,7 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
             fragment.tankerNoList = tankerList
             fragment.addedByList = addedBy
             fragment.addedById = selectedAddedBy
+            fragment.maintenanceDoneById = selectedMaintenanceDoneBy
             fragment.callBack = listener
             return fragment
         }
@@ -106,6 +111,7 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
         binding?.tvToDate?.setOnClickListener(this)
         binding?.tvPaymentMode?.setOnClickListener(this)
         binding?.tvAddedBy?.setOnClickListener(this)
+        binding?.tvMaintenanceDoneBy?.setOnClickListener(this)
     }
 
     private fun init() {
@@ -124,15 +130,16 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
         setTankerNoSpinner()
         setPaymentModeSpinner()
         setAddedBySpinner()
+        setMaintenanceDoneBy()
     }
 
     private fun setYearSpinner() {
-       /* if (yearList.isEmpty()) {
-            yearList.add(0, FilterItem("", getString(R.string.please_select_year)))
-            yearList.add(FilterItem("2023", "2023"))
-            yearList.add(FilterItem("2022", "2022"))
-            yearList.add(FilterItem("2021", "2021"))
-        }*/
+        /* if (yearList.isEmpty()) {
+             yearList.add(0, FilterItem("", getString(R.string.please_select_year)))
+             yearList.add(FilterItem("2023", "2023"))
+             yearList.add(FilterItem("2022", "2022"))
+             yearList.add(FilterItem("2021", "2021"))
+         }*/
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, yearList)
         binding?.spYear?.adapter = adapter
 
@@ -194,11 +201,11 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
 
     private fun setTankerNoSpinner() {
 
-       /* if (tankerNoList.isEmpty()) {
-            tankerNoList.add(0, FilterItem("", getString(R.string.please_select_tanker_no)))
-            tankerNoList.add(FilterItem("MH 01 AB  4545", "MH 01 AB  4545"))
-            tankerNoList.add(FilterItem("MH 02 AV  4545", "MH 02 AV  4545"))
-        }*/
+        /* if (tankerNoList.isEmpty()) {
+             tankerNoList.add(0, FilterItem("", getString(R.string.please_select_tanker_no)))
+             tankerNoList.add(FilterItem("MH 01 AB  4545", "MH 01 AB  4545"))
+             tankerNoList.add(FilterItem("MH 02 AV  4545", "MH 02 AV  4545"))
+         }*/
         val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, tankerNoList)
         binding?.spTankerNo?.adapter = adapter
 
@@ -324,7 +331,7 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
                 callBack?.onApply(
                     fromDate, displayFromDate, toDate, displayToDate,
                     selectedYear, selectedTankerType, selectedTankerNo,
-                    selectedPaymentMode, selectedAddedBy
+                    selectedPaymentMode, selectedAddedBy,selectedMaintenanceDoneBy
                 )
                 dismiss()
             }
@@ -347,6 +354,7 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
             R.id.tvTankerNo -> binding?.spTankerNo?.performClick()
             R.id.tvPaymentMode -> binding?.spPaymentMode?.performClick()
             R.id.tvAddedBy -> binding?.spAddedBy?.performClick()
+            R.id.tvMaintenanceDoneBy -> binding?.spMaintenanceDoneBy?.performClick()
         }
     }
 
@@ -366,17 +374,52 @@ class MaintenanceFilterDialogFragment : BaseDialogFragment(), View.OnClickListen
         tankerNoId = ""
         paymentModeId = ""
         addedById = ""
+        maintenanceDoneById = ""
 
         selectedYear = ""
         selectedTankerType = ""
         selectedTankerNo = ""
         selectedPaymentMode = ""
         selectedAddedBy = ""
+        selectedMaintenanceDoneBy = ""
 
         fromDate = ""
         toDate = ""
         displayFromDate = ""
         displayToDate = ""
+    }
+
+
+    private fun setMaintenanceDoneBy() {
+
+        val maintenanceDoneByList = ArrayList<FilterItem>()
+        if (maintenanceDoneByList.isEmpty()) {
+            maintenanceDoneByList.add(0, FilterItem("", getString(R.string.please_select_fuel_filled_by)))
+            maintenanceDoneByList.add(FilterItem(getString(R.string.by_ajit), getString(R.string.by_ajit)))
+            maintenanceDoneByList.add(FilterItem(getString(R.string.by_nitish), getString(R.string.by_nitish)))
+            maintenanceDoneByList.add(FilterItem(getString(R.string.by_bussiness_card), getString(R.string.by_bussiness_card)))
+        }
+        val adapter = VWSSpinnerAdapter(requireContext(), R.layout.simple_dropdown_item, maintenanceDoneByList)
+        binding?.spMaintenanceDoneBy?.adapter = adapter
+
+        if (maintenanceDoneById.isNotEmpty()) {
+            val doneBy: FilterItem? = maintenanceDoneByList.find { it.dbValue.equals(maintenanceDoneById, false) }
+            val spinnerPosition: Int = maintenanceDoneByList.indexOf(doneBy)
+            selectedMaintenanceDoneBy = doneBy.toString()
+            spinnerPosition.let { binding?.spMaintenanceDoneBy?.setSelection(it) }
+        }
+
+        binding?.spMaintenanceDoneBy?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {
+                selectedMaintenanceDoneBy = maintenanceDoneByList[binding?.spMaintenanceDoneBy?.selectedItemPosition!!].dbValue
+                if (selectedMaintenanceDoneBy.isNotEmpty()) {
+                    adapter.setSelectedPosition(i)
+                    binding?.tvMaintenanceDoneBy?.text = maintenanceDoneByList[binding?.spMaintenanceDoneBy?.selectedItemPosition!!].displayValue
+                }
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+        }
     }
 
 }

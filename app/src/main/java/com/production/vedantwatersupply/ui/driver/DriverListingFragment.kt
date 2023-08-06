@@ -63,6 +63,8 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private var driveFilterList = ArrayList<FilterItem>()
     private var addedByList = ArrayList<FilterItem>()
 
+    private var selectedDriverPaymentDoneBy = ""
+
     override val layoutId: Int
         get() = R.layout.fragment_driver_listing
 
@@ -339,9 +341,9 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
     private fun openFilterDialog() {
         val filterDialog = DriverFilterDialogFragment.getInstance(
             selectedYear, selectedDriverType, selectedDriver, selectedPaymentMode, selectedAddedBy,
-            fromDate, toDate, displayFromDate, displayToDate,
+            fromDate, toDate, displayFromDate, displayToDate,selectedDriverPaymentDoneBy,
             yearList, driveFilterList, addedByList, object : DriverFilterClickListener {
-                override fun onApply(fromDate: String, displayFromDate: String?, toDate: String, displayToDate: String?, selectedYear: String, selectedDriverType: String, selectedDriver: String, selectedPaymentMode: String, selectedAddedBy: String) {
+                override fun onApply(fromDate: String, displayFromDate: String?, toDate: String, displayToDate: String?, selectedYear: String, selectedDriverType: String, selectedDriver: String, selectedPaymentMode: String, selectedAddedBy: String, selectedDriverPaymentDoneBy: String) {
                     this@DriverListingFragment.fromDate = fromDate
                     this@DriverListingFragment.displayFromDate = displayFromDate.toString()
                     this@DriverListingFragment.toDate = toDate
@@ -351,6 +353,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                     this@DriverListingFragment.selectedDriverType = selectedDriverType
                     this@DriverListingFragment.selectedPaymentMode = selectedPaymentMode
                     this@DriverListingFragment.selectedAddedBy = selectedAddedBy
+                    this@DriverListingFragment.selectedDriverPaymentDoneBy = selectedDriverPaymentDoneBy
 
                     if (fromDate.isNotEmpty() && toDate.isNotEmpty()) {
                         binding?.rvMonthFilter?.visibility = View.GONE
