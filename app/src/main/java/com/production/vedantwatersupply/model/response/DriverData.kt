@@ -62,4 +62,8 @@ class DriverData : BaseWebserviceResponse(){
     @Expose
     var isExtrapayment: Int? = null
 
+    @SerializedName("paymentDoneBy")
+    @Expose
+    var paymentDoneBy: String? = null
+
 }

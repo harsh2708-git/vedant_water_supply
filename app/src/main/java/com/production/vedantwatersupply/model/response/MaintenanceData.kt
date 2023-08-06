@@ -42,4 +42,8 @@ class MaintenanceData : BaseWebserviceResponse() {
     @Expose
     var dateReadable: String? = null
 
+    @SerializedName("paymentDoneBy")
+    @Expose
+    var paymentDoneBy: String? = null
+
 }

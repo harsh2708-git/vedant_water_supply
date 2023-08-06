@@ -153,6 +153,7 @@ class DriverDetailFragment : BaseFragment<FragmentDriverDetailBinding, DriverVie
         binding?.tvPaymentMode?.text = it.paymentMode
         binding?.tvExtraPayment?.text = if (it.isExtrapayment  == 1) "Yes" else "No"
         binding?.tvDescription?.text = it.description.toString().ifEmpty { getString(R.string.na) }
+        binding?.tvDriverPaymentDoneBy?.text = it.paymentDoneBy.toString().ifEmpty { getString(R.string.na) }
     }
 
     private fun callDriverDeleteApi(id: String?) {

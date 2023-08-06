@@ -152,6 +152,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
         getAllMaintenanceRequest.tankerId = selectedTankerNo
         getAllMaintenanceRequest.paymentmode = selectedPaymentMode
         getAllMaintenanceRequest.addedBy = selectedAddedBy
+        getAllMaintenanceRequest.paymentDoneBy = selectedMaintenanceDoneBy
         Log.d("Maintenance Listing Params", "callGetAllMaintenanceApi: " + Gson().toJson(getAllMaintenanceRequest))
         viewModel?.callGetAllMaintenanceApi(getAllMaintenanceRequest)
     }
@@ -396,6 +397,7 @@ class MaintenanceListingFragment : BaseFragment<FragmentMaintenanceListingBindin
                     displayFromDate = ""
                     displayToDate = ""
                     selectedAddedBy = ""
+                    selectedMaintenanceDoneBy = ""
 
                     binding?.rvMonthFilter?.visibility = View.VISIBLE
 

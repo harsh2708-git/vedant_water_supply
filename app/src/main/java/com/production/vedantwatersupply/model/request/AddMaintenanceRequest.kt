@@ -10,5 +10,6 @@ class AddMaintenanceRequest {
     var amount = ""
     var paymentMode = ""
     var date = ""
+    var paymentDoneBy = ""
 
 }

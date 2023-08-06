@@ -118,6 +118,7 @@ class MaintenanceDetailFragment : BaseFragment<FragmentMaintenanceDetailBinding,
         binding?.tvMaintenanceAmount?.text = it.amount.toString().formatPriceWithoutDecimal()
         binding?.tvPaymentMode?.text = it.paymentMode
         binding?.tvDescription?.text = it.description.toString().ifEmpty { getString(R.string.na) }
+        binding?.tvMaintenancePaymentDoneBy?.text = it.paymentDoneBy.toString().ifEmpty { getString(R.string.na) }
     }
 
     override fun onClick(v: View?) {

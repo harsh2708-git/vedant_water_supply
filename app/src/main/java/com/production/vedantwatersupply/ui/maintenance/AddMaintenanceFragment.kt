@@ -142,6 +142,7 @@ class AddMaintenanceFragment : BaseFragment<FragmentAddMaintenanceBinding, Maint
         addUpdateMaintenanceRequest.amount = binding?.etMaintenanceAmount?.numericValue.toString()
         addUpdateMaintenanceRequest.paymentMode = selectedPaymentMode
         addUpdateMaintenanceRequest.date = fromDate
+        addUpdateMaintenanceRequest.paymentDoneBy = selectedMaintenanceDoneBy
         Log.e("Add Update Request", "callAddUpdateMaintenanceApi: " + Gson().toJson(addUpdateMaintenanceRequest))
 
         viewModel?.callAddUpdateMaintenanceApi(addUpdateMaintenanceRequest)
@@ -340,6 +341,9 @@ class AddMaintenanceFragment : BaseFragment<FragmentAddMaintenanceBinding, Maint
         } else if (binding?.spPaymentMode?.selectedItemPosition == 0) {
             CommonUtils.showToast(requireContext(), getString(R.string.please_select_payment_mode))
             false
+        }else if (binding?.spMaintenanceDoneBy?.selectedItemPosition == 0) {
+            CommonUtils.showToast(requireContext(), getString(R.string.please_select_maintenance_done_by))
+            false
         } else {
             true
         }
@@ -364,7 +368,7 @@ class AddMaintenanceFragment : BaseFragment<FragmentAddMaintenanceBinding, Maint
 
         binding?.etDescription?.setText(it.description)
 
-        maintenanceDoneById = ""
+        maintenanceDoneById = it.paymentDoneBy.toString()
         setMaintenanceDoneBy()
 
     }

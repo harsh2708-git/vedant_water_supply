@@ -135,6 +135,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
         getDriverExpensesRequest.driverId = selectedDriver
         getDriverExpensesRequest.paymentmode = selectedPaymentMode
         getDriverExpensesRequest.addedBy = selectedAddedBy
+        getDriverExpensesRequest.paymentDoneBy = selectedDriverPaymentDoneBy
         Log.d("Driver Listing Params", "callGetAllDriverExpences: " + Gson().toJson(getDriverExpensesRequest))
         viewModel?.callGetAllDriverExpences(getDriverExpensesRequest)
     }
@@ -374,6 +375,7 @@ class DriverListingFragment : BaseFragment<FragmentDriverListingBinding, DriverV
                     selectedDriver = ""
                     selectedPaymentMode = ""
                     selectedAddedBy = ""
+                    selectedDriverPaymentDoneBy = ""
 
                     fromDate = ""
                     toDate = ""

@@ -12,4 +12,5 @@ class GetAllMaintenanceRequest {
     var tankerId = ""
     var paymentmode = ""
     var addedBy = ""
+    var paymentDoneBy = ""
 }

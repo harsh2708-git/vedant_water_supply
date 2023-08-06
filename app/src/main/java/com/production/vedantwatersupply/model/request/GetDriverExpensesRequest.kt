@@ -11,4 +11,5 @@ class GetDriverExpensesRequest {
     var driverId = ""
     var paymentmode = ""
     var addedBy = ""
+    var paymentDoneBy = ""
 }
