@@ -24,7 +24,10 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/clMain"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/_30sdp"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/start"
@@ -47,29 +50,29 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvTripCode"
                     style="@style/RobotoMedium16"
+                    app:layout_constraintEnd_toStartOf="@id/tvStatus"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_10sdp"
-                    android:text="VWS/TRP/2023/07/0001"
                     android:textColor="@color/black"
-                    app:layout_constraintBottom_toBottomOf="@+id/ivOptions"
-                    app:layout_constraintEnd_toStartOf="@id/tvStatus"
+                    app:layout_constraintTop_toBottomOf="@id/clScreenTitle"
                     app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toTopOf="@id/ivOptions" />
+                    android:layout_marginTop="@dimen/_30sdp"
+                    tools:text="VWS/TRP/2023/07/0001" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/ivOptions"
                     style="@style/IconFont"
                     android:layout_width="@dimen/_40sdp"
                     android:layout_height="@dimen/_40sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
                     android:background="@drawable/circle_f2f2f2"
                     android:gravity="center"
                     android:text="@string/ic_vertical_dot"
                     android:textColor="@color/color_4A494D"
                     android:textSize="@dimen/_24ssp"
                     app:layout_constraintEnd_toEndOf="@id/end"
-                    app:layout_constraintTop_toBottomOf="@+id/clScreenTitle" />
+                    app:layout_constraintTop_toTopOf="@+id/tvTripCode"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvTripCode"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvStatus"
@@ -81,9 +84,9 @@
                     android:text="@string/cancelled"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@id/ivOptions"
+                    app:layout_constraintBottom_toBottomOf="@id/tvTripCode"
                     app:layout_constraintEnd_toStartOf="@id/ivOptions"
-                    app:layout_constraintTop_toTopOf="@id/ivOptions" />
+                    app:layout_constraintTop_toTopOf="@id/tvTripCode" />
 
                 <androidx.constraintlayout.widget.Barrier
                     android:id="@+id/brOptions"
@@ -104,18 +107,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/brOptions">
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/txt_perform_on"
+                        android:id="@+id/tvAddedByDate"
                         style="@style/RobotoRegular12"
                         android:layout_width="0dp"
                         android:layout_marginVertical="@dimen/_13sdp"
                         android:layout_marginStart="@dimen/_25sdp"
                         android:layout_marginEnd="@dimen/_25sdp"
-                        android:text="By Teri Dactyi, 14/06/2023"
                         android:textColor="@color/body_text"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="By Teri Dactyi, 14/06/2023" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -148,11 +151,11 @@
                     android:paddingVertical="@dimen/_7sdp"
                     android:paddingStart="@dimen/_16sdp"
                     android:paddingEnd="@dimen/_16sdp"
-                    android:text="MH 01 AB 1221"
                     android:textColor="@color/color_dark"
                     app:layout_constraintStart_toStartOf="@id/start"
                     app:layout_constraintTop_toBottomOf="@+id/labelTankerNo"
-                    app:textAllCaps="true" />
+                    app:textAllCaps="true"
+                    tools:text="MH 01 AB 1221" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelTankerType"
@@ -162,7 +165,7 @@
                     android:layout_marginTop="@dimen/_20sdp"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:text="@string/tanker_type"
-                    app:layout_constraintEnd_toStartOf="@+id/labelWaterType"
+                    app:layout_constraintEnd_toEndOf="@id/end"
                     app:layout_constraintStart_toStartOf="@id/start"
                     app:layout_constraintTop_toBottomOf="@id/tvTruckNo" />
 
@@ -172,13 +175,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="Own Tanker"
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="@+id/labelTankerType"
                     app:layout_constraintStart_toStartOf="@id/labelTankerType"
-                    app:layout_constraintTop_toBottomOf="@id/labelTankerType" />
+                    app:layout_constraintTop_toBottomOf="@id/labelTankerType"
+                    tools:text="Own Tanker" />
 
-                <androidx.appcompat.widget.AppCompatTextView
+               <!-- <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelWaterType"
                     style="@style/RobotoRegular12"
                     android:layout_width="0dp"
@@ -194,11 +197,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="Drinking Water"
+                    tools:text="Drinking Water"
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="@+id/labelWaterType"
                     app:layout_constraintStart_toStartOf="@id/labelWaterType"
-                    app:layout_constraintTop_toBottomOf="@id/labelWaterType" />
+                    app:layout_constraintTop_toBottomOf="@id/labelWaterType" />-->
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelFuelDetail"
@@ -209,7 +212,7 @@
                     android:text="@string/fuel_detail"
                     android:textColor="@color/color_dark"
                     app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@+id/tvWaterType" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvTankerType" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelFuelAmount"
@@ -229,7 +232,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="20,000.00"
+                    tools:text="20,000.00"
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="@+id/labelFuelAmount"
                     app:layout_constraintStart_toStartOf="@id/labelFuelAmount"
@@ -251,11 +254,57 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="Cheque"
+                    tools:text="Cheque"
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="@+id/labelPaymentMode"
                     app:layout_constraintStart_toStartOf="@id/labelPaymentMode"
                     app:layout_constraintTop_toBottomOf="@id/labelPaymentMode" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelFuelFilledBy"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="@string/fuel_filled_by"
+                    app:layout_constraintStart_toStartOf="@id/start"
+                    app:layout_constraintEnd_toStartOf="@id/labelTotalTrip"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPaymentMode" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFuelFilledBy"
+                    style="@style/RobotoRegular14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    tools:text="By Ajit"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintEnd_toEndOf="@+id/labelFuelFilledBy"
+                    app:layout_constraintStart_toStartOf="@id/labelFuelFilledBy"
+                    app:layout_constraintTop_toBottomOf="@id/labelFuelFilledBy" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelTotalTrip"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_trips"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintStart_toEndOf="@id/labelFuelFilledBy"
+                    app:layout_constraintTop_toTopOf="@+id/labelFuelFilledBy" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvTotalTrip"
+                    style="@style/RobotoRegular14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    tools:text="222"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintEnd_toEndOf="@+id/labelTotalTrip"
+                    app:layout_constraintStart_toStartOf="@id/labelTotalTrip"
+                    app:layout_constraintTop_toBottomOf="@id/labelTotalTrip" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelDriverDetail"
@@ -266,7 +315,7 @@
                     android:text="@string/driver_detail"
                     android:textColor="@color/color_dark"
                     app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@+id/tvPaymentMode" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvFuelFilledBy" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelDriverType"
@@ -286,7 +335,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="Permanent Driver"
+                    tools:text="Permanent Driver"
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="@+id/labelDriverType"
                     app:layout_constraintStart_toStartOf="@id/labelDriverType"
@@ -308,11 +357,34 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="Harsh Prajapati"
+                    tools:text="Harsh Prajapati"
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="@+id/labelDriverName"
                     app:layout_constraintStart_toStartOf="@id/labelDriverName"
                     app:layout_constraintTop_toBottomOf="@id/labelDriverName" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelDriverMoNo"
+                    style="@style/RobotoRegular12"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="@string/driver_mo_no"
+                    app:layout_constraintEnd_toEndOf="@id/end"
+                    app:layout_constraintStart_toEndOf="@id/start"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDriverName" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvDriverMoNo"
+                    style="@style/RobotoRegular14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    tools:text="1234567890"
+                    android:textColor="@color/color_dark"
+                    app:layout_constraintEnd_toEndOf="@+id/labelDriverMoNo"
+                    app:layout_constraintStart_toStartOf="@id/labelDriverMoNo"
+                    app:layout_constraintTop_toBottomOf="@id/labelDriverMoNo" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelSiteDetail"
@@ -321,7 +393,7 @@
                     android:text="@string/site_detail"
                     android:textColor="@color/color_dark"
                     app:layout_constraintStart_toStartOf="@id/start"
-                    app:layout_constraintTop_toBottomOf="@id/tvDriverName" />
+                    app:layout_constraintTop_toBottomOf="@id/tvDriverMoNo" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/ivSource"
@@ -363,11 +435,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
                     android:paddingBottom="@dimen/_30sdp"
-                    android:text="MIDC"
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/ivSource"
-                    app:layout_constraintTop_toTopOf="@id/ivSource" />
+                    app:layout_constraintTop_toTopOf="@id/ivSource"
+                    tools:text="MIDC" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvDestination"
@@ -375,11 +447,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
-                    android:text="Abuja"
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/ivDestination"
-                    app:layout_constraintTop_toBottomOf="@+id/tvFilledSiteName" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvFilledSiteName"
+                    tools:text="Abuja" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelCustomerDetail"
@@ -408,7 +480,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="Harsh Prajapati"
+                    tools:text="Harsh Prajapati"
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="@+id/labelCustomerName"
                     app:layout_constraintStart_toStartOf="@id/labelCustomerName"
@@ -430,7 +502,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="1654165151"
+                    tools:text="1654165151"
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="@+id/labelCustomerMoNo"
                     app:layout_constraintStart_toStartOf="@id/labelCustomerMoNo"
@@ -451,11 +523,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:text="Harsh Prajapati Harsh PrajapatiHarsh PrajapatiHarsh Prajapati "
+                    tools:text="Harsh Prajapati Harsh PrajapatiHarsh PrajapatiHarsh Prajapati "
                     android:textColor="@color/color_dark"
                     app:layout_constraintEnd_toEndOf="@+id/end"
                     app:layout_constraintStart_toStartOf="@id/start"
                     app:layout_constraintTop_toBottomOf="@id/labelDescription" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>

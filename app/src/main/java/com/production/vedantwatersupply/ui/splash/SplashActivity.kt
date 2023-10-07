@@ -7,6 +7,7 @@ import com.production.vedantwatersupply.core.BaseActivity
 import com.production.vedantwatersupply.core.BaseViewModel
 import com.production.vedantwatersupply.databinding.ActivitySplashBinding
 import com.production.vedantwatersupply.ui.login.LoginActivity
+import com.production.vedantwatersupply.utils.UserUtils
 import java.util.*
 
 @SuppressLint("CustomSplashScreen")
@@ -28,7 +29,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, BaseViewModel>() {
     }
 
     private fun navigateToNextScreen() {
-        navigateActivity(Intent(this, LoginActivity::class.java))
+        if (UserUtils.isUserLoggedIn(this)) navigateToMainActivity(this)
+        else navigateActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
 

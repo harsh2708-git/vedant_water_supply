@@ -76,14 +76,14 @@
                                 android:id="@+id/tvUserName"
                                 style="@style/RobotoRegular16"
                                 android:layout_width="0dp"
-                                android:layout_marginStart="@dimen/_5sdp"
                                 android:layout_marginEnd="@dimen/_10sdp"
                                 android:maxLines="2"
-                                android:text="Harsh Prajapati"
+                                tools:text="Harsh Prajapati"
+                                android:layout_marginTop="@dimen/_5sdp"
                                 android:textColor="@color/white"
                                 app:layout_constraintEnd_toStartOf="@id/fabLogout"
-                                app:layout_constraintStart_toEndOf="@+id/labelHello"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/labelHello" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/labelWelcome"
@@ -92,6 +92,7 @@
                                 android:layout_marginTop="@dimen/_5sdp"
                                 android:text="@string/welcome"
                                 android:textColor="@color/white"
+                                android:visibility="gone"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@id/tvUserName" />
 
@@ -100,7 +101,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 app:backgroundTint="@color/color_dark"
-                                app:fabCustomSize="@dimen/_50sdp"
+                                app:fabCustomSize="@dimen/_35sdp"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:srcCompat="@drawable/ic_log_out"
@@ -113,7 +114,7 @@
                                 android:layout_height="@dimen/_1sdp"
                                 android:layout_marginTop="@dimen/_10sdp"
                                 android:background="@color/color_E6E6E64D"
-                                app:layout_constraintTop_toBottomOf="@id/labelWelcome" />
+                                app:layout_constraintTop_toBottomOf="@id/fabLogout" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/labelTotalTrip"
@@ -131,11 +132,33 @@
                                 android:layout_width="0dp"
                                 android:layout_marginStart="@dimen/_10sdp"
                                 android:gravity="end"
-                                android:text="10,000"
+                                tools:text="10,000"
                                 android:textColor="@color/white"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toEndOf="@+id/labelTotalTrip"
                                 app:layout_constraintTop_toTopOf="@+id/labelTotalTrip" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/labelTotalFuelAmount"
+                                style="@style/RobotoRegular14"
+                                android:layout_width="wrap_content"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:text="@string/total_fuel_amount"
+                                android:textColor="@color/color_FFFFFFD9"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/tvTotalTrip" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tvTotalFuelAmount"
+                                style="@style/RobotoRegular16"
+                                android:layout_width="0dp"
+                                android:layout_marginStart="@dimen/_10sdp"
+                                android:gravity="end"
+                                tools:text="10,000"
+                                android:textColor="@color/white"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/labelTotalFuelAmount"
+                                app:layout_constraintTop_toTopOf="@+id/labelTotalFuelAmount" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/labelTotalMaintanance"
@@ -145,7 +168,7 @@
                                 android:text="@string/total_maintenance"
                                 android:textColor="@color/color_FFFFFFD9"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/tvTotalTrip" />
+                                app:layout_constraintTop_toBottomOf="@id/tvTotalFuelAmount" />
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/tvTotalMaintanance"
@@ -153,7 +176,7 @@
                                 android:layout_width="0dp"
                                 android:layout_marginStart="@dimen/_10sdp"
                                 android:gravity="end"
-                                android:text="10,000"
+                                tools:text="10,000"
                                 android:textColor="@color/white"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toEndOf="@+id/labelTotalMaintanance"
@@ -175,7 +198,7 @@
                                 android:layout_width="0dp"
                                 android:layout_marginStart="@dimen/_10sdp"
                                 android:gravity="end"
-                                android:text="10,000"
+                                tools:text="10,000"
                                 android:textColor="@color/white"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toEndOf="@+id/labelTotalMaintananceAmount"
@@ -333,10 +356,16 @@
                         layout="@layout/layout_no_data_found"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@id/end"
                         app:layout_constraintStart_toStartOf="@id/start"
                         app:layout_constraintTop_toBottomOf="@id/labelTrip" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/brTripData"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="tripNoData,rvTrips"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/labelMaintanance"
@@ -345,7 +374,7 @@
                         android:text="@string/maintenance"
                         android:textColor="@color/color_0E0D12"
                         app:layout_constraintStart_toStartOf="@id/start"
-                        app:layout_constraintTop_toBottomOf="@id/rvTrips" />
+                        app:layout_constraintTop_toBottomOf="@id/brTripData" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvViewAllTripsMaintanance"
@@ -384,10 +413,16 @@
                         layout="@layout/layout_no_data_found"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@id/end"
                         app:layout_constraintStart_toStartOf="@id/start"
                         app:layout_constraintTop_toBottomOf="@id/labelMaintanance" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/brMaintenanceData"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="maintenanceNoData,rvMaintanance"/>
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/labelDrivers"
@@ -396,7 +431,7 @@
                         android:text="@string/drivers"
                         android:textColor="@color/color_0E0D12"
                         app:layout_constraintStart_toStartOf="@id/start"
-                        app:layout_constraintTop_toBottomOf="@id/rvMaintanance" />
+                        app:layout_constraintTop_toBottomOf="@id/brMaintenanceData" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvViewAllTripsDrivers"
@@ -435,7 +470,6 @@
                         layout="@layout/layout_no_data_found"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="@id/end"
                         app:layout_constraintStart_toStartOf="@id/start"
                         app:layout_constraintTop_toBottomOf="@id/labelDrivers" />

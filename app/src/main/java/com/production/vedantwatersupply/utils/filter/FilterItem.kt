@@ -1,12 +1,12 @@
-package com.transportermanger.util.filter
+package com.production.vedantwatersupply.utils.filter
 
 import com.google.gson.annotations.SerializedName
 
 class FilterItem {
-    @SerializedName("fur_display_status", alternate = ["dr_display_status", "display_status", "lat_display_status", "CustomerCompanyName", "val"])
+    @SerializedName("value")
     var displayValue: String = ""
 
-    @SerializedName("fur_status", alternate = ["dr_status", "status", "lat_status", "customerId", "id"])
+    @SerializedName("id", alternate = ["_id"])
     var dbValue: String = ""
     var isSelected: Boolean = false
 

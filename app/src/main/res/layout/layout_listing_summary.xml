@@ -33,59 +33,35 @@
             android:layout_width="0dp"
             android:layout_marginStart="@dimen/_5sdp"
             android:gravity="end"
-            android:text="2,42,460,631.45"
+            tools:text="2,42,460,631.45"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/labelTotal"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/labelCurrentMonth"
+            android:id="@+id/labelAmount"
             style="@style/RobotoRegular14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
-            android:text="@string/current_month"
+            tools:text="@string/total_fuel_amount"
             android:textColor="@color/color_FFFFFFD9"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvTotal" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvCurrentMonth"
+            android:id="@+id/tvAmount"
             style="@style/RobotoMedium14"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_5sdp"
             android:gravity="end"
-            android:text="April"
+            tools:text="20,000"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/labelCurrentMonth"
-            app:layout_constraintTop_toTopOf="@id/labelCurrentMonth" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/labelDate"
-            style="@style/RobotoRegular14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:text="@string/date"
-            android:textColor="@color/color_FFFFFFD9"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvCurrentMonth" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tvDate"
-            style="@style/RobotoMedium14"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_5sdp"
-            android:gravity="end"
-            android:text="10/11/2023"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/labelDate"
-            app:layout_constraintTop_toTopOf="@id/labelDate" />
+            app:layout_constraintStart_toEndOf="@id/labelAmount"
+            app:layout_constraintTop_toTopOf="@id/labelAmount" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

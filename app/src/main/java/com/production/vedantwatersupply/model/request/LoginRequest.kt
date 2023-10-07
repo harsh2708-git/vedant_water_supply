@@ -1,4 +1,4 @@
-package com.production.vedantwatersupply.model
+package com.production.vedantwatersupply.model.request
 
 class LoginRequest {
 

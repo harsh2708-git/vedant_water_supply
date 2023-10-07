@@ -8,10 +8,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.databinding.ItemMaintenanceBinding
-import com.production.vedantwatersupply.databinding.ItemTripBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
+import com.production.vedantwatersupply.model.response.DriverData
+import com.production.vedantwatersupply.model.response.MaintenanceData
+import com.production.vedantwatersupply.model.response.TripData
+import com.production.vedantwatersupply.utils.formatPriceWithDecimal
+import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 
-class MaintenanceAdapter(context: Context, val clickListener: RecyclerViewClickListener): RecyclerView.Adapter<MaintenanceAdapter.ViewHolder>() {
+class MaintenanceAdapter(context: Context, private var maintenanceList: ArrayList<MaintenanceData>, val clickListener: RecyclerViewClickListener): RecyclerView.Adapter<MaintenanceAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding : ItemMaintenanceBinding): RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         init {
@@ -32,9 +36,32 @@ class MaintenanceAdapter(context: Context, val clickListener: RecyclerViewClickL
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = 3
+    override fun getItemCount() = maintenanceList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val response = maintenanceList[position]
+        holder.binding.apply {
+            tvTripCode.text = response.reference
+            tvTruck.text = response.tanker?.tankerNumber
+            tvMaintenanceAmount.text = response.amount.toString().formatPriceWithoutDecimal()
+            tvScheduledDate.text = response.dateReadable.toString()
+        }
+    }
 
+    fun getItemAt(pos: Int): MaintenanceData {
+        return maintenanceList[pos]
+    }
+
+    fun addRecords(data: List<MaintenanceData>) {
+        val lastPos: Int = maintenanceList.size
+        maintenanceList.clear()
+        maintenanceList.addAll(data)
+        notifyDataSetChanged()
+    }
+
+    fun updateRecords(data: List<MaintenanceData>){
+        val lastPos: Int = maintenanceList.size
+        maintenanceList.addAll(lastPos, data)
+        notifyItemRangeInserted(lastPos, data.size)
     }
 }

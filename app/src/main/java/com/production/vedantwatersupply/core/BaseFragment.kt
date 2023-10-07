@@ -10,6 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
+import com.production.vedantwatersupply.databinding.LayoutNoDataFoundBinding
 
 abstract class BaseFragment<VD : ViewDataBinding, VM : BaseViewModel> : Fragment() {
 
@@ -65,5 +67,10 @@ abstract class BaseFragment<VD : ViewDataBinding, VM : BaseViewModel> : Fragment
     open fun hideProgress() {
         baseActivity?.hideProgress()
     }
+
+
+//    fun callMonthFilterApi(){
+//        viewModel?.callMonthFilterApi()
+//    }
 
 }

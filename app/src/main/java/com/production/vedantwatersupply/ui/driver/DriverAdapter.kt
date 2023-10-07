@@ -1,6 +1,7 @@
 package com.production.vedantwatersupply.ui.driver
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,12 +9,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.production.vedantwatersupply.R
 import com.production.vedantwatersupply.databinding.ItemDriverBinding
-import com.production.vedantwatersupply.databinding.ItemMaintenanceBinding
-import com.production.vedantwatersupply.databinding.ItemTripBinding
 import com.production.vedantwatersupply.listener.RecyclerViewClickListener
+import com.production.vedantwatersupply.model.response.DriverData
+import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 
-class DriverAdapter(context: Context, val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<DriverAdapter.ViewHolder>() {
-
+class DriverAdapter(private var context: Context, private var driverList: ArrayList<DriverData>, val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<DriverAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ItemDriverBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         init {
@@ -34,9 +34,32 @@ class DriverAdapter(context: Context, val clickListener: RecyclerViewClickListen
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = 3
+    override fun getItemCount() = driverList.size.also {
+        Log.e("TAG","-------------------------------$it")
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val response = driverList[holder.adapterPosition]
 
+        holder.binding.apply {
+            tvTripCode.text = response.reference
+            tvDriver.text = response.driver?.driverName
+            tvAmount.text = response.amount?.toString()?.formatPriceWithoutDecimal()
+            tvDate.text = response.dateReadable
+        }
+    }
+
+    fun getItemAt(pos: Int) = driverList[pos]
+
+    fun addRecords(data: List<DriverData>) {
+        driverList.clear()
+        driverList.addAll(data)
+        notifyDataSetChanged()
+    }
+
+    fun updateRecords(data: List<DriverData>){
+        val lastPos: Int = driverList.size
+        driverList.addAll(lastPos, data)
+        notifyItemRangeInserted(lastPos, data.size)
     }
 }
