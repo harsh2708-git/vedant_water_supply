@@ -200,6 +200,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         addUpdateTripRequest.customerMobile = binding?.etCustomerMoNo?.text.toString()
 //        addUpdateTripRequest.waterType = binding?.etTankerType?.text.toString()
         addUpdateTripRequest.description = binding?.etDescription?.text.toString()
+        addUpdateTripRequest.totalTrip = binding?.etTotalTrip?.numericValue.toString()
         Log.e("Add Update Request", "callAddUpdateTripApi: " + Gson().toJson(addUpdateTripRequest))
         viewModel?.callAddUpdateTripApi(addUpdateTripRequest)
     }
@@ -503,6 +504,9 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         } else if (binding?.etDieselAmount?.text?.isEmpty() == true) {
             CommonUtils.showToast(requireContext(), getString(R.string.please_enter_fuel_amount))
             false
+        }else if (binding?.etTotalTrip?.text?.isEmpty() == true) {
+            CommonUtils.showToast(requireContext(), getString(R.string.please_enter_total_trip))
+            false
         } else if (binding?.spPaymentMode?.selectedItemPosition == 0) {
             CommonUtils.showToast(requireContext(), getString(R.string.please_select_payment_mode))
             false
@@ -573,6 +577,7 @@ class AddTripFragment : BaseFragment<FragmentAddTripBinding, TripViewModel>(), V
         binding?.etCustomerMoNo?.setText(tripData.customerMobile)
 //        binding?.etTankerType?.setText(tripData.waterType)
         binding?.etDescription?.setText(tripData.description)
+        binding?.etTotalTrip?.setText(tripData.totalTrip)
     }
 
 }

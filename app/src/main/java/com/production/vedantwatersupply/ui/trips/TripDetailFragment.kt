@@ -21,6 +21,7 @@ import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.OTHER_
 import com.production.vedantwatersupply.utils.AppConstants.Trip.Companion.PERMANENT_DRIVER_DISPLAY
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.formatPriceWithDecimal
+import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 import com.production.vedantwatersupply.webservice.baseresponse.WebServiceSetting
 
 
@@ -164,7 +165,7 @@ class TripDetailFragment : BaseFragment<FragmentTripDetailBinding, TripViewModel
         binding?.tvDescription?.text = it.description?.ifEmpty { getString(R.string.na) }
 
         binding?.ivOptions?.visibility = if (it.status?.equals(AppConstants.CANCELLED) == true) View.GONE else View.VISIBLE
-
+        binding?.tvTotalTrip?.text = it.totalTrip.toString().formatPriceWithoutDecimal()
     }
 
     override fun onClick(v: View?) {

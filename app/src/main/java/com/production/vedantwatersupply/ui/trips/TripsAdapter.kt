@@ -14,6 +14,7 @@ import com.production.vedantwatersupply.model.response.TripData
 import com.production.vedantwatersupply.utils.AppConstants.CANCELLED
 import com.production.vedantwatersupply.utils.CommonUtils
 import com.production.vedantwatersupply.utils.formatPriceWithDecimal
+import com.production.vedantwatersupply.utils.formatPriceWithoutDecimal
 import java.util.Date
 
 class TripsAdapter(context: Context, private var tripDataList: ArrayList<TripData>, val clickListener: RecyclerViewClickListener) : RecyclerView.Adapter<TripsAdapter.ViewHolder>() {
@@ -55,6 +56,7 @@ class TripsAdapter(context: Context, private var tripDataList: ArrayList<TripDat
 
             ivTripOptions.visibility = if (response.status?.equals(CANCELLED) == true) View.GONE else View.VISIBLE
 
+            tvTotalTrip.text = response.totalTrip.toString().formatPriceWithoutDecimal()
         }
     }
 

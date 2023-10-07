@@ -81,5 +81,9 @@ class TripData: BaseWebserviceResponse() {
     @Expose
     var tripDateReadable: String? = null
 
+    @SerializedName("totalTrip")
+    @Expose
+    var totalTrip: String? = null
+
 
 }

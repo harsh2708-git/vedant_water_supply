@@ -21,4 +21,5 @@ class AddTripRequest {
     var customerMobile = ""
     var waterType = ""
     var description = ""
+    var totalTrip = ""
 }

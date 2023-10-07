@@ -168,4 +168,5 @@
     <string name="driver_payment_done_by">Driver Payment Done By</string>
     <string name="please_select_maintenance_done_by">Please select maintenance done by</string>
     <string name="please_select_driver_payment_done_by">Please select driver payment done by</string>
+    <string name="please_enter_total_trip">Please enter total trip</string>
 </resources>
